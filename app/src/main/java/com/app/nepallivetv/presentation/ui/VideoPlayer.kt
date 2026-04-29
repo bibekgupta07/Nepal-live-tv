@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.media.AudioManager
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
@@ -20,7 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -38,6 +39,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -70,6 +72,7 @@ fun VideoPlayer(
     
     var isBuffering by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isControlsVisible by remember { mutableStateOf(true) }
 
     // Manage Window states based on isFullScreen
     DisposableEffect(isFullScreen) {
@@ -117,8 +120,19 @@ fun VideoPlayer(
                     )
                 )
             
+            // Configure LoadControl for Low Latency / Live Streaming
+            val loadControl = DefaultLoadControl.Builder()
+                .setBufferDurationsMs(
+                    1500,  // min buffer before playback starts
+                    10000, // max buffer
+                    1000,  // buffer for playback to start
+                    1500   // buffer for playback to resume after rebuffer
+                )
+                .build()
+
             val player = ExoPlayer.Builder(context)
                 .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
+                .setLoadControl(loadControl)
                 .build()
                 
             player.addListener(object : Player.Listener {
@@ -140,7 +154,17 @@ fun VideoPlayer(
         }
         
         if (streamUrl != null) {
-            val mediaItem = MediaItem.fromUri(streamUrl)
+            // Configure MediaItem for Live Streaming
+            val mediaItem = MediaItem.Builder()
+                .setUri(streamUrl)
+                .setLiveConfiguration(
+                    MediaItem.LiveConfiguration.Builder()
+                        .setMaxPlaybackSpeed(1.02f) // Allows player to slightly speed up to catch up to live edge
+                        .setTargetOffsetMs(2500)    // Target starting 2.5 seconds from the live edge
+                        .build()
+                )
+                .build()
+
             exoPlayer?.setMediaItem(mediaItem)
             exoPlayer?.prepare()
         }
@@ -166,6 +190,9 @@ fun VideoPlayer(
                         useController = true
                         setShowNextButton(false)
                         setShowPreviousButton(false)
+                        setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+                            isControlsVisible = visibility == View.VISIBLE
+                        })
                     }
                 },
                 update = { view ->
@@ -239,50 +266,60 @@ fun VideoPlayer(
             )
 
             // Top Left: Back/Close button
-            PlayerIconButton(
-                icon = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Close",
-                onClick = onClose,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
-            )
-
-            // Top Right: Controls
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp), // Avoids notching
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            AnimatedVisibility(
+                visible = isControlsVisible,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.TopStart)
             ) {
                 PlayerIconButton(
-                    icon = when (resizeMode) {
-                        AspectRatioFrameLayout.RESIZE_MODE_FIT -> Icons.Filled.FitScreen
-                        AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.Fullscreen
-                        AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> Icons.Filled.ZoomIn
-                        else -> Icons.Filled.FitScreen
-                    },
-                    contentDescription = "Resize Mode",
-                    onClick = {
-                        resizeMode = when (resizeMode) {
-                            AspectRatioFrameLayout.RESIZE_MODE_FIT -> AspectRatioFrameLayout.RESIZE_MODE_FILL
-                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                            else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Close",
+                    onClick = onClose,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            // Top Right: Controls
+            AnimatedVisibility(
+                visible = isControlsVisible,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp), // Avoids notching
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    PlayerIconButton(
+                        icon = when (resizeMode) {
+                            AspectRatioFrameLayout.RESIZE_MODE_FIT -> Icons.Filled.FitScreen
+                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.Fullscreen
+                            AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> Icons.Filled.ZoomIn
+                            else -> Icons.Filled.FitScreen
+                        },
+                        contentDescription = "Resize Mode",
+                        onClick = {
+                            resizeMode = when (resizeMode) {
+                                AspectRatioFrameLayout.RESIZE_MODE_FIT -> AspectRatioFrameLayout.RESIZE_MODE_FILL
+                                AspectRatioFrameLayout.RESIZE_MODE_FILL -> AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                                else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
+                            }
                         }
-                    }
-                )
-                
-                PlayerIconButton(
-                    icon = if (isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
-                    contentDescription = "Mute Toggle",
-                    onClick = { isMuted = !isMuted }
-                )
-                
-                PlayerIconButton(
-                    icon = if (isFullScreen) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen,
-                    contentDescription = "Toggle Fullscreen",
-                    onClick = onToggleFullScreen
-                )
+                    )
+                    
+                    PlayerIconButton(
+                        icon = if (isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
+                        contentDescription = "Mute Toggle",
+                        onClick = { isMuted = !isMuted }
+                    )
+                    
+                    PlayerIconButton(
+                        icon = Icons.Filled.ScreenRotation,
+                        contentDescription = "Toggle Orientation",
+                        onClick = onToggleFullScreen
+                    )
+                }
             }
 
             // Volume / Brightness Indicator
