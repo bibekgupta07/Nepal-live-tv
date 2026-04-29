@@ -1,6 +1,7 @@
 package com.app.nepallivetv.presentation.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -37,6 +38,7 @@ fun MainScreen(viewModel: MainViewModel) {
     val selectedCategory by viewModel.selectedCategory.collectAsState()
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
     val categories = viewModel.categories
+    val selectedChannel by viewModel.selectedChannel.collectAsState()
     
     var isFullScreen by remember { mutableStateOf(false) }
 
@@ -90,8 +92,9 @@ fun MainScreen(viewModel: MainViewModel) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    shape = RoundedCornerShape(24.dp), // Pill shape for modern look
+                        .height(52.dp)
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(8.dp), // Rounded corner with 8.dp
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
@@ -137,7 +140,11 @@ fun MainScreen(viewModel: MainViewModel) {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(channels) { channel ->
-                            ChannelItem(channel = channel, onClick = { viewModel.selectChannel(channel) })
+                            ChannelItem(
+                                channel = channel,
+                                isSelected = channel == selectedChannel,
+                                onClick = { viewModel.selectChannel(channel) }
+                            )
                         }
                     }
                 }
@@ -147,15 +154,16 @@ fun MainScreen(viewModel: MainViewModel) {
 }
 
 @Composable
-fun ChannelItem(channel: Channel, onClick: () -> Unit) {
+fun ChannelItem(channel: Channel, isSelected: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(0.85f) // Makes the card slightly taller to properly fit text without squishing
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
+        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
