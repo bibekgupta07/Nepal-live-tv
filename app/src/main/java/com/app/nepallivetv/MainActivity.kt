@@ -14,42 +14,63 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.app.nepallivetv.presentation.ui.MainScreen
-import com.app.nepallivetv.presentation.MainViewModel
-import com.app.nepallivetv.ui.theme.NepalLiveTvTheme
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.app.nepallivetv.presentation.navigation.AppNavigation
+import com.app.nepallivetv.ui.theme.NepalLiveTvTheme
 
+/**
+ * MainActivity serves as the single entry point to the Compose UI.
+ * Handles the Android Native Splash Screen and System-level Picture-in-Picture mode overrides.
+ */
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModel()
+    
+    // State to pass to Compose to notify if the app is currently small and floating
     private var isInPipMode by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 1. Intercepts the app launch and displays our dark custom Splash Screen
         installSplashScreen()
+        
         super.onCreate(savedInstanceState)
+        
+        // 2. Extends the app all the way behind the status bar and navigation bar
         enableEdgeToEdge()
+        
+        // 3. Render the Compose UI Tree using our Navigation Coordinator
         setContent {
             NepalLiveTvTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
-                    MainScreen(viewModel = viewModel, isInPipMode = isInPipMode)
+                    AppNavigation(isInPipMode = isInPipMode)
                 }
             }
         }
     }
 
+    /**
+     * Triggered when the user presses the Android "Home" or "Recent Apps" button.
+     * Instead of pausing the app, we check if a video is playing. If it is, we ask
+     * the Android system to shrink our app into a floating Picture-in-Picture window!
+     */
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        if (viewModel.currentStreamUrl.value != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        
+        // Hardcoded PiP check removed, handled gracefully by OS if not possible
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
                 enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
+    /**
+     * Fired by the system whenever the app actually shrinks into a PiP window or expands back to normal.
+     * We capture this state and pass it down to Compose so it can hide non-video UI elements.
+     */
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration

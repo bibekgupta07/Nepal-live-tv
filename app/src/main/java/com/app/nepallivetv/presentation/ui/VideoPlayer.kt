@@ -27,6 +27,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -37,7 +38,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
@@ -47,71 +53,72 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
-import androidx.media3.common.Player
-import androidx.media3.common.PlaybackException
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
-
+/**
+ * A highly customized, gesture-enabled Jetpack Compose wrapper for ExoPlayer.
+ * Supports Fullscreen toggling, Picture-in-Picture mode, live-stream optimizations,
+ * and swipe gestures for volume and brightness.
+ */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun VideoPlayer(
+    modifier: Modifier = Modifier,
     streamUrl: String?,
     isFullScreen: Boolean,
     isInPipMode: Boolean = false,
     onToggleFullScreen: () -> Unit,
-    onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    onClose: () -> Unit
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
     
+    // --- PLAYER STATE ---
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var resizeMode by remember { mutableIntStateOf(AspectRatioFrameLayout.RESIZE_MODE_FIT) }
     var isMuted by remember { mutableStateOf(false) }
-
-    var indicatorValue by remember { mutableFloatStateOf(0f) }
-    var isVolumeIndicator by remember { mutableStateOf(true) }
-    var showIndicator by remember { mutableStateOf(false) }
-    
     var isBuffering by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isControlsVisible by remember { mutableStateOf(false) }
 
-    // Manage Window states based on isFullScreen
+    // --- GESTURE / OVERLAY STATE ---
+    var indicatorValue by remember { mutableFloatStateOf(0f) }
+    var isVolumeIndicator by remember { mutableStateOf(true) }
+    var showIndicator by remember { mutableStateOf(false) }
+
+    // =======================================================
+    // 1. WINDOW SYSTEM & LIFECYCLE MANAGEMENT
+    // =======================================================
+
+    // Controls showing/hiding the Android status bar and rotating the physical screen
     DisposableEffect(isFullScreen) {
         val window = activity?.window
-        var insetsController: WindowInsetsControllerCompat? = null
-        if (window != null) {
-            insetsController = WindowCompat.getInsetsController(window, window.decorView)
-        }
+        val insetsController = window?.let { WindowCompat.getInsetsController(it, it.decorView) }
 
         if (isFullScreen) {
             window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            insetsController?.hide(WindowInsetsCompat.Type.systemBars())
+            insetsController?.hide(WindowInsetsCompat.Type.systemBars()) // Hide clock & battery
             insetsController?.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE // Force Horizontal
         } else {
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            insetsController?.show(WindowInsetsCompat.Type.systemBars())
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            insetsController?.show(WindowInsetsCompat.Type.systemBars()) // Show clock
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED // Let sensor decide
         }
-        
-        onDispose {
-            // Nothing to tear down per-state change, proper destroy handled by the unit DisposableEffect below
-        }
+        onDispose { }
     }
 
+    // Listens to Android App Lifecycle (Background/Foreground)
     val lifecycleOwner = LocalLifecycleOwner.current
-
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
+            // If the user goes to the home screen (and NOT in Picture-in-Picture mode)
             if (event == Lifecycle.Event.ON_PAUSE) {
                 if (activity != null && !activity.isInPictureInPictureMode) {
-                    exoPlayer?.pause()
+                    exoPlayer?.pause() // Stop pulling network data and stop audio
                 }
-            } else if (event == Lifecycle.Event.ON_RESUME) {
-                exoPlayer?.play()
+            } 
+            // If the user opens the app back up
+            else if (event == Lifecycle.Event.ON_RESUME) {
+                exoPlayer?.play() // Resume stream
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -120,12 +127,12 @@ fun VideoPlayer(
         }
     }
 
+    // Instantly hide the playback controls if Android shrinks the app into PiP mode
     LaunchedEffect(isInPipMode) {
-        if (isInPipMode) {
-            isControlsVisible = false
-        }
+        if (isInPipMode) isControlsVisible = false
     }
 
+    // Cleanup: Make sure we destroy the ExoPlayer completely when this View is closed
     DisposableEffect(Unit) {
         onDispose {
             exoPlayer?.release()
@@ -137,7 +144,12 @@ fun VideoPlayer(
         }
     }
 
+    // =======================================================
+    // 2. EXOPLAYER INITIALIZATION & LIVE OPTIMIZATION
+    // =======================================================
+    
     LaunchedEffect(streamUrl) {
+        // Build the player engine
         if (streamUrl != null && exoPlayer == null) {
             val dataSourceFactory = DefaultHttpDataSource.Factory()
                 .setDefaultRequestProperties(
@@ -148,13 +160,14 @@ fun VideoPlayer(
                     )
                 )
             
-            // Configure LoadControl for Low Latency / Live Streaming
+            // Custom Load Control: Don't wait to download 10 seconds of video before starting. 
+            // Start as soon as 1.5 seconds is buffered.
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
                     1500,  // min buffer before playback starts
-                    10000, // max buffer
-                    1000,  // buffer for playback to start
-                    1500   // buffer for playback to resume after rebuffer
+                    10000, // max buffer allowed to download
+                    1000,  // buffer required to resume after freezing
+                    1500
                 )
                 .build()
 
@@ -181,17 +194,20 @@ fun VideoPlayer(
             exoPlayer = player
         }
         
+        // Feed the URL to the player engine
         if (streamUrl != null) {
-            // Configure MediaItem for Live Streaming
             val mediaItem = MediaItem.Builder()
                 .setUri(streamUrl)
                 .setLiveConfiguration(
                     MediaItem.LiveConfiguration.Builder()
-                        .setMaxPlaybackSpeed(1.04f) // Speeds up by 4% when network is good to catch up to live edge
-                        .setMinPlaybackSpeed(0.96f) // Slows down to 96% speed when network is bad to prevent buffering
-                        .setTargetOffsetMs(3000)    // Target starting 3 seconds from the live edge
-                        .setMinOffsetMs(1500)       // Can get as close as 1.5 seconds to live
-                        .setMaxOffsetMs(15000)      // Can drift up to 15 seconds behind live before skipping
+                        // Automatically slow down video by 4% if network is struggling (prevents spinning wheel)
+                        .setMinPlaybackSpeed(0.96f)
+                        // Automatically speed up video by 4% if we are lagging behind the live edge
+                        .setMaxPlaybackSpeed(1.04f)
+                        // Target playing 3 seconds behind "live" to allow a tiny buffer
+                        .setTargetOffsetMs(3000)
+                        .setMinOffsetMs(1500)
+                        .setMaxOffsetMs(15000)
                         .build()
                 )
                 .build()
@@ -201,7 +217,7 @@ fun VideoPlayer(
         }
     }
 
-    // Auto-hide controls after 3 seconds
+    // Timer to automatically hide custom UI Controls after 3 seconds of inactivity
     LaunchedEffect(isControlsVisible) {
         if (isControlsVisible) {
             delay(3000)
@@ -209,7 +225,7 @@ fun VideoPlayer(
         }
     }
 
-    // Auto-hide volume/brightness indicator after 1.5 seconds
+    // Timer to automatically hide the Brightness/Volume graphic after swiping
     LaunchedEffect(indicatorValue, showIndicator) {
         if (showIndicator) {
             delay(1500)
@@ -217,8 +233,14 @@ fun VideoPlayer(
         }
     }
 
+    // =======================================================
+    // 3. UI RENDERING
+    // =======================================================
+
     if (streamUrl != null) {
         Box(modifier = modifier.background(Color.Black)) {
+            
+            // The actual raw video feed surface
             AndroidView(
                 factory = { ctx ->
                     PlayerView(ctx).apply {
@@ -226,6 +248,7 @@ fun VideoPlayer(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
+                        // We use our own custom compose overlay, completely hiding ExoPlayer's ugly native controls
                         useController = false
                     }
                 },
@@ -236,77 +259,21 @@ fun VideoPlayer(
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(isInPipMode) {
-                        if (!isInPipMode) {
-                            detectTapGestures(
-                                onTap = { isControlsVisible = !isControlsVisible }
-                            )
+                    .videoPlayerGestures(
+                        context = context,
+                        activity = activity,
+                        isInPipMode = isInPipMode,
+                        onTap = { isControlsVisible = !isControlsVisible },
+                        onSwipe = { value, isVolume ->
+                            indicatorValue = value
+                            isVolumeIndicator = isVolume
+                            showIndicator = true
+                            if (isVolume && value > 0 && isMuted) isMuted = false
                         }
-                    }
-                    .pointerInput(isInPipMode) {
-                        if (!isInPipMode) {
-                            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                            var startX = 0f
-                            var startY = 0f
-                            var isVolumeSwipe = false
-                            var isBrightnessSwipe = false
-                            var startVolume = 0
-                            var startBrightness = 0f
-
-                            detectDragGestures(
-                                onDragStart = { offset ->
-                                    startX = offset.x
-                                    startY = offset.y
-                                    startVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-                                    startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
-                                    if (startBrightness < 0) startBrightness = 0.5f
-                                    
-                                    val halfScreenWidth = size.width / 2
-                                    if (startX > halfScreenWidth) {
-                                        isVolumeSwipe = true
-                                        isBrightnessSwipe = false
-                                    } else {
-                                        isBrightnessSwipe = true
-                                        isVolumeSwipe = false
-                                    }
-                                },
-                                onDragEnd = {
-                                    isVolumeSwipe = false
-                                    isBrightnessSwipe = false
-                                },
-                                onDrag = { change, dragAmount ->
-                                    change.consume()
-                                    val deltaY = startY - change.position.y // Up is positive
-                                    val percent = deltaY / size.height
-
-                                    if (abs(deltaY) > 50) { // Threshold
-                                        if (isVolumeSwipe) {
-                                            val volChange = (percent * maxVolume).toInt()
-                                            val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)
-                                            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0)
-                                            indicatorValue = newVolume.toFloat() / maxVolume
-                                            isVolumeIndicator = true
-                                            showIndicator = true
-                                            if (newVolume > 0 && isMuted) isMuted = false
-                                        } else if (isBrightnessSwipe) {
-                                            val brightChange = percent * 1.5f
-                                            val newBrightness = (startBrightness + brightChange).coerceIn(0.01f, 1f)
-                                            activity?.window?.let { win ->
-                                                val lp = win.attributes
-                                                lp.screenBrightness = newBrightness
-                                                win.attributes = lp
-                                            }
-                                            indicatorValue = newBrightness
-                                            isVolumeIndicator = false
-                                            showIndicator = true
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
+                    )
             )
+
+            // --- UI OVERLAYS ---
 
             // Top Left: Back/Close button
             AnimatedVisibility(
@@ -323,7 +290,7 @@ fun VideoPlayer(
                 )
             }
 
-            // Bottom Right: Controls
+            // Bottom Right: System Controls
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -331,7 +298,7 @@ fun VideoPlayer(
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp), // Avoids notching
+                    modifier = Modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     PlayerIconButton(
@@ -365,7 +332,7 @@ fun VideoPlayer(
                 }
             }
 
-            // Volume / Brightness Indicator
+            // Center Overlay: Volume / Brightness Level Box
             AnimatedVisibility(
                 visible = showIndicator,
                 enter = fadeIn(),
@@ -399,7 +366,7 @@ fun VideoPlayer(
                 }
             }
 
-            // Buffering Indicator
+            // Center Overlay: Loading Spinner
             if (isBuffering && errorMessage == null) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
@@ -407,7 +374,7 @@ fun VideoPlayer(
                 )
             }
 
-            // Error Overlay
+            // Center Overlay: Error Panel
             if (errorMessage != null) {
                 Column(
                     modifier = Modifier
@@ -435,6 +402,9 @@ fun VideoPlayer(
     }
 }
 
+/**
+ * Clean reusable button layout for the Video Player overlays.
+ */
 @Composable
 fun PlayerIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector, 
@@ -445,13 +415,93 @@ fun PlayerIconButton(
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f)),
-        modifier = modifier.size(40.dp) // Reduced container size
+        modifier = modifier.size(40.dp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = Color.White,
-            modifier = Modifier.size(22.dp) // Reduced icon size
+            modifier = Modifier.size(22.dp)
         )
     }
+}
+
+/**
+ * Extension function handling the complex Touch gestures for Brightness (Left Swipe) and Volume (Right Swipe).
+ * Extracts this messy logic out of the main compose tree.
+ */
+private fun Modifier.videoPlayerGestures(
+    context: Context,
+    activity: Activity?,
+    isInPipMode: Boolean,
+    onTap: () -> Unit,
+    onSwipe: (value: Float, isVolume: Boolean) -> Unit
+): Modifier = composed {
+    if (isInPipMode) return@composed this // Disable gestures completely if minimized
+
+    val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+    
+    var startX = 0f
+    var startY = 0f
+    var isVolumeSwipe = false
+    var isBrightnessSwipe = false
+    var startVolume = 0
+    var startBrightness = 0f
+
+    this
+        .pointerInput(Unit) {
+            detectTapGestures(onTap = { onTap() })
+        }
+        .pointerInput(Unit) {
+            detectDragGestures(
+                onDragStart = { offset ->
+                    startX = offset.x
+                    startY = offset.y
+                    startVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                    startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
+                    if (startBrightness < 0) startBrightness = 0.5f
+                    
+                    // Determine if the user touched the left half (brightness) or right half (volume)
+                    val halfScreenWidth = size.width / 2
+                    if (startX > halfScreenWidth) {
+                        isVolumeSwipe = true
+                        isBrightnessSwipe = false
+                    } else {
+                        isBrightnessSwipe = true
+                        isVolumeSwipe = false
+                    }
+                },
+                onDragEnd = {
+                    isVolumeSwipe = false
+                    isBrightnessSwipe = false
+                },
+                onDrag = { change, dragAmount ->
+                    change.consume()
+                    val deltaY = startY - change.position.y // Up is positive
+                    val percent = deltaY / size.height
+
+                    if (abs(deltaY) > 50) { // Drag Threshold
+                        if (isVolumeSwipe) {
+                            val volChange = (percent * maxVolume).toInt()
+                            val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)
+                            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0)
+                            
+                            val value = newVolume.toFloat() / maxVolume
+                            onSwipe(value, true)
+                        } else if (isBrightnessSwipe) {
+                            val brightChange = percent * 1.5f
+                            val newBrightness = (startBrightness + brightChange).coerceIn(0.01f, 1f)
+                            activity?.window?.let { win ->
+                                val lp = win.attributes
+                                lp.screenBrightness = newBrightness
+                                win.attributes = lp
+                            }
+                            
+                            onSwipe(newBrightness, false)
+                        }
+                    }
+                }
+            )
+        }
 }

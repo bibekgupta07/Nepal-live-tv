@@ -1,6 +1,5 @@
 package com.app.nepallivetv.presentation.ui
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -33,40 +32,55 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import android.widget.Toast
 import coil.compose.AsyncImage
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.MainViewModel
 
+/**
+ * MainScreen is the primary dashboard of the application.
+ * It intelligently orchestrates the VideoPlayer, the Search/Category row, and the Grid of channels.
+ *
+ * @param viewModel The ViewModel providing state.
+ * @param isInPipMode Boolean indicating if Android is currently minimizing the app into Picture-in-Picture.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
+    // Collect all states safely from the ViewModel
     val channels by viewModel.filteredChannels.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val selectedCategory by viewModel.selectedCategory.collectAsState()
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
-    val categories = viewModel.categories
     val selectedChannel by viewModel.selectedChannel.collectAsState()
+    val categories = viewModel.categories
     
+    // UI Local States
     var isFullScreen by remember { mutableStateOf(false) }
     var isSearchVisible by remember { mutableStateOf(false) }
+    
+    // Used to handle keyboard and focus events smoothly
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val context = androidx.compose.ui.platform.LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
-    // If search text exists, ensure search bar stays visible
+    // Keeps search bar expanded if the user has actively typed something in it
     LaunchedEffect(searchQuery) {
         if (searchQuery.isNotEmpty()) {
             isSearchVisible = true
         }
     }
 
+    // --- BACK BUTTON HANDLING ---
+    // If we are in fullscreen, back button exits fullscreen
     BackHandler(enabled = isFullScreen && !isInPipMode) {
         isFullScreen = false
     }
     
+    // If we are in normal view, require a double-tap on the back button to exit the app completely
     BackHandler(enabled = !isFullScreen && !isInPipMode) {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime < 2000) {
@@ -77,14 +91,15 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
         }
     }
 
+    // --- MAIN UI LAYOUT ---
     Scaffold(
-        // The top bar is removed as requested
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(if (isFullScreen) PaddingValues(0.dp) else paddingValues)
+                // This globally catches taps outside the keyboard and closes the keyboard!
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(pass = PointerEventPass.Initial)
@@ -93,12 +108,12 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                 }
         ) {
             
-            // Video Player
+            // 1. TOP VIDEO PLAYER SECTION
             if (currentStreamUrl != null) {
                 VideoPlayer(
                     streamUrl = currentStreamUrl,
                     isFullScreen = isFullScreen,
-                    isInPipMode = isInPipMode,
+                    isInPipMode = isInPipMode, // Passes PiP state down so controls can hide automatically
                     onToggleFullScreen = { isFullScreen = !isFullScreen },
                     onClose = { 
                         if (isFullScreen) {
@@ -107,20 +122,22 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                             viewModel.closePlayer() 
                         }
                     },
+                    // If fullscreen or in tiny PiP mode, fill the whole screen. Otherwise, maintain 16:9 ratio.
                     modifier = if (isFullScreen || isInPipMode) Modifier.fillMaxSize() else Modifier.fillMaxWidth().aspectRatio(16f / 9f)
                 )
             }
 
-            // Rest of UI
+            // 2. BOTTOM GRID & SEARCH SECTION (Hidden during Fullscreen or PiP)
             if (!isFullScreen && !isInPipMode) {
-                // Request focus to open keyboard automatically
+                
+                // Triggers the keyboard to open automatically when the search bar becomes visible
                 LaunchedEffect(isSearchVisible) {
                     if (isSearchVisible) {
                         focusRequester.requestFocus()
                     }
                 }
 
-                // Category Row with Search Icon / Search Bar inline
+                // -> SEARCH BAR & CATEGORY ROW COMPONENT
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -129,6 +146,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (isSearchVisible) {
+                        // Shows the expanded Search Bar
                         OutlinedTextField(
                             value = searchQuery,
                             onValueChange = { viewModel.onSearchQueryChanged(it) },
@@ -138,6 +156,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                             },
                             trailingIcon = {
                                 IconButton(onClick = { 
+                                    // Always clear search, close keyboard, and hide search bar
                                     viewModel.onSearchQueryChanged("")
                                     isSearchVisible = false
                                     focusManager.clearFocus()
@@ -158,6 +177,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                             singleLine = true
                         )
                     } else {
+                        // Shows the Horizontal scrollable Category Chips
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
@@ -194,6 +214,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                     }
                 }
 
+                // -> CHANNEL GRID COMPONENT
                 if (isLoading) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -206,9 +227,8 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                         )
                     }
                 } else {
-                    // Improved Grid
                     LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 100.dp), // Auto-adapts to screen size
+                        columns = GridCells.Adaptive(minSize = 100.dp), // Dynamically adapts columns to fit width
                         contentPadding = PaddingValues(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -219,6 +239,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
                                 channel = channel,
                                 isSelected = channel == selectedChannel,
                                 onClick = { 
+                                    // Start playing channel, clear search, and close keyboard
                                     viewModel.selectChannel(channel)
                                     viewModel.onSearchQueryChanged("")
                                     isSearchVisible = false
@@ -233,14 +254,18 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
     }
 }
 
+/**
+ * Represents a single rectangular Channel Card in the grid.
+ */
 @Composable
 fun ChannelItem(channel: Channel, isSelected: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.85f) // Makes the card slightly taller to properly fit text without squishing
+            .aspectRatio(0.85f)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
+        // Highlights the active card with the primary theme color
         border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
@@ -253,8 +278,7 @@ fun ChannelItem(channel: Channel, isSelected: Boolean, onClick: () -> Unit) {
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            // White box for the logo. This standardizes all logos (even transparent ones) 
-            // so they don't look messy against dark mode backgrounds.
+            // Inner white box holding the Channel Logo to standardize all transparent/weirdly sized logos
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -274,12 +298,13 @@ fun ChannelItem(channel: Channel, isSelected: Boolean, onClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(8.dp))
             
+            // Text Label below the logo
             Text(
                 text = channel.name,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
-                minLines = 2, // Keeps all cards exactly the same height even if names are short
+                minLines = 2, // Forces exactly 2 lines so grid rows align perfectly
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
