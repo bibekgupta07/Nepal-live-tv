@@ -1,9 +1,14 @@
 package com.app.nepallivetv.domain.usecase
 
-import com.app.nepallivetv.domain.repository.ChannelRepository
+import android.util.Base64
 
-class GetStreamUrlUseCase(private val repository: ChannelRepository) {
-    suspend operator fun invoke(channelId: String): String {
-        return repository.getStreamUrl(channelId)
+class GetStreamUrlUseCase {
+    operator fun invoke(encodedUrl: String): String {
+        return try {
+            val decodedBytes = Base64.decode(encodedUrl, Base64.DEFAULT)
+            String(decodedBytes)
+        } catch (e: Exception) {
+            ""
+        }
     }
 }

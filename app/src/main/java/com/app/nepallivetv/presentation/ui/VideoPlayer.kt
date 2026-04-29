@@ -45,6 +45,9 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
+import androidx.media3.common.Player
+import androidx.media3.common.PlaybackException
+
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun VideoPlayer(
@@ -64,6 +67,9 @@ fun VideoPlayer(
     var indicatorValue by remember { mutableFloatStateOf(0f) }
     var isVolumeIndicator by remember { mutableStateOf(true) }
     var showIndicator by remember { mutableStateOf(false) }
+    
+    var isBuffering by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     // Manage Window states based on isFullScreen
     DisposableEffect(isFullScreen) {
@@ -111,11 +117,26 @@ fun VideoPlayer(
                     )
                 )
             
-            exoPlayer = ExoPlayer.Builder(context)
+            val player = ExoPlayer.Builder(context)
                 .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
-                .build().apply {
-                playWhenReady = true
-            }
+                .build()
+                
+            player.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    isBuffering = playbackState == Player.STATE_BUFFERING
+                    if (playbackState == Player.STATE_READY) {
+                        errorMessage = null
+                    }
+                }
+
+                override fun onPlayerError(error: PlaybackException) {
+                    errorMessage = "Playback failed. Please try again."
+                    isBuffering = false
+                }
+            })
+            
+            player.playWhenReady = true
+            exoPlayer = player
         }
         
         if (streamUrl != null) {
@@ -294,6 +315,39 @@ fun VideoPlayer(
                                 .height(8.dp),
                             strokeCap = StrokeCap.Round
                         )
+                    }
+                }
+            }
+
+            // Buffering Indicator
+            if (isBuffering && errorMessage == null) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            // Error Overlay
+            if (errorMessage != null) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .background(Color.Black.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = errorMessage ?: "",
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                        errorMessage = null
+                        isBuffering = true
+                        exoPlayer?.prepare()
+                    }) {
+                        Text("Retry")
                     }
                 }
             }

@@ -93,7 +93,7 @@ class MainViewModel(
         _selectedChannel.value = channel
         _currentStreamUrl.value = null // reset url while fetching new
         viewModelScope.launch {
-            val url = getStreamUrlUseCase(channel.id)
+            val url = getStreamUrlUseCase(channel.encodedUrl)
             _currentStreamUrl.value = url
         }
     }
