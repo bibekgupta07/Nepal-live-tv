@@ -1,5 +1,6 @@
 package com.app.nepallivetv.presentation.ui
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -38,7 +39,7 @@ import com.app.nepallivetv.presentation.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
     val channels by viewModel.filteredChannels.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -51,6 +52,9 @@ fun MainScreen(viewModel: MainViewModel) {
     var isSearchVisible by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val activity = context as? android.app.Activity
+    var backPressedTime by remember { mutableLongStateOf(0L) }
 
     // If search text exists, ensure search bar stays visible
     LaunchedEffect(searchQuery) {
@@ -59,8 +63,18 @@ fun MainScreen(viewModel: MainViewModel) {
         }
     }
 
-    BackHandler(enabled = isFullScreen) {
+    BackHandler(enabled = isFullScreen && !isInPipMode) {
         isFullScreen = false
+    }
+    
+    BackHandler(enabled = !isFullScreen && !isInPipMode) {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime < 2000) {
+            activity?.finish()
+        } else {
+            backPressedTime = currentTime
+            Toast.makeText(context, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        }
     }
 
     Scaffold(
@@ -84,6 +98,7 @@ fun MainScreen(viewModel: MainViewModel) {
                 VideoPlayer(
                     streamUrl = currentStreamUrl,
                     isFullScreen = isFullScreen,
+                    isInPipMode = isInPipMode,
                     onToggleFullScreen = { isFullScreen = !isFullScreen },
                     onClose = { 
                         if (isFullScreen) {
@@ -92,12 +107,12 @@ fun MainScreen(viewModel: MainViewModel) {
                             viewModel.closePlayer() 
                         }
                     },
-                    modifier = if (isFullScreen) Modifier.fillMaxSize() else Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+                    modifier = if (isFullScreen || isInPipMode) Modifier.fillMaxSize() else Modifier.fillMaxWidth().aspectRatio(16f / 9f)
                 )
             }
 
             // Rest of UI
-            if (!isFullScreen) {
+            if (!isFullScreen && !isInPipMode) {
                 // Request focus to open keyboard automatically
                 LaunchedEffect(isSearchVisible) {
                     if (isSearchVisible) {

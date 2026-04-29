@@ -49,12 +49,16 @@ import kotlin.math.abs
 
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun VideoPlayer(
     streamUrl: String?,
     isFullScreen: Boolean,
+    isInPipMode: Boolean = false,
     onToggleFullScreen: () -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -95,6 +99,30 @@ fun VideoPlayer(
         
         onDispose {
             // Nothing to tear down per-state change, proper destroy handled by the unit DisposableEffect below
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                if (activity != null && !activity.isInPictureInPictureMode) {
+                    exoPlayer?.pause()
+                }
+            } else if (event == Lifecycle.Event.ON_RESUME) {
+                exoPlayer?.play()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(isInPipMode) {
+        if (isInPipMode) {
+            isControlsVisible = false
         }
     }
 
@@ -208,77 +236,81 @@ fun VideoPlayer(
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = { isControlsVisible = !isControlsVisible }
-                        )
+                    .pointerInput(isInPipMode) {
+                        if (!isInPipMode) {
+                            detectTapGestures(
+                                onTap = { isControlsVisible = !isControlsVisible }
+                            )
+                        }
                     }
-                    .pointerInput(Unit) {
-                        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                        var startX = 0f
-                        var startY = 0f
-                        var isVolumeSwipe = false
-                        var isBrightnessSwipe = false
-                        var startVolume = 0
-                        var startBrightness = 0f
+                    .pointerInput(isInPipMode) {
+                        if (!isInPipMode) {
+                            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                            var startX = 0f
+                            var startY = 0f
+                            var isVolumeSwipe = false
+                            var isBrightnessSwipe = false
+                            var startVolume = 0
+                            var startBrightness = 0f
 
-                        detectDragGestures(
-                            onDragStart = { offset ->
-                                startX = offset.x
-                                startY = offset.y
-                                startVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-                                startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
-                                if (startBrightness < 0) startBrightness = 0.5f
-                                
-                                val halfScreenWidth = size.width / 2
-                                if (startX > halfScreenWidth) {
-                                    isVolumeSwipe = true
-                                    isBrightnessSwipe = false
-                                } else {
-                                    isBrightnessSwipe = true
+                            detectDragGestures(
+                                onDragStart = { offset ->
+                                    startX = offset.x
+                                    startY = offset.y
+                                    startVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                                    startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
+                                    if (startBrightness < 0) startBrightness = 0.5f
+                                    
+                                    val halfScreenWidth = size.width / 2
+                                    if (startX > halfScreenWidth) {
+                                        isVolumeSwipe = true
+                                        isBrightnessSwipe = false
+                                    } else {
+                                        isBrightnessSwipe = true
+                                        isVolumeSwipe = false
+                                    }
+                                },
+                                onDragEnd = {
                                     isVolumeSwipe = false
-                                }
-                            },
-                            onDragEnd = {
-                                isVolumeSwipe = false
-                                isBrightnessSwipe = false
-                            },
-                            onDrag = { change, dragAmount ->
-                                change.consume()
-                                val deltaY = startY - change.position.y // Up is positive
-                                val percent = deltaY / size.height
+                                    isBrightnessSwipe = false
+                                },
+                                onDrag = { change, dragAmount ->
+                                    change.consume()
+                                    val deltaY = startY - change.position.y // Up is positive
+                                    val percent = deltaY / size.height
 
-                                if (abs(deltaY) > 50) { // Threshold
-                                    if (isVolumeSwipe) {
-                                        val volChange = (percent * maxVolume).toInt()
-                                        val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)
-                                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0)
-                                        indicatorValue = newVolume.toFloat() / maxVolume
-                                        isVolumeIndicator = true
-                                        showIndicator = true
-                                        if (newVolume > 0 && isMuted) isMuted = false
-                                    } else if (isBrightnessSwipe) {
-                                        val brightChange = percent * 1.5f
-                                        val newBrightness = (startBrightness + brightChange).coerceIn(0.01f, 1f)
-                                        activity?.window?.let { win ->
-                                            val lp = win.attributes
-                                            lp.screenBrightness = newBrightness
-                                            win.attributes = lp
+                                    if (abs(deltaY) > 50) { // Threshold
+                                        if (isVolumeSwipe) {
+                                            val volChange = (percent * maxVolume).toInt()
+                                            val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)
+                                            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0)
+                                            indicatorValue = newVolume.toFloat() / maxVolume
+                                            isVolumeIndicator = true
+                                            showIndicator = true
+                                            if (newVolume > 0 && isMuted) isMuted = false
+                                        } else if (isBrightnessSwipe) {
+                                            val brightChange = percent * 1.5f
+                                            val newBrightness = (startBrightness + brightChange).coerceIn(0.01f, 1f)
+                                            activity?.window?.let { win ->
+                                                val lp = win.attributes
+                                                lp.screenBrightness = newBrightness
+                                                win.attributes = lp
+                                            }
+                                            indicatorValue = newBrightness
+                                            isVolumeIndicator = false
+                                            showIndicator = true
                                         }
-                                        indicatorValue = newBrightness
-                                        isVolumeIndicator = false
-                                        showIndicator = true
                                     }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
             )
 
             // Top Left: Back/Close button
             AnimatedVisibility(
-                visible = isControlsVisible,
+                visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.TopStart)
@@ -293,7 +325,7 @@ fun VideoPlayer(
 
             // Bottom Right: Controls
             AnimatedVisibility(
-                visible = isControlsVisible,
+                visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.BottomEnd)
