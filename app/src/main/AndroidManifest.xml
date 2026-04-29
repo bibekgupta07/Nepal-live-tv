@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.NepalLiveTv">
+        android:theme="@style/Theme.NepalLiveTv.Starting">
         <activity
             android:name=".MainActivity"
             android:exported="true"

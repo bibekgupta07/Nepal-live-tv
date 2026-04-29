@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.NepalLiveTv.Starting" parent="Theme.SplashScreen">
+        <!-- The background color of the splash screen (very dark plum from your icon) -->
+        <item name="windowSplashScreenBackground">#0A0005</item>
+        <!-- The animated icon to draw on the splash screen -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- The theme to switch to after the splash screen is done -->
+        <item name="postSplashScreenTheme">@style/Theme.NepalLiveTv</item>
+    </style>
 
     <style name="Theme.NepalLiveTv" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

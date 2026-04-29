@@ -13,10 +13,13 @@ import com.app.nepallivetv.presentation.MainViewModel
 import com.app.nepallivetv.ui.theme.NepalLiveTvTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
