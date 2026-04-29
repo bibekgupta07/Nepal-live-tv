@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.media.AudioManager
-import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
@@ -13,6 +12,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -72,7 +72,7 @@ fun VideoPlayer(
     
     var isBuffering by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var isControlsVisible by remember { mutableStateOf(true) }
+    var isControlsVisible by remember { mutableStateOf(false) }
 
     // Manage Window states based on isFullScreen
     DisposableEffect(isFullScreen) {
@@ -159,14 +159,25 @@ fun VideoPlayer(
                 .setUri(streamUrl)
                 .setLiveConfiguration(
                     MediaItem.LiveConfiguration.Builder()
-                        .setMaxPlaybackSpeed(1.02f) // Allows player to slightly speed up to catch up to live edge
-                        .setTargetOffsetMs(2500)    // Target starting 2.5 seconds from the live edge
+                        .setMaxPlaybackSpeed(1.04f) // Speeds up by 4% when network is good to catch up to live edge
+                        .setMinPlaybackSpeed(0.96f) // Slows down to 96% speed when network is bad to prevent buffering
+                        .setTargetOffsetMs(3000)    // Target starting 3 seconds from the live edge
+                        .setMinOffsetMs(1500)       // Can get as close as 1.5 seconds to live
+                        .setMaxOffsetMs(15000)      // Can drift up to 15 seconds behind live before skipping
                         .build()
                 )
                 .build()
 
             exoPlayer?.setMediaItem(mediaItem)
             exoPlayer?.prepare()
+        }
+    }
+
+    // Auto-hide controls after 3 seconds
+    LaunchedEffect(isControlsVisible) {
+        if (isControlsVisible) {
+            delay(3000)
+            isControlsVisible = false
         }
     }
 
@@ -187,12 +198,7 @@ fun VideoPlayer(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
-                        useController = true
-                        setShowNextButton(false)
-                        setShowPreviousButton(false)
-                        setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
-                            isControlsVisible = visibility == View.VISIBLE
-                        })
+                        useController = false
                     }
                 },
                 update = { view ->
@@ -202,6 +208,11 @@ fun VideoPlayer(
                 },
                 modifier = Modifier
                     .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = { isControlsVisible = !isControlsVisible }
+                        )
+                    }
                     .pointerInput(Unit) {
                         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
@@ -280,12 +291,12 @@ fun VideoPlayer(
                 )
             }
 
-            // Top Right: Controls
+            // Bottom Right: Controls
             AnimatedVisibility(
                 visible = isControlsVisible,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopEnd)
+                modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp), // Avoids notching
@@ -402,12 +413,13 @@ fun PlayerIconButton(
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f)),
-        modifier = modifier.size(48.dp)
+        modifier = modifier.size(40.dp) // Reduced container size
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = Color.White
+            tint = Color.White,
+            modifier = Modifier.size(22.dp) // Reduced icon size
         )
     }
 }
