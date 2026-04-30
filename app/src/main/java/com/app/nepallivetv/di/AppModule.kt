@@ -4,12 +4,16 @@ import com.app.nepallivetv.data.repository.ChannelRepositoryImpl
 import com.app.nepallivetv.domain.repository.ChannelRepository
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
-import com.app.nepallivetv.presentation.MainViewModel
+import com.app.nepallivetv.presentation.screens.livetv.LiveTvViewModel
+import com.app.nepallivetv.data.local.ThemePreferences
+import com.app.nepallivetv.presentation.ThemeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+
+    single { ThemePreferences(androidContext()) }
 
     single<ChannelRepository> {
         ChannelRepositoryImpl(androidContext())
@@ -18,5 +22,6 @@ val appModule = module {
     factory { GetChannelsUseCase(get()) }
     factory { GetStreamUrlUseCase() }
 
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { LiveTvViewModel(get(), get()) }
+    viewModel { ThemeViewModel(get()) }
 }

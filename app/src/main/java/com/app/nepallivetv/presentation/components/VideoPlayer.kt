@@ -1,4 +1,4 @@
-package com.app.nepallivetv.presentation.ui
+package com.app.nepallivetv.presentation.components
 
 import android.app.Activity
 import android.content.Context
@@ -13,10 +13,16 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FastRewind
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
@@ -28,12 +34,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -53,6 +61,8 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
+
+
 /**
  * A highly customized, gesture-enabled Jetpack Compose wrapper for ExoPlayer.
  * Supports Fullscreen toggling, Picture-in-Picture mode, live-stream optimizations,
@@ -63,6 +73,7 @@ import kotlin.math.abs
 fun VideoPlayer(
     modifier: Modifier = Modifier,
     streamUrl: String?,
+    channelName: String = "Live Stream",
     isFullScreen: Boolean,
     isInPipMode: Boolean = false,
     onToggleFullScreen: () -> Unit,
@@ -274,28 +285,100 @@ fun VideoPlayer(
             )
 
             // --- UI OVERLAYS ---
+            
+            // Gradient Scrim overlay to make top/bottom text readable
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Black.copy(alpha = 0.7f), Color.Transparent, Color.Transparent, Color.Black.copy(alpha = 0.7f)),
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY
+                        )
+                    )
+            )
 
-            // Top Left: Back/Close button
+            // Top Left: LIVE Badge
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopStart)
+                modifier = Modifier.align(Alignment.TopStart).padding(16.dp)
             ) {
-                PlayerIconButton(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Close",
-                    onClick = onClose,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    LiveBadge()
+                }
             }
 
-            // Bottom Right: System Controls
+            // Top Right: Close Button & Channel Name
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                        .clickable { onClose() }
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color(0xFF6B8AFF), modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+            }
+
+            // Center Controls (Play/Pause wrapper mock)
+            AnimatedVisibility(
+                visible = isControlsVisible && !isInPipMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.FastRewind, contentDescription = "Rewind", tint = Color.White, modifier = Modifier.size(32.dp).background(Color.Black.copy(alpha = 0.4f), CircleShape).padding(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .background(Color(0xFFE63946), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.Pause, contentDescription = "Pause", tint = Color.White, modifier = Modifier.size(32.dp))
+                    }
+                    Icon(Icons.Default.FastForward, contentDescription = "Forward", tint = Color.White, modifier = Modifier.size(32.dp).background(Color.Black.copy(alpha = 0.4f), CircleShape).padding(6.dp))
+                }
+            }
+
+            // Bottom Left: Show Title & Progress Bar
+            AnimatedVisibility(
+                visible = isControlsVisible && !isInPipMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 16.dp, end = 120.dp)
+            ) {
+                Column {
+                    Text(text = channelName, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = "Live Now • HD", color = Color.Gray, fontSize = 12.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LinearProgressIndicator(
+                        progress = { 1f }, // Mock full progress for live
+                        color = Color(0xFFE63946),
+                        trackColor = Color.DarkGray,
+                        modifier = Modifier.fillMaxWidth().height(4.dp),
+                        strokeCap = StrokeCap.Round
+                    )
+                }
+            }
+
+            // Bottom Right: System Controls (Rotated/Mute)
+            AnimatedVisibility(
+                visible = isControlsVisible && !isInPipMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 16.dp)
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -504,4 +587,15 @@ private fun Modifier.videoPlayerGestures(
                 }
             )
         }
+}
+@Composable
+fun LiveBadge(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.background(MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.size(6.dp).background(Color.White, CircleShape))
+        Spacer(modifier = Modifier.width(4.dp))
+        Text("LIVE", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
+    }
 }

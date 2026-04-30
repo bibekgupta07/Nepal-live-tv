@@ -9,20 +9,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.collectAsState
+import com.app.nepallivetv.presentation.ThemeViewModel
 import com.app.nepallivetv.presentation.navigation.AppNavigation
 import com.app.nepallivetv.ui.theme.NepalLiveTvTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * MainActivity serves as the single entry point to the Compose UI.
  * Handles the Android Native Splash Screen and System-level Picture-in-Picture mode overrides.
  */
 class MainActivity : ComponentActivity() {
+    
+    private val themeViewModel: ThemeViewModel by viewModel()
     
     // State to pass to Compose to notify if the app is currently small and floating
     private var isInPipMode by mutableStateOf(false)
@@ -38,10 +44,12 @@ class MainActivity : ComponentActivity() {
         
         // 3. Render the Compose UI Tree using our Navigation Coordinator
         setContent {
-            NepalLiveTvTheme {
+            val isDarkMode by themeViewModel.isDarkMode.collectAsState()
+            
+            NepalLiveTvTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavigation(isInPipMode = isInPipMode)
                 }

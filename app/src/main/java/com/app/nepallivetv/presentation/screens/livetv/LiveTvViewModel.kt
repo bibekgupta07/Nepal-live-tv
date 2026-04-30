@@ -1,4 +1,4 @@
-package com.app.nepallivetv.presentation
+package com.app.nepallivetv.presentation.screens.livetv
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * MainViewModel manages the state for the entire Main Screen.
+ * LiveTvViewModel manages the state for the Live TV Screen.
  * It follows the MVI/MVVM architectural pattern, exposing state exclusively through immutable [StateFlow]s.
  */
-class MainViewModel(
+class LiveTvViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
     private val getStreamUrlUseCase: GetStreamUrlUseCase
 ) : ViewModel() {

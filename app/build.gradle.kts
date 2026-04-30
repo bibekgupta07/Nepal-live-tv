@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation(libs.androidx.core.ktx)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.lifecycle.runtime.ktx)
