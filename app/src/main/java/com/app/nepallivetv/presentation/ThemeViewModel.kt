@@ -2,7 +2,7 @@ package com.app.nepallivetv.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.nepallivetv.data.local.ThemePreferences
+import com.app.nepallivetv.data.local.datastore.ThemePreferences
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

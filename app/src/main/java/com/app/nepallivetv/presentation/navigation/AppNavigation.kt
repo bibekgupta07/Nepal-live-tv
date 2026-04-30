@@ -13,7 +13,7 @@ import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LiveTv
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,21 +34,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
+import com.app.nepallivetv.presentation.screens.home.HomeViewModel
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
-import com.app.nepallivetv.presentation.screens.profile.ProfileScreen
+import com.app.nepallivetv.presentation.screens.setting.SettingScreen
 import com.app.nepallivetv.presentation.screens.schedule.ScheduleScreen
+import com.app.nepallivetv.presentation.screens.tvlist.TvListScreen
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-import com.app.nepallivetv.presentation.screens.livetv.LiveTvViewModel
-import com.app.nepallivetv.presentation.screens.livetv.LiveTvScreen
-
 @Serializable object HomeRoute
-@Serializable object LiveTvRoute
+@Serializable object TvListRoute
 @Serializable object ScheduleRoute
 @Serializable object MyListRoute
-@Serializable object ProfileRoute
+@Serializable object SettingRoute
 
 @Composable
 fun AppNavigation(isInPipMode: Boolean) {
@@ -56,8 +55,8 @@ fun AppNavigation(isInPipMode: Boolean) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Share one instance of LiveTvViewModel across the tabs that need it
-    val liveTvViewModel = koinViewModel<LiveTvViewModel>()
+    // Share one instance of HomeViewModel across the tabs that need it
+    val homeViewModel = koinViewModel<HomeViewModel>()
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
@@ -103,19 +102,19 @@ fun AppNavigation(isInPipMode: Boolean) {
         // Instead, individual screens handle their own bottom padding if needed.
         NavHost(
             navController = navController,
-            startDestination = LiveTvRoute,
+            startDestination = HomeRoute,
             modifier = Modifier.fillMaxSize()
         ) {
             composable<HomeRoute> {
-                HomeScreen()
-            }
-            
-            composable<LiveTvRoute> {
-                LiveTvScreen(
-                    viewModel = liveTvViewModel,
+                HomeScreen(
+                    viewModel = homeViewModel,
                     isInPipMode = isInPipMode,
                     bottomPadding = innerPadding.calculateBottomPadding()
                 )
+            }
+            
+            composable<TvListRoute> {
+                TvListScreen()
             }
             
             composable<ScheduleRoute> {
@@ -126,8 +125,8 @@ fun AppNavigation(isInPipMode: Boolean) {
                 MyListScreen()
             }
             
-            composable<ProfileRoute> {
-                ProfileScreen()
+            composable<SettingRoute> {
+                SettingScreen()
             }
         }
     }
@@ -139,10 +138,10 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
     // Or we map strictly to our objects.
     val tabs = listOf(
         Triple("Home", Icons.Default.Home, HomeRoute),
-        Triple("Live TV", Icons.Default.LiveTv, LiveTvRoute),
+        Triple("TV List", Icons.Default.LiveTv, TvListRoute),
         Triple("Schedule", Icons.Default.CalendarMonth, ScheduleRoute),
         Triple("My List", Icons.Default.Bookmarks, MyListRoute),
-        Triple("Profile", Icons.Default.Person, ProfileRoute)
+        Triple("Settings", Icons.Default.Settings, SettingRoute)
     )
 
     NavigationBar(
