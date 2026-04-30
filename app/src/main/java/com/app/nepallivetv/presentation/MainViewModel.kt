@@ -34,6 +34,10 @@ class MainViewModel(
     private val _selectedCategory = MutableStateFlow("All")
     val selectedCategory: StateFlow<String> = _selectedCategory
 
+    // Dynamically generated list of categories based on available channels
+    private val _categories = MutableStateFlow<List<String>>(listOf("All"))
+    val categories: StateFlow<List<String>> = _categories
+
     // --- DERIVED STATE ---
     /**
      * A dynamically combined flow that recalculates the visible channels anytime the raw channels, 
@@ -48,20 +52,9 @@ class MainViewModel(
             // 1. Check if the channel name matches the search query
             val matchesQuery = channel.name.contains(query, ignoreCase = true)
             
-            // 2. Check if the channel fits the selected category (using simple keyword matching)
-            val matchesCategory = if (category == "All") {
-                true
-            } else {
-                when (category) {
-                    "News" -> channel.name.contains("news", true) || channel.name.contains("samachar", true) || channel.name.contains("tv", true)
-                    "Movies" -> channel.name.contains("movie", true) || channel.name.contains("cinema", true) || channel.name.contains("max", true)
-                    "Sports" -> channel.name.contains("sport", true) || channel.name.contains("action", true) || channel.name.contains("ten", true) || channel.name.contains("star", true)
-                    "Kids" -> channel.name.contains("kid", true) || channel.name.contains("cartoon", true) || channel.name.contains("disney", true) || channel.name.contains("nick", true) || channel.name.contains("pogo", true) || channel.name.contains("hungama", true)
-                    "Music" -> channel.name.contains("music", true) || channel.name.contains("mtv", true) || channel.name.contains("vh1", true)
-                    "Gaming" -> channel.name.contains("game", true) || channel.name.contains("gaming", true) || channel.name.contains("play", true)
-                    else -> true
-                }
-            }
+            // 2. Exact match using the channel's actual category_title from the JSON
+            val matchesCategory = category == "All" || channel.category.equals(category, ignoreCase = true)
+            
             matchesQuery && matchesCategory
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -79,9 +72,6 @@ class MainViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // Hardcoded mock categories
-    val categories = listOf("All", "News", "Movies", "Sports", "Kids", "Music", "Gaming")
-
     init {
         loadChannels()
     }
@@ -94,6 +84,15 @@ class MainViewModel(
             _isLoading.value = true
             val fetchedChannels = getChannelsUseCase()
             _channels.value = fetchedChannels
+            
+            // Dynamically extract all unique categories from the JSON data
+            val uniqueCategories = fetchedChannels
+                .map { it.category }
+                .filter { it.isNotBlank() }
+                .distinct()
+                .sorted()
+                
+            _categories.value = listOf("All") + uniqueCategories
             
             // Automatically start playing the very first channel in the list on boot
             if (fetchedChannels.isNotEmpty() && _selectedChannel.value == null) {

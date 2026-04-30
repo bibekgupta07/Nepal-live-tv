@@ -54,7 +54,7 @@ fun MainScreen(viewModel: MainViewModel, isInPipMode: Boolean = false) {
     val selectedCategory by viewModel.selectedCategory.collectAsState()
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
     val selectedChannel by viewModel.selectedChannel.collectAsState()
-    val categories = viewModel.categories
+    val categories by viewModel.categories.collectAsState()
     
     // UI Local States
     var isFullScreen by remember { mutableStateOf(false) }

@@ -36,7 +36,8 @@ class ChannelRepositoryImpl(
                     Channel(
                         name = jsonObject.getString("name"),
                         encodedUrl = jsonObject.getString("encodedUrl"), // This is stored as Base64 for security
-                        logo = jsonObject.optString("logo")
+                        logo = jsonObject.optString("logo"),
+                        category = jsonObject.optString("category", "All")
                     )
                 )
             }
