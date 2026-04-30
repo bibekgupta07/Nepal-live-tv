@@ -1,4 +1,4 @@
-package com.app.nepallivetv.presentation.screens.home
+package com.app.nepallivetv.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,15 +10,17 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
- * LiveTvViewModel manages the state for the Live TV Screen.
+ * SharedViewModel manages the state for the screens like Home and TV List.
  * It follows the MVI/MVVM architectural pattern, exposing state exclusively through immutable [StateFlow]s.
  */
-class HomeViewModel(
+class SharedViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
-    private val getStreamUrlUseCase: GetStreamUrlUseCase
+    private val getStreamUrlUseCase: GetStreamUrlUseCase,
+    private val favoritesPreferences: com.app.nepallivetv.data.local.datastore.FavoritesPreferences
 ) : ViewModel() {
 
     // --- RAW STATE ---
@@ -37,6 +39,10 @@ class HomeViewModel(
     // Dynamically generated list of categories based on available channels
     private val _categories = MutableStateFlow<List<String>>(listOf("All"))
     val categories: StateFlow<List<String>> = _categories
+
+    // Favorite channels state
+    val favoriteUrls: StateFlow<Set<String>> = favoritesPreferences.favoriteUrls
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
     // --- DERIVED STATE ---
     /**
@@ -58,6 +64,30 @@ class HomeViewModel(
             matchesQuery && matchesCategory
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val tvListChannels: StateFlow<List<Channel>> = _channels.map { channels ->
+        channels.filter { channel ->
+            val name = channel.name.lowercase()
+            name.contains("npl live") ||
+            name.contains("kantipur max hd") || // Handles kantipur max hd and hd2
+            name.contains("kantipur hd max") ||
+            channel.category.equals("Sports", ignoreCase = true)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val favoriteChannels: StateFlow<List<Channel>> = combine(
+        _channels,
+        favoriteUrls
+    ) { channels, favs ->
+        channels.filter { it.encodedUrl in favs }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    fun selectNplLive() {
+        val nplLive = tvListChannels.value.find { it.name.lowercase().contains("npl live") }
+        if (nplLive != null) {
+            selectChannel(nplLive)
+        }
+    }
 
     // --- PLAYER STATE ---
     // The fully decoded, tokenized URL ready to be passed to ExoPlayer
@@ -111,6 +141,12 @@ class HomeViewModel(
 
     fun onCategorySelected(category: String) {
         _selectedCategory.value = category
+    }
+
+    fun toggleFavorite(channel: Channel) {
+        viewModelScope.launch {
+            favoritesPreferences.toggleFavorite(channel.encodedUrl)
+        }
     }
 
     /**

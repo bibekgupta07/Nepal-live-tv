@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FastForward
@@ -76,6 +78,8 @@ fun VideoPlayer(
     channelName: String = "Live Stream",
     isFullScreen: Boolean,
     isInPipMode: Boolean = false,
+    isFavorite: Boolean = false,
+    onToggleFavorite: () -> Unit = {},
     onToggleFullScreen: () -> Unit,
     onClose: () -> Unit
 ) {
@@ -311,7 +315,7 @@ fun VideoPlayer(
                 }
             }
 
-            // Top Right: Close Button & Channel Name
+            // Top Right: Favorite Button, Close Button & Channel Name
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -320,14 +324,24 @@ fun VideoPlayer(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                        .clickable { onClose() }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color(0xFF6B8AFF), modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    PlayerIconButton(
+                        icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Toggle Favorite",
+                        onClick = onToggleFavorite
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                            .clickable { onClose() }
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color(0xFF6B8AFF), modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    }
                 }
             }
 

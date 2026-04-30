@@ -8,12 +8,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,14 +26,18 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
+
+import com.app.nepallivetv.presentation.SharedViewModel
 
 // ==============================================================================
 // SCREEN
@@ -39,7 +46,7 @@ import com.app.nepallivetv.presentation.components.VideoPlayer
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: SharedViewModel,
     isInPipMode: Boolean = false,
     bottomPadding: Dp = 0.dp
 ) {
@@ -52,19 +59,11 @@ fun HomeScreen(
     val categories by viewModel.categories.collectAsState()
 
     var isFullScreen by remember { mutableStateOf(false) }
-    var isSearchVisible by remember { mutableStateOf(false) }
 
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val context = androidx.compose.ui.platform.LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
-
-    LaunchedEffect(searchQuery) {
-        if (searchQuery.isNotEmpty()) {
-            isSearchVisible = true
-        }
-    }
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
         isFullScreen = false
@@ -90,11 +89,16 @@ fun HomeScreen(
     ) {
         // --- TOP VIDEO PLAYER ---
         if (currentStreamUrl != null) {
+            val favoriteUrls by viewModel.favoriteUrls.collectAsState()
+            val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
+
             VideoPlayer(
                 streamUrl = currentStreamUrl,
                 channelName = selectedChannel?.name ?: "Live Stream",
                 isFullScreen = isFullScreen,
                 isInPipMode = isInPipMode,
+                isFavorite = isCurrentFavorite,
+                onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
                 onToggleFullScreen = { isFullScreen = !isFullScreen },
                 onClose = {
                     if (isFullScreen) {
@@ -112,109 +116,172 @@ fun HomeScreen(
         // --- MAIN DASHBOARD SCROLLABLE CONTENT ---
         if (!isFullScreen && !isInPipMode) {
 
-            // Categories Row
-            CategoryRow(
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Categories Row with Search
+            CategoryAndSearchRow(
                 categories = categories,
                 selectedCategory = selectedCategory,
-                onCategorySelected = { viewModel.onCategorySelected(it) }
+                onCategorySelected = { viewModel.onCategorySelected(it) },
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) }
             )
 
-            // Featured Section
-            if (channels.isNotEmpty()) {
-                FeaturedLiveSection(
-                    featuredChannels = channels.take(5),
-                    selectedChannel = selectedChannel,
-                    onChannelClick = { viewModel.selectChannel(it) }
-                )
-            }
-
-            // Grid Title
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Text(
-                    text = "All Channels",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "${channels.size} live →",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-            // Grid Content
-            if (isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                }
-            } else if (channels.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No channels found.",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            if (searchQuery.isNotEmpty()) {
+                // List View when searching
+                if (channels.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No channels found for \"$searchQuery\".",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(channels) { channel ->
+                            ChannelListItem(
+                                channel = channel,
+                                isSelected = channel == selectedChannel,
+                                onClick = {
+                                    viewModel.selectChannel(channel)
+                                    viewModel.onSearchQueryChanged("")
+                                    focusManager.clearFocus()
+                                }
+                            )
+                        }
+                    }
                 }
             } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                // Grid View when not searching
+                // Featured Section
+                if (channels.isNotEmpty() && selectedCategory == "All") {
+                    FeaturedLiveSection(
+                        featuredChannels = channels.take(5),
+                        selectedChannel = selectedChannel,
+                        onChannelClick = { viewModel.selectChannel(it) }
+                    )
+                }
+
+                // Grid Title
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
                 ) {
-                    items(channels) { channel ->
-                        ChannelGridItem(
-                            channel = channel,
-                            isSelected = channel == selectedChannel,
-                            onClick = {
-                                viewModel.selectChannel(channel)
-                                viewModel.onSearchQueryChanged("")
-                                isSearchVisible = false
-                                focusManager.clearFocus()
-                            }
+                    Text(
+                        text = "All Channels",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = "${channels.size} live →",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                // Grid Content
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                } else if (channels.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No channels found.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        items(channels) { channel ->
+                            ChannelGridItem(
+                                channel = channel,
+                                isSelected = channel == selectedChannel,
+                                onClick = {
+                                    viewModel.selectChannel(channel)
+                                    focusManager.clearFocus()
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
     } // End Column
-} // End LiveTvScreen
+} // End HomeScreen
 
 // ==============================================================================
 // UI COMPONENTS
 // ==============================================================================
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryRow(
+fun CategoryAndSearchRow(
     categories: List<String>,
     selectedCategory: String,
-    onCategorySelected: (String) -> Unit
+    onCategorySelected: (String) -> Unit,
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        item {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChanged,
+                placeholder = { Text("Search...", fontSize = 14.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", modifier = Modifier.size(20.dp)) },
+                singleLine = true,
+                shape = RoundedCornerShape(24.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                modifier = Modifier
+                    .width(160.dp)
+                    .height(50.dp)
+            )
+        }
         items(categories) { category ->
             val isSelected = category == selectedCategory
             val emoji = when (category) {
@@ -323,6 +390,15 @@ fun FeaturedChannelItem(
                     )
                 )
         ) {
+            if (!channel.logo.isNullOrEmpty()) {
+                AsyncImage(
+                    model = channel.logo,
+                    contentDescription = channel.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    alpha = 0.4f
+                )
+            }
             LiveBadge(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -375,6 +451,17 @@ fun ChannelGridItem(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(8.dp)
             ) {
+                if (!channel.logo.isNullOrEmpty()) {
+                    AsyncImage(
+                        model = channel.logo,
+                        contentDescription = channel.name,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 Text(
                     text = channel.name,
                     color = Color.White,
@@ -388,6 +475,77 @@ fun ChannelGridItem(
                     Spacer(modifier = Modifier.height(4.dp))
                     LiveBadge()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ChannelListItem(
+    channel: Channel,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (!channel.logo.isNullOrEmpty()) {
+                AsyncImage(
+                    model = channel.logo,
+                    contentDescription = channel.name,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = channel.name.take(1).uppercase(),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+            }
+            
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = channel.name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = channel.category,
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
+            if (isSelected) {
+                Spacer(modifier = Modifier.width(8.dp))
+                LiveBadge()
             }
         }
     }

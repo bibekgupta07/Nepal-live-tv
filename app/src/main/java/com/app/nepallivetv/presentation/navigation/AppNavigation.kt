@@ -34,7 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
-import com.app.nepallivetv.presentation.screens.home.HomeViewModel
+import com.app.nepallivetv.presentation.SharedViewModel
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
 import com.app.nepallivetv.presentation.screens.setting.SettingScreen
 import com.app.nepallivetv.presentation.screens.schedule.ScheduleScreen
@@ -55,8 +55,8 @@ fun AppNavigation(isInPipMode: Boolean) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Share one instance of HomeViewModel across the tabs that need it
-    val homeViewModel = koinViewModel<HomeViewModel>()
+    // Share one instance of SharedViewModel across the tabs that need it
+    val sharedViewModel = koinViewModel<SharedViewModel>()
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
@@ -107,14 +107,18 @@ fun AppNavigation(isInPipMode: Boolean) {
         ) {
             composable<HomeRoute> {
                 HomeScreen(
-                    viewModel = homeViewModel,
+                    viewModel = sharedViewModel,
                     isInPipMode = isInPipMode,
                     bottomPadding = innerPadding.calculateBottomPadding()
                 )
             }
             
             composable<TvListRoute> {
-                TvListScreen()
+                TvListScreen(
+                    viewModel = sharedViewModel,
+                    isInPipMode = isInPipMode,
+                    bottomPadding = innerPadding.calculateBottomPadding()
+                )
             }
             
             composable<ScheduleRoute> {
@@ -122,7 +126,11 @@ fun AppNavigation(isInPipMode: Boolean) {
             }
             
             composable<MyListRoute> {
-                MyListScreen()
+                MyListScreen(
+                    viewModel = sharedViewModel,
+                    isInPipMode = isInPipMode,
+                    bottomPadding = innerPadding.calculateBottomPadding()
+                )
             }
             
             composable<SettingRoute> {
