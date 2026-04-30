@@ -308,7 +308,10 @@ fun VideoPlayer(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopStart).padding(16.dp)
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .then(if (!isFullScreen) Modifier.statusBarsPadding() else Modifier)
+                    .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     LiveBadge()
@@ -320,7 +323,10 @@ fun VideoPlayer(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .then(if (!isFullScreen) Modifier.statusBarsPadding() else Modifier)
+                    .padding(16.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

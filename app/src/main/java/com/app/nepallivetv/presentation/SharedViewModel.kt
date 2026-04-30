@@ -102,6 +102,10 @@ class SharedViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    // Full screen state
+    private val _isFullScreen = MutableStateFlow(false)
+    val isFullScreen: StateFlow<Boolean> = _isFullScreen
+
     init {
         loadChannels()
     }
@@ -163,11 +167,16 @@ class SharedViewModel(
         }
     }
     
+    fun setFullScreen(fullScreen: Boolean) {
+        _isFullScreen.value = fullScreen
+    }
+
     /**
      * Shuts down the player and returns to standard grid view.
      */
     fun closePlayer() {
         _selectedChannel.value = null
         _currentStreamUrl.value = null
+        _isFullScreen.value = false
     }
 }

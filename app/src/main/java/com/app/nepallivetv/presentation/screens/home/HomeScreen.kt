@@ -13,9 +13,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -58,7 +60,8 @@ fun HomeScreen(
     val selectedChannel by viewModel.selectedChannel.collectAsState()
     val categories by viewModel.categories.collectAsState()
 
-    var isFullScreen by remember { mutableStateOf(false) }
+    val isFullScreen by viewModel.isFullScreen.collectAsState()
+    var isSearchVisible by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -66,7 +69,7 @@ fun HomeScreen(
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
-        isFullScreen = false
+        viewModel.setFullScreen(false)
     }
 
     BackHandler(enabled = !isFullScreen && !isInPipMode) {
@@ -99,10 +102,10 @@ fun HomeScreen(
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
-                onToggleFullScreen = { isFullScreen = !isFullScreen },
+                onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
                     if (isFullScreen) {
-                        isFullScreen = false
+                        viewModel.setFullScreen(false)
                     } else {
                         viewModel.closePlayer()
                     }
@@ -124,7 +127,9 @@ fun HomeScreen(
                 selectedCategory = selectedCategory,
                 onCategorySelected = { viewModel.onCategorySelected(it) },
                 searchQuery = searchQuery,
-                onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) }
+                onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) },
+                isSearchExpanded = isSearchVisible,
+                onSearchExpandedChanged = { isSearchVisible = it }
             )
 
             if (searchQuery.isNotEmpty()) {
@@ -255,7 +260,9 @@ fun CategoryAndSearchRow(
     selectedCategory: String,
     onCategorySelected: (String) -> Unit,
     searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit
+    onSearchQueryChanged: (String) -> Unit,
+    isSearchExpanded: Boolean,
+    onSearchExpandedChanged: (Boolean) -> Unit
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
@@ -264,23 +271,54 @@ fun CategoryAndSearchRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         item {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = onSearchQueryChanged,
-                placeholder = { Text("Search...", fontSize = 14.sp) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", modifier = Modifier.size(20.dp)) },
-                singleLine = true,
-                shape = RoundedCornerShape(24.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                ),
-                modifier = Modifier
-                    .width(160.dp)
-                    .height(50.dp)
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !isSearchExpanded,
+                    enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandHorizontally(),
+                    exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkHorizontally()
+                ) {
+                    IconButton(
+                        onClick = { onSearchExpandedChanged(true) },
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                            .size(48.dp)
+                    ) {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = isSearchExpanded,
+                    enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandHorizontally(),
+                    exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkHorizontally()
+                ) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = onSearchQueryChanged,
+                        placeholder = { Text("Search...", fontSize = 14.sp) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", modifier = Modifier.size(20.dp)) },
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                onSearchQueryChanged("")
+                                onSearchExpandedChanged(false)
+                            }) {
+                                Icon(Icons.Default.Clear, contentDescription = "Clear", modifier = Modifier.size(18.dp))
+                            }
+                        },
+                        singleLine = true,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(50.dp)
+                    )
+                }
+            }
         }
         items(categories) { category ->
             val isSelected = category == selectedCategory

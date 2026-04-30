@@ -50,7 +50,7 @@ fun TvListScreen(
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
     val selectedChannel by viewModel.selectedChannel.collectAsState()
 
-    var isFullScreen by remember { mutableStateOf(false) }
+    val isFullScreen by viewModel.isFullScreen.collectAsState()
 
     val focusManager = LocalFocusManager.current
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -67,7 +67,7 @@ fun TvListScreen(
     }
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
-        isFullScreen = false
+        viewModel.setFullScreen(false)
     }
 
     BackHandler(enabled = !isFullScreen && !isInPipMode) {
@@ -100,10 +100,10 @@ fun TvListScreen(
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
-                onToggleFullScreen = { isFullScreen = !isFullScreen },
+                onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
                     if (isFullScreen) {
-                        isFullScreen = false
+                        viewModel.setFullScreen(false)
                     } else {
                         viewModel.closePlayer()
                     }

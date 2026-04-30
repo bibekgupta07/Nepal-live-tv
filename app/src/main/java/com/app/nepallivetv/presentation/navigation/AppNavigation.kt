@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,8 @@ fun AppNavigation(isInPipMode: Boolean) {
 
     // Share one instance of SharedViewModel across the tabs that need it
     val sharedViewModel = koinViewModel<SharedViewModel>()
+    
+    val isFullScreen by sharedViewModel.isFullScreen.collectAsState()
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
@@ -71,7 +74,7 @@ fun AppNavigation(isInPipMode: Boolean) {
     Scaffold(
         bottomBar = {
             AnimatedVisibility(
-                visible = isBottomBarVisible && !isInPipMode,
+                visible = isBottomBarVisible && !isInPipMode && !isFullScreen,
                 enter = slideInVertically(initialOffsetY = { it }),
                 exit = slideOutVertically(targetOffsetY = { it })
             ) {
@@ -153,8 +156,8 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
     )
 
     NavigationBar(
-        containerColor = Color(0xFF13131A),
-        contentColor = Color.Gray,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 8.dp
     ) {
         tabs.forEach { (label, icon, routeObject) ->
@@ -166,18 +169,18 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
                 onClick = { onNavigateTo(routeObject) },
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(icon, contentDescription = label, tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray)
+                        Icon(icon, contentDescription = label, tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
                         if (isSelected) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Box(modifier = Modifier.size(4.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
                         }
                     }
                 },
-                label = { Text(label, fontSize = 10.sp, color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray) },
+                label = { Text(label, fontSize = 10.sp, color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent, // Removed standard pill indicator
                     selectedIconColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = Color.Gray
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }

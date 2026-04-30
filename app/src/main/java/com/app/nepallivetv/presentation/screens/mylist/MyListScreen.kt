@@ -48,7 +48,7 @@ fun MyListScreen(
     val selectedChannel by viewModel.selectedChannel.collectAsState()
     val favoriteUrls by viewModel.favoriteUrls.collectAsState()
 
-    var isFullScreen by remember { mutableStateOf(false) }
+    val isFullScreen by viewModel.isFullScreen.collectAsState()
 
     val focusManager = LocalFocusManager.current
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -56,7 +56,7 @@ fun MyListScreen(
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
-        isFullScreen = false
+        viewModel.setFullScreen(false)
     }
 
     BackHandler(enabled = !isFullScreen && !isInPipMode) {
@@ -88,10 +88,10 @@ fun MyListScreen(
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
-                onToggleFullScreen = { isFullScreen = !isFullScreen },
+                onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
                     if (isFullScreen) {
-                        isFullScreen = false
+                        viewModel.setFullScreen(false)
                     } else {
                         viewModel.closePlayer()
                     }
