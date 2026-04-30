@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,11 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
-import com.app.nepallivetv.presentation.SharedViewModel
-
-// ==============================================================================
-// SCREEN
-// ==============================================================================
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +48,7 @@ fun MyListScreen(
     val isFullScreen by viewModel.isFullScreen.collectAsState()
 
     val focusManager = LocalFocusManager.current
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
@@ -77,7 +74,6 @@ fun MyListScreen(
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        // --- TOP VIDEO PLAYER ---
         if (currentStreamUrl != null) {
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
 
@@ -102,10 +98,7 @@ fun MyListScreen(
             )
         }
 
-        // --- MAIN DASHBOARD SCROLLABLE CONTENT ---
         if (!isFullScreen && !isInPipMode) {
-
-            // Grid Title
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +120,6 @@ fun MyListScreen(
                 )
             }
 
-            // Grid Content
             if (isLoading) {
                 Box(
                     modifier = Modifier
@@ -172,12 +164,8 @@ fun MyListScreen(
                 }
             }
         }
-    } // End Column
-} // End MyListScreen
-
-// ==============================================================================
-// UI COMPONENTS
-// ==============================================================================
+    }
+}
 
 @Composable
 fun FavoriteGridItem(

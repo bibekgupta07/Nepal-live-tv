@@ -35,7 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
-import com.app.nepallivetv.presentation.SharedViewModel
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
 import com.app.nepallivetv.presentation.screens.setting.SettingScreen
 import com.app.nepallivetv.presentation.screens.schedule.ScheduleScreen

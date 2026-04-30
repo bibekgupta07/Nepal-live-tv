@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CastConnected
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FastForward
@@ -69,10 +68,8 @@ import com.google.android.gms.cast.framework.CastContext
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
-
-
 /**
- * A highly customized, gesture-enabled Jetpack Compose wrapper for ExoPlayer.
+ * A gesture-enabled Jetpack Compose wrapper for ExoPlayer.
  * Supports Fullscreen toggling, Picture-in-Picture mode, live-stream optimizations,
  * and swipe gestures for volume and brightness.
  */
@@ -92,7 +89,6 @@ fun VideoPlayer(
     val context = LocalContext.current
     val activity = context as? Activity
     
-    // --- PLAYER STATE ---
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var castPlayer by remember { mutableStateOf<CastPlayer?>(null) }
     var isCasting by remember { mutableStateOf(false) }
@@ -103,46 +99,36 @@ fun VideoPlayer(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isControlsVisible by remember { mutableStateOf(false) }
 
-    // --- GESTURE / OVERLAY STATE ---
     var indicatorValue by remember { mutableFloatStateOf(0f) }
     var isVolumeIndicator by remember { mutableStateOf(true) }
     var showIndicator by remember { mutableStateOf(false) }
 
-    // =======================================================
-    // 1. WINDOW SYSTEM & LIFECYCLE MANAGEMENT
-    // =======================================================
-
-    // Controls showing/hiding the Android status bar and rotating the physical screen
     DisposableEffect(isFullScreen) {
         val window = activity?.window
         val insetsController = window?.let { WindowCompat.getInsetsController(it, it.decorView) }
 
         if (isFullScreen) {
             window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            insetsController?.hide(WindowInsetsCompat.Type.systemBars()) // Hide clock & battery
+            insetsController?.hide(WindowInsetsCompat.Type.systemBars())
             insetsController?.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE // Force Horizontal
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         } else {
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            insetsController?.show(WindowInsetsCompat.Type.systemBars()) // Show clock
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED // Let sensor decide
+            insetsController?.show(WindowInsetsCompat.Type.systemBars())
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
         onDispose { }
     }
 
-    // Listens to Android App Lifecycle (Background/Foreground)
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            // If the user goes to the home screen (and NOT in Picture-in-Picture mode)
             if (event == Lifecycle.Event.ON_PAUSE) {
                 if (activity != null && !activity.isInPictureInPictureMode) {
-                    exoPlayer?.pause() // Stop pulling network data and stop audio
+                    exoPlayer?.pause()
                 }
-            } 
-            // If the user opens the app back up
-            else if (event == Lifecycle.Event.ON_RESUME) {
-                exoPlayer?.play() // Resume stream
+            } else if (event == Lifecycle.Event.ON_RESUME) {
+                exoPlayer?.play()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -151,12 +137,10 @@ fun VideoPlayer(
         }
     }
 
-    // Instantly hide the playback controls if Android shrinks the app into PiP mode
     LaunchedEffect(isInPipMode) {
         if (isInPipMode) isControlsVisible = false
     }
 
-    // Cleanup: Make sure we destroy the ExoPlayer completely when this View is closed
     DisposableEffect(Unit) {
         onDispose {
             exoPlayer?.release()
@@ -169,20 +153,13 @@ fun VideoPlayer(
         }
     }
 
-    // =======================================================
-    // 2. EXOPLAYER INITIALIZATION & LIVE OPTIMIZATION
-    // =======================================================
-    
-    // Setup CastPlayer
     LaunchedEffect(Unit) {
         try {
-            // Context needs to be Activity context or Application context, wrapping in try/catch safely handles devices without Google Play Services
             val castContext = CastContext.getSharedInstance(context)
             val player = CastPlayer(castContext)
             player.setSessionAvailabilityListener(object : SessionAvailabilityListener {
                 override fun onCastSessionAvailable() {
                     isCasting = true
-                    // CastPlayer crashes if currentPosition is negative
                     val currentPosition = Math.max(0L, exoPlayer?.currentPosition ?: 0L)
                     exoPlayer?.pause()
                     
@@ -211,7 +188,6 @@ fun VideoPlayer(
     }
 
     LaunchedEffect(streamUrl) {
-        // Build the player engine
         if (streamUrl != null && exoPlayer == null) {
             val dataSourceFactory = DefaultHttpDataSource.Factory()
                 .setDefaultRequestProperties(
@@ -222,13 +198,11 @@ fun VideoPlayer(
                     )
                 )
             
-            // Custom Load Control: Don't wait to download 10 seconds of video before starting. 
-            // Start as soon as 1.5 seconds is buffered.
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
-                    1500,  // min buffer before playback starts
-                    10000, // max buffer allowed to download
-                    1000,  // buffer required to resume after freezing
+                    1500,
+                    10000,
+                    1000,
                     1500
                 )
                 .build()
@@ -256,17 +230,13 @@ fun VideoPlayer(
             exoPlayer = player
         }
         
-        // Feed the URL to the player engine
         if (streamUrl != null) {
             val mediaItem = MediaItem.Builder()
                 .setUri(streamUrl)
                 .setLiveConfiguration(
                     MediaItem.LiveConfiguration.Builder()
-                        // Automatically slow down video by 4% if network is struggling (prevents spinning wheel)
                         .setMinPlaybackSpeed(0.96f)
-                        // Automatically speed up video by 4% if we are lagging behind the live edge
                         .setMaxPlaybackSpeed(1.04f)
-                        // Target playing 3 seconds behind "live" to allow a tiny buffer
                         .setTargetOffsetMs(3000)
                         .setMinOffsetMs(1500)
                         .setMaxOffsetMs(15000)
@@ -279,7 +249,6 @@ fun VideoPlayer(
         }
     }
 
-    // Timer to automatically hide custom UI Controls after 3 seconds of inactivity
     LaunchedEffect(isControlsVisible) {
         if (isControlsVisible) {
             delay(3000)
@@ -287,7 +256,6 @@ fun VideoPlayer(
         }
     }
 
-    // Timer to automatically hide the Brightness/Volume graphic after swiping
     LaunchedEffect(indicatorValue, showIndicator) {
         if (showIndicator) {
             delay(1500)
@@ -295,14 +263,8 @@ fun VideoPlayer(
         }
     }
 
-    // =======================================================
-    // 3. UI RENDERING
-    // =======================================================
-
     if (streamUrl != null) {
         Box(modifier = modifier.background(Color.Black)) {
-            
-            // The actual raw video feed surface
             AndroidView(
                 factory = { ctx ->
                     PlayerView(ctx).apply {
@@ -310,7 +272,6 @@ fun VideoPlayer(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
-                        // We use our own custom compose overlay, completely hiding ExoPlayer's ugly native controls
                         useController = false
                     }
                 },
@@ -335,9 +296,6 @@ fun VideoPlayer(
                     )
             )
 
-            // --- UI OVERLAYS ---
-            
-            // Gradient Scrim overlay to make top/bottom text readable
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -350,7 +308,6 @@ fun VideoPlayer(
                     )
             )
 
-            // Top Left: LIVE Badge
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -365,7 +322,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Top Right: Favorite Button, Close Button & Channel Name
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -385,7 +341,6 @@ fun VideoPlayer(
                         onClick = onToggleFavorite
                     )
                     
-                    // The Google Cast Button
                     Box(
                         modifier = Modifier
                             .background(Color.Black.copy(alpha = 0.5f), CircleShape)
@@ -394,8 +349,6 @@ fun VideoPlayer(
                     ) {
                         AndroidView(
                             factory = { ctx ->
-                                // MediaRouteButton requires a valid AppCompat/Theme wrapped context, not a translucent one.
-                                // We wrap the compose context with standard dark theme to prevent the ColorUtils #0 translucent crash
                                 val wrapper = androidx.appcompat.view.ContextThemeWrapper(ctx, androidx.appcompat.R.style.Theme_AppCompat_NoActionBar)
                                 MediaRouteButton(wrapper).apply {
                                     CastButtonFactory.setUpMediaRouteButton(wrapper, this)
@@ -418,7 +371,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Center Controls (Play/Pause wrapper mock)
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -439,7 +391,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Bottom Left: Show Title & Progress Bar
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -451,7 +402,7 @@ fun VideoPlayer(
                     Text(text = "Live Now • HD", color = Color.Gray, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     LinearProgressIndicator(
-                        progress = { 1f }, // Mock full progress for live
+                        progress = { 1f },
                         color = Color(0xFFE63946),
                         trackColor = Color.DarkGray,
                         modifier = Modifier.fillMaxWidth().height(4.dp),
@@ -460,7 +411,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Bottom Right: System Controls (Rotated/Mute)
             AnimatedVisibility(
                 visible = isControlsVisible && !isInPipMode,
                 enter = fadeIn(),
@@ -502,7 +452,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Center Overlay: Volume / Brightness Level Box
             AnimatedVisibility(
                 visible = showIndicator,
                 enter = fadeIn(),
@@ -536,7 +485,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Center Overlay: Casting Indicator
             AnimatedVisibility(
                 visible = isCasting,
                 enter = fadeIn(),
@@ -555,7 +503,6 @@ fun VideoPlayer(
                 }
             }
 
-            // Center Overlay: Loading Spinner
             if (isBuffering && errorMessage == null) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
@@ -563,7 +510,6 @@ fun VideoPlayer(
                 )
             }
 
-            // Center Overlay: Error Panel
             if (errorMessage != null) {
                 Column(
                     modifier = Modifier
@@ -591,9 +537,6 @@ fun VideoPlayer(
     }
 }
 
-/**
- * Clean reusable button layout for the Video Player overlays.
- */
 @Composable
 fun PlayerIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector, 
@@ -615,10 +558,6 @@ fun PlayerIconButton(
     }
 }
 
-/**
- * Extension function handling the complex Touch gestures for Brightness (Left Swipe) and Volume (Right Swipe).
- * Extracts this messy logic out of the main compose tree.
- */
 private fun Modifier.videoPlayerGestures(
     context: Context,
     activity: Activity?,
@@ -626,7 +565,7 @@ private fun Modifier.videoPlayerGestures(
     onTap: () -> Unit,
     onSwipe: (value: Float, isVolume: Boolean) -> Unit
 ): Modifier = composed {
-    if (isInPipMode) return@composed this // Disable gestures completely if minimized
+    if (isInPipMode) return@composed this
 
     val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
@@ -651,7 +590,6 @@ private fun Modifier.videoPlayerGestures(
                     startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
                     if (startBrightness < 0) startBrightness = 0.5f
                     
-                    // Determine if the user touched the left half (brightness) or right half (volume)
                     val halfScreenWidth = size.width / 2
                     if (startX > halfScreenWidth) {
                         isVolumeSwipe = true
@@ -667,10 +605,10 @@ private fun Modifier.videoPlayerGestures(
                 },
                 onDrag = { change, dragAmount ->
                     change.consume()
-                    val deltaY = startY - change.position.y // Up is positive
+                    val deltaY = startY - change.position.y
                     val percent = deltaY / size.height
 
-                    if (abs(deltaY) > 50) { // Drag Threshold
+                    if (abs(deltaY) > 50) {
                         if (isVolumeSwipe) {
                             val volChange = (percent * maxVolume).toInt()
                             val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)
@@ -694,6 +632,7 @@ private fun Modifier.videoPlayerGestures(
             )
         }
 }
+
 @Composable
 fun LiveBadge(modifier: Modifier = Modifier) {
     Row(

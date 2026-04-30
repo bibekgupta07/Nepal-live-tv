@@ -1,4 +1,4 @@
-package com.app.nepallivetv.presentation
+package com.app.nepallivetv.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

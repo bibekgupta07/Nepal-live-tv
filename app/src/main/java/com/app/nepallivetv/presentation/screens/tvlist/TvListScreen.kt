@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,25 +17,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
-import coil.compose.AsyncImage
-import androidx.compose.ui.layout.ContentScale
-import com.app.nepallivetv.presentation.SharedViewModel
-
-// ==============================================================================
-// SCREEN
-// ==============================================================================
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +47,7 @@ fun TvListScreen(
     val isFullScreen by viewModel.isFullScreen.collectAsState()
 
     val focusManager = LocalFocusManager.current
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
@@ -88,7 +82,6 @@ fun TvListScreen(
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        // --- TOP VIDEO PLAYER ---
         if (currentStreamUrl != null) {
             val favoriteUrls by viewModel.favoriteUrls.collectAsState()
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
@@ -114,10 +107,7 @@ fun TvListScreen(
             )
         }
 
-        // --- MAIN DASHBOARD SCROLLABLE CONTENT ---
         if (!isFullScreen && !isInPipMode) {
-
-            // Grid Title
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,7 +129,6 @@ fun TvListScreen(
                 )
             }
 
-            // Grid Content
             if (isLoading) {
                 Box(
                     modifier = Modifier
@@ -184,12 +173,8 @@ fun TvListScreen(
                 }
             }
         }
-    } // End Column
-} // End TvListScreen
-
-// ==============================================================================
-// UI COMPONENTS
-// ==============================================================================
+    }
+}
 
 @Composable
 fun ChannelGridItem(

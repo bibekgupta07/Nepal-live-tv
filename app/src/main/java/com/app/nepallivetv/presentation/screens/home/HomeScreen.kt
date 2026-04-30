@@ -2,18 +2,24 @@ package com.app.nepallivetv.presentation.screens.home
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,11 +30,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,12 +44,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
-
-import com.app.nepallivetv.presentation.SharedViewModel
-
-// ==============================================================================
-// SCREEN
-// ==============================================================================
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +65,7 @@ fun HomeScreen(
     var isSearchVisible by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
 
@@ -90,7 +91,6 @@ fun HomeScreen(
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        // --- TOP VIDEO PLAYER ---
         if (currentStreamUrl != null) {
             val favoriteUrls by viewModel.favoriteUrls.collectAsState()
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
@@ -116,12 +116,9 @@ fun HomeScreen(
             )
         }
 
-        // --- MAIN DASHBOARD SCROLLABLE CONTENT ---
         if (!isFullScreen && !isInPipMode) {
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Categories Row with Search
             CategoryAndSearchRow(
                 categories = categories,
                 selectedCategory = selectedCategory,
@@ -133,7 +130,6 @@ fun HomeScreen(
             )
 
             if (searchQuery.isNotEmpty()) {
-                // List View when searching
                 if (channels.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -168,8 +164,6 @@ fun HomeScreen(
                     }
                 }
             } else {
-                // Grid View when not searching
-                // Featured Section
                 if (channels.isNotEmpty() && selectedCategory == "All") {
                     FeaturedLiveSection(
                         featuredChannels = channels.take(5),
@@ -178,7 +172,6 @@ fun HomeScreen(
                     )
                 }
 
-                // Grid Title
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -200,7 +193,6 @@ fun HomeScreen(
                     )
                 }
 
-                // Grid Content
                 if (isLoading) {
                     Box(
                         modifier = Modifier
@@ -246,12 +238,8 @@ fun HomeScreen(
                 }
             }
         }
-    } // End Column
-} // End HomeScreen
-
-// ==============================================================================
-// UI COMPONENTS
-// ==============================================================================
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -272,10 +260,10 @@ fun CategoryAndSearchRow(
     ) {
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = !isSearchExpanded,
-                    enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandHorizontally(),
-                    exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkHorizontally()
+                    enter = fadeIn() + expandHorizontally(),
+                    exit = fadeOut() + shrinkHorizontally()
                 ) {
                     IconButton(
                         onClick = { onSearchExpandedChanged(true) },
@@ -287,10 +275,10 @@ fun CategoryAndSearchRow(
                     }
                 }
 
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = isSearchExpanded,
-                    enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandHorizontally(),
-                    exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkHorizontally()
+                    enter = fadeIn() + expandHorizontally(),
+                    exit = fadeOut() + shrinkHorizontally()
                 ) {
                     OutlinedTextField(
                         value = searchQuery,
