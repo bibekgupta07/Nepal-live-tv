@@ -9,5 +9,5 @@
         <item name="postSplashScreenTheme">@style/Theme.NepalLiveTv</item>
     </style>
 
-    <style name="Theme.NepalLiveTv" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.NepalLiveTv" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>

@@ -4,7 +4,7 @@ import android.app.PictureInPictureParams
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * MainActivity serves as the single entry point to the Compose UI.
  * Handles the Android Native Splash Screen and System-level Picture-in-Picture mode overrides.
  */
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     
     private val themeViewModel: ThemeViewModel by viewModel()
     

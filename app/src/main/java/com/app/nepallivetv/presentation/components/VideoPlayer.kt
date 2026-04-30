@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CastConnected
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.FastRewind
@@ -60,6 +61,11 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import androidx.media3.cast.CastPlayer
+import androidx.media3.cast.SessionAvailabilityListener
+import androidx.mediarouter.app.MediaRouteButton
+import com.google.android.gms.cast.framework.CastButtonFactory
+import com.google.android.gms.cast.framework.CastContext
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
@@ -88,6 +94,9 @@ fun VideoPlayer(
     
     // --- PLAYER STATE ---
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
+    var castPlayer by remember { mutableStateOf<CastPlayer?>(null) }
+    var isCasting by remember { mutableStateOf(false) }
+
     var resizeMode by remember { mutableIntStateOf(AspectRatioFrameLayout.RESIZE_MODE_FIT) }
     var isMuted by remember { mutableStateOf(false) }
     var isBuffering by remember { mutableStateOf(true) }
@@ -151,6 +160,7 @@ fun VideoPlayer(
     DisposableEffect(Unit) {
         onDispose {
             exoPlayer?.release()
+            castPlayer?.release()
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             val window = activity?.window
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -163,6 +173,43 @@ fun VideoPlayer(
     // 2. EXOPLAYER INITIALIZATION & LIVE OPTIMIZATION
     // =======================================================
     
+    // Setup CastPlayer
+    LaunchedEffect(Unit) {
+        try {
+            // Context needs to be Activity context or Application context, wrapping in try/catch safely handles devices without Google Play Services
+            val castContext = CastContext.getSharedInstance(context)
+            val player = CastPlayer(castContext)
+            player.setSessionAvailabilityListener(object : SessionAvailabilityListener {
+                override fun onCastSessionAvailable() {
+                    isCasting = true
+                    // CastPlayer crashes if currentPosition is negative
+                    val currentPosition = Math.max(0L, exoPlayer?.currentPosition ?: 0L)
+                    exoPlayer?.pause()
+                    
+                    streamUrl?.let { url ->
+                        val mimeType = if (url.contains(".m3u8")) "application/x-mpegURL" else "video/mp4"
+                        val mediaItem = MediaItem.Builder()
+                            .setUri(url)
+                            .setMimeType(mimeType)
+                            .build()
+                        player.setMediaItem(mediaItem, currentPosition)
+                        player.prepare()
+                        player.play()
+                    }
+                }
+
+                override fun onCastSessionUnavailable() {
+                    isCasting = false
+                    player.stop()
+                    exoPlayer?.play()
+                }
+            })
+            castPlayer = player
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     LaunchedEffect(streamUrl) {
         // Build the player engine
         if (streamUrl != null && exoPlayer == null) {
@@ -337,6 +384,26 @@ fun VideoPlayer(
                         contentDescription = "Toggle Favorite",
                         onClick = onToggleFavorite
                     )
+                    
+                    // The Google Cast Button
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                            .padding(horizontal = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AndroidView(
+                            factory = { ctx ->
+                                // MediaRouteButton requires a valid AppCompat/Theme wrapped context, not a translucent one.
+                                // We wrap the compose context with standard dark theme to prevent the ColorUtils #0 translucent crash
+                                val wrapper = androidx.appcompat.view.ContextThemeWrapper(ctx, androidx.appcompat.R.style.Theme_AppCompat_NoActionBar)
+                                MediaRouteButton(wrapper).apply {
+                                    CastButtonFactory.setUpMediaRouteButton(wrapper, this)
+                                }
+                            }
+                        )
+                    }
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -466,6 +533,25 @@ fun VideoPlayer(
                             strokeCap = StrokeCap.Round
                         )
                     }
+                }
+            }
+
+            // Center Overlay: Casting Indicator
+            AnimatedVisibility(
+                visible = isCasting,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.8f), RoundedCornerShape(16.dp))
+                        .padding(32.dp)
+                ) {
+                    Icon(Icons.Default.CastConnected, contentDescription = "Casting", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Casting to TV", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
 
