@@ -1,6 +1,7 @@
 package com.app.nepallivetv.presentation.screens.home
 
 import android.widget.Toast
+import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -30,29 +31,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
+import com.app.nepallivetv.presentation.components.LiveBadge
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    viewModel: SharedViewModel,
-    isInPipMode: Boolean = false,
-    bottomPadding: Dp = 0.dp
-) {
+fun HomeScreen() {
+    val viewModel = koinViewModel<SharedViewModel>()
+    val isInPipMode = LocalPipMode.current
+
     val channels by viewModel.filteredChannels.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -68,6 +70,9 @@ fun HomeScreen(
     val context = LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
         viewModel.setFullScreen(false)
@@ -86,7 +91,6 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = bottomPadding)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
@@ -94,6 +98,7 @@ fun HomeScreen(
         if (currentStreamUrl != null) {
             val favoriteUrls by viewModel.favoriteUrls.collectAsState()
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
+            val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 
             VideoPlayer(
                 streamUrl = currentStreamUrl,
@@ -101,6 +106,7 @@ fun HomeScreen(
                 isFullScreen = isFullScreen,
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
+                isCastEnabled = isCastEnabled,
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
                 onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
@@ -110,13 +116,13 @@ fun HomeScreen(
                         viewModel.closePlayer()
                     }
                 },
-                modifier = if (isFullScreen || isInPipMode) Modifier.fillMaxSize() else Modifier
+                modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() else Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f)
             )
         }
 
-        if (!isFullScreen && !isInPipMode) {
+        if (!isFullScreen && !isInPipMode && !isLandscape) {
             Spacer(modifier = Modifier.height(8.dp))
 
             CategoryAndSearchRow(
@@ -157,6 +163,7 @@ fun HomeScreen(
                                 onClick = {
                                     viewModel.selectChannel(channel)
                                     viewModel.onSearchQueryChanged("")
+                                    isSearchVisible = false
                                     focusManager.clearFocus()
                                 }
                             )
@@ -164,14 +171,6 @@ fun HomeScreen(
                     }
                 }
             } else {
-                if (channels.isNotEmpty() && selectedCategory == "All") {
-                    FeaturedLiveSection(
-                        featuredChannels = channels.take(5),
-                        selectedChannel = selectedChannel,
-                        onChannelClick = { viewModel.selectChannel(it) }
-                    )
-                }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -346,114 +345,6 @@ fun CategoryAndSearchRow(
 }
 
 @Composable
-fun FeaturedLiveSection(
-    featuredChannels: List<Channel>,
-    selectedChannel: Channel?,
-    onChannelClick: (Channel) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = "Featured Live",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-            Text(
-                text = "See all →",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(featuredChannels) { channel ->
-                FeaturedChannelItem(
-                    channel = channel,
-                    isSelected = channel == selectedChannel,
-                    onClick = { onChannelClick(channel) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun FeaturedChannelItem(
-    channel: Channel,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .width(200.dp)
-            .height(110.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(Color(0xFF3A1C1C), Color(0xFF1C1C1C))
-                    )
-                )
-        ) {
-            if (!channel.logo.isNullOrEmpty()) {
-                AsyncImage(
-                    model = channel.logo,
-                    contentDescription = channel.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                    alpha = 0.4f
-                )
-            }
-            LiveBadge(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(12.dp)
-            ) {
-                Text(
-                    text = channel.name,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Live Now",
-                    color = Color.Gray,
-                    fontSize = 11.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun ChannelGridItem(
     channel: Channel,
     isSelected: Boolean,
@@ -574,28 +465,5 @@ fun ChannelListItem(
                 LiveBadge()
             }
         }
-    }
-}
-
-@Composable
-fun LiveBadge(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .background(Color.White, CircleShape)
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            "LIVE",
-            color = Color.White,
-            fontSize = 9.sp,
-            fontWeight = FontWeight.ExtraBold
-        )
     }
 }

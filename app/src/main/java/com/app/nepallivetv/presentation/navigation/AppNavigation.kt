@@ -1,5 +1,6 @@
 package com.app.nepallivetv.presentation.navigation
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -34,6 +36,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.app.nepallivetv.LocalFullScreenMode
+import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
@@ -51,19 +55,18 @@ import org.koin.androidx.compose.koinViewModel
 @Serializable object SettingRoute
 
 @Composable
-fun AppNavigation(isInPipMode: Boolean) {
+fun AppNavigation() {
+    val isInPipMode = LocalPipMode.current
+    val isFullScreen = LocalFullScreenMode.current
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Share one instance of SharedViewModel across the tabs that need it
-    val sharedViewModel = koinViewModel<SharedViewModel>()
-    
-    val isFullScreen by sharedViewModel.isFullScreen.collectAsState()
-
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
-    // Auto-hide bottom bar after 5 seconds
     LaunchedEffect(isBottomBarVisible, currentDestination) {
         if (isBottomBarVisible && !isInPipMode) {
             delay(5000)
@@ -73,55 +76,46 @@ fun AppNavigation(isInPipMode: Boolean) {
 
     Scaffold(
         bottomBar = {
-            AnimatedVisibility(
-                visible = isBottomBarVisible && !isInPipMode && !isFullScreen,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it })
-            ) {
-                AppBottomNavigation(
-                    currentDestinationRoute = currentDestination?.route,
-                    onNavigateTo = { route ->
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+            if (!isFullScreen && !isInPipMode && !isLandscape) {
+                AnimatedVisibility(
+                    visible = isBottomBarVisible,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it })
+                ) {
+                    AppBottomNavigation(
+                        currentDestinationRoute = currentDestination?.route,
+                        onNavigateTo = { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
             }
         },
         containerColor = MaterialTheme.colorScheme.background,
         modifier = Modifier.pointerInput(Unit) {
-            // Wake up the bottom bar whenever the user taps the screen
             awaitEachGesture {
                 awaitFirstDown(pass = PointerEventPass.Initial)
                 isBottomBarVisible = true
             }
         }
     ) { innerPadding ->
-        // We do NOT apply innerPadding to the NavHost if we want the VideoPlayer to be truly edge-to-edge.
-        // Instead, individual screens handle their own bottom padding if needed.
         NavHost(
             navController = navController,
             startDestination = HomeRoute,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().then(if (isFullScreen) Modifier else Modifier.padding(innerPadding))
         ) {
             composable<HomeRoute> {
-                HomeScreen(
-                    viewModel = sharedViewModel,
-                    isInPipMode = isInPipMode,
-                    bottomPadding = innerPadding.calculateBottomPadding()
-                )
+                HomeScreen()
             }
             
             composable<TvListRoute> {
-                TvListScreen(
-                    viewModel = sharedViewModel,
-                    isInPipMode = isInPipMode,
-                    bottomPadding = innerPadding.calculateBottomPadding()
-                )
+                TvListScreen()
             }
             
             composable<ScheduleRoute> {
@@ -129,11 +123,7 @@ fun AppNavigation(isInPipMode: Boolean) {
             }
             
             composable<MyListRoute> {
-                MyListScreen(
-                    viewModel = sharedViewModel,
-                    isInPipMode = isInPipMode,
-                    bottomPadding = innerPadding.calculateBottomPadding()
-                )
+                MyListScreen()
             }
             
             composable<SettingRoute> {
@@ -145,8 +135,6 @@ fun AppNavigation(isInPipMode: Boolean) {
 
 @Composable
 fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) -> Unit) {
-    // We inspect the fully qualified class names that Navigation Serialization uses behind the scenes.
-    // Or we map strictly to our objects.
     val tabs = listOf(
         Triple("Home", Icons.Default.Home, HomeRoute),
         Triple("TV List", Icons.Default.LiveTv, TvListRoute),
@@ -161,7 +149,6 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
         tonalElevation = 8.dp
     ) {
         tabs.forEach { (label, icon, routeObject) ->
-            // Check if current destination matches the class name of the route object
             val isSelected = currentDestinationRoute?.contains(routeObject::class.simpleName ?: "") == true
             
             NavigationBarItem(
@@ -178,7 +165,7 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
                 },
                 label = { Text(label, fontSize = 10.sp, color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent, // Removed standard pill indicator
+                    indicatorColor = Color.Transparent,
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
