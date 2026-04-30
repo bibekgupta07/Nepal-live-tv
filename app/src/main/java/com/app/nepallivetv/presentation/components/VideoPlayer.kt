@@ -27,11 +27,14 @@ import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Crop
+import androidx.compose.material.icons.filled.AspectRatio
 import androidx.compose.material.icons.filled.FitScreen
-import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material.icons.filled.ZoomIn
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material3.*
+import com.app.nepallivetv.presentation.components.LiveBadge
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,6 +85,7 @@ fun VideoPlayer(
     isFullScreen: Boolean,
     isInPipMode: Boolean = false,
     isFavorite: Boolean = false,
+    isCastEnabled: Boolean = true,
     onToggleFavorite: () -> Unit = {},
     onToggleFullScreen: () -> Unit,
     onClose: () -> Unit
@@ -155,6 +159,7 @@ fun VideoPlayer(
 
     LaunchedEffect(Unit) {
         try {
+            if (!isCastEnabled) return@LaunchedEffect
             val castContext = CastContext.getSharedInstance(context)
             val player = CastPlayer(castContext)
             player.setSessionAvailabilityListener(object : SessionAvailabilityListener {
@@ -338,23 +343,27 @@ fun VideoPlayer(
                     PlayerIconButton(
                         icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Toggle Favorite",
-                        onClick = onToggleFavorite
+                        onClick = onToggleFavorite,
+                        modifier = Modifier.size(32.dp),
+                        iconSize = 18.dp
                     )
                     
-                    Box(
-                        modifier = Modifier
-                            .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                            .padding(horizontal = 4.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        AndroidView(
-                            factory = { ctx ->
-                                val wrapper = androidx.appcompat.view.ContextThemeWrapper(ctx, androidx.appcompat.R.style.Theme_AppCompat_NoActionBar)
-                                MediaRouteButton(wrapper).apply {
-                                    CastButtonFactory.setUpMediaRouteButton(wrapper, this)
+                    if (isCastEnabled) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                                .padding(horizontal = 4.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AndroidView(
+                                factory = { ctx ->
+                                    val wrapper = androidx.appcompat.view.ContextThemeWrapper(ctx, androidx.appcompat.R.style.Theme_AppCompat_NoActionBar)
+                                    MediaRouteButton(wrapper).apply {
+                                        CastButtonFactory.setUpMediaRouteButton(wrapper, this)
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
 
                     Row(
@@ -424,8 +433,8 @@ fun VideoPlayer(
                     PlayerIconButton(
                         icon = when (resizeMode) {
                             AspectRatioFrameLayout.RESIZE_MODE_FIT -> Icons.Filled.FitScreen
-                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.Fullscreen
-                            AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> Icons.Filled.ZoomIn
+                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.ZoomIn
+                            AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> Icons.Filled.Crop
                             else -> Icons.Filled.FitScreen
                         },
                         contentDescription = "Resize Mode",
@@ -435,19 +444,25 @@ fun VideoPlayer(
                                 AspectRatioFrameLayout.RESIZE_MODE_FILL -> AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                                 else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
                             }
-                        }
+                        },
+                        modifier = Modifier.size(36.dp),
+                        iconSize = 20.dp
                     )
                     
                     PlayerIconButton(
                         icon = if (isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
                         contentDescription = "Mute Toggle",
-                        onClick = { isMuted = !isMuted }
+                        onClick = { isMuted = !isMuted },
+                        modifier = Modifier.size(36.dp),
+                        iconSize = 20.dp
                     )
                     
                     PlayerIconButton(
-                        icon = Icons.Filled.ScreenRotation,
+                        icon = if (isFullScreen) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen,
                         contentDescription = "Toggle Orientation",
-                        onClick = onToggleFullScreen
+                        onClick = onToggleFullScreen,
+                        modifier = Modifier.size(36.dp),
+                        iconSize = 20.dp
                     )
                 }
             }
@@ -542,7 +557,8 @@ fun PlayerIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector, 
     contentDescription: String, 
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconSize: androidx.compose.ui.unit.Dp = 22.dp
 ) {
     IconButton(
         onClick = onClick,
@@ -553,7 +569,7 @@ fun PlayerIconButton(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = Color.White,
-            modifier = Modifier.size(22.dp)
+            modifier = Modifier.size(iconSize)
         )
     }
 }
@@ -633,14 +649,3 @@ private fun Modifier.videoPlayerGestures(
         }
 }
 
-@Composable
-fun LiveBadge(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.background(MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(modifier = Modifier.size(6.dp).background(Color.White, CircleShape))
-        Spacer(modifier = Modifier.width(4.dp))
-        Text("LIVE", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
-    }
-}

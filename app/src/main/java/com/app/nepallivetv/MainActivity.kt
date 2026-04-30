@@ -16,14 +16,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.collectAsState
-import com.app.nepallivetv.presentation.viewmodel.ThemeViewModel
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.CompositionLocalProvider
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.navigation.AppNavigation
 import com.app.nepallivetv.ui.theme.NepalLiveTvTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+val LocalPipMode = compositionLocalOf { false }
+val LocalFullScreenMode = compositionLocalOf { false }
+
 class MainActivity : AppCompatActivity() {
     
-    private val themeViewModel: ThemeViewModel by viewModel()
+    private val sharedViewModel: SharedViewModel by viewModel()
     
     private var isInPipMode by mutableStateOf(false)
 
@@ -35,14 +40,20 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         
         setContent {
-            val isDarkMode by themeViewModel.isDarkMode.collectAsState()
+            val isDarkMode by sharedViewModel.isDarkMode.collectAsState()
+            val isFullScreen by sharedViewModel.isFullScreen.collectAsState()
             
             NepalLiveTvTheme(darkTheme = isDarkMode) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                CompositionLocalProvider(
+                    LocalPipMode provides isInPipMode,
+                    LocalFullScreenMode provides isFullScreen
                 ) {
-                    AppNavigation(isInPipMode = isInPipMode)
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        AppNavigation()
+                    }
                 }
             }
         }

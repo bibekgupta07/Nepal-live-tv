@@ -24,21 +24,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
+import com.app.nepallivetv.presentation.components.LiveBadge
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyListScreen(
-    viewModel: SharedViewModel,
-    isInPipMode: Boolean = false,
-    bottomPadding: Dp = 0.dp
-) {
+fun MyListScreen() {
+    val viewModel = koinViewModel<SharedViewModel>()
+    val isInPipMode = LocalPipMode.current
     val channels by viewModel.favoriteChannels.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
@@ -69,13 +69,13 @@ fun MyListScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = bottomPadding)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
         if (currentStreamUrl != null) {
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
+            val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 
             VideoPlayer(
                 streamUrl = currentStreamUrl,
@@ -83,6 +83,7 @@ fun MyListScreen(
                 isFullScreen = isFullScreen,
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
+                isCastEnabled = isCastEnabled,
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
                 onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
@@ -217,28 +218,5 @@ fun FavoriteGridItem(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun LiveBadge(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .background(Color.White, CircleShape)
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            "LIVE",
-            color = Color.White,
-            fontSize = 9.sp,
-            fontWeight = FontWeight.ExtraBold
-        )
     }
 }

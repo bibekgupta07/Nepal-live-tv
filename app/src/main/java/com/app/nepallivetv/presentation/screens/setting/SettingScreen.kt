@@ -20,16 +20,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.nepallivetv.presentation.viewmodel.ThemeViewModel
+import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen(themeViewModel: ThemeViewModel = koinViewModel()) {
-    val isDarkMode by themeViewModel.isDarkMode.collectAsState()
+fun SettingScreen() {
+    val viewModel = koinViewModel<SharedViewModel>()
+    val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val isCastEnabled by viewModel.isCastEnabled.collectAsState()
     
-    // Mock States for Cast Settings
-    var isCastEnabled by remember { mutableStateOf(true) }
     var forceHdCast by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -52,7 +52,6 @@ fun SettingScreen(themeViewModel: ThemeViewModel = koinViewModel()) {
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // --- APPEARANCE SECTION ---
             Text(
                 text = "Appearance",
                 color = MaterialTheme.colorScheme.primary,
@@ -66,12 +65,11 @@ fun SettingScreen(themeViewModel: ThemeViewModel = koinViewModel()) {
                 title = "Dark Mode",
                 subtitle = "Toggle dark theme across the app",
                 isChecked = isDarkMode,
-                onCheckedChange = { themeViewModel.toggleTheme(it) }
+                onCheckedChange = { viewModel.toggleTheme(it) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- CASTING & DISPLAY SECTION ---
             Text(
                 text = "Casting & Display",
                 color = MaterialTheme.colorScheme.primary,
@@ -85,7 +83,7 @@ fun SettingScreen(themeViewModel: ThemeViewModel = koinViewModel()) {
                 title = "Enable Chromecast",
                 subtitle = "Show cast button in video player",
                 isChecked = isCastEnabled,
-                onCheckedChange = { isCastEnabled = it }
+                onCheckedChange = { viewModel.setCastEnabled(it) }
             )
             
             Spacer(modifier = Modifier.height(12.dp))
@@ -101,7 +99,6 @@ fun SettingScreen(themeViewModel: ThemeViewModel = koinViewModel()) {
 
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Info Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),

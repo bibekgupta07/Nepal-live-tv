@@ -2,7 +2,7 @@ package com.app.nepallivetv.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.nepallivetv.data.local.datastore.FavoritesPreferences
+import com.app.nepallivetv.data.local.datastore.DatastorePreferences
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class SharedViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
     private val getStreamUrlUseCase: GetStreamUrlUseCase,
-    private val favoritesPreferences: FavoritesPreferences
+    private val datastorePreferences: DatastorePreferences
 ) : ViewModel() {
 
     private val _channels = MutableStateFlow<List<Channel>>(emptyList())
@@ -32,8 +32,14 @@ class SharedViewModel(
     private val _categories = MutableStateFlow<List<String>>(listOf("All"))
     val categories: StateFlow<List<String>> = _categories
 
-    val favoriteUrls: StateFlow<Set<String>> = favoritesPreferences.favoriteUrls
+    val favoriteUrls: StateFlow<Set<String>> = datastorePreferences.favoriteUrlsFlow
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
+
+    val isDarkMode: StateFlow<Boolean> = datastorePreferences.isDarkModeFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val isCastEnabled: StateFlow<Boolean> = datastorePreferences.isCastEnabledFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     val filteredChannels: StateFlow<List<Channel>> = combine(
         _channels,
@@ -54,6 +60,16 @@ class SharedViewModel(
             name.contains("kantipur max hd") ||
             name.contains("kantipur hd max") ||
             channel.category.equals("Sports", ignoreCase = true)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val featuredTvListChannels: StateFlow<List<Channel>> = _channels.map { channels ->
+        channels.filter { channel ->
+            val name = channel.name.lowercase()
+            name.contains("npl live") ||
+            name.contains("star sports 1 hd") ||
+            name.contains("star sports 1 sd") ||
+            name.contains("star sports 1 hindi")
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -117,9 +133,21 @@ class SharedViewModel(
         _selectedCategory.value = category
     }
 
+    fun toggleTheme(isDark: Boolean) {
+        viewModelScope.launch {
+            datastorePreferences.setDarkMode(isDark)
+        }
+    }
+
+    fun setCastEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            datastorePreferences.setCastEnabled(isEnabled)
+        }
+    }
+
     fun toggleFavorite(channel: Channel) {
         viewModelScope.launch {
-            favoritesPreferences.toggleFavorite(channel.encodedUrl)
+            datastorePreferences.toggleFavorite(channel.encodedUrl)
         }
     }
 
