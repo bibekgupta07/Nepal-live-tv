@@ -20,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // IMPORTANT: Replace IP with your actual local network IP where the FastAPI server is running
+        buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
     }
 
     buildTypes {
@@ -66,6 +69,10 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

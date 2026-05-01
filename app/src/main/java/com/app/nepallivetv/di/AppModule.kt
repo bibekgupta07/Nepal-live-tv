@@ -15,11 +15,11 @@ val appModule = module {
     single { DatastorePreferences(androidContext()) }
 
     single<ChannelRepository> {
-        ChannelRepositoryImpl(androidContext())
+        ChannelRepositoryImpl(get(), androidContext())
     }
 
     factory { GetChannelsUseCase(get()) }
-    factory { GetStreamUrlUseCase() }
+    factory { GetStreamUrlUseCase(get()) }
 
     viewModel { SharedViewModel(get(), get(), get()) }
 }

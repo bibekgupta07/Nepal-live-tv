@@ -195,6 +195,7 @@ fun VideoPlayer(
     LaunchedEffect(streamUrl) {
         if (streamUrl != null && exoPlayer == null) {
             val dataSourceFactory = DefaultHttpDataSource.Factory()
+                .setAllowCrossProtocolRedirects(true)
                 .setDefaultRequestProperties(
                     mapOf(
                         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36",

@@ -108,7 +108,7 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = HomeRoute,
-            modifier = Modifier.fillMaxSize().then(if (isFullScreen) Modifier else Modifier.padding(innerPadding))
+            modifier = Modifier.fillMaxSize().then(if (isFullScreen || isLandscape) Modifier else Modifier.padding(innerPadding))
         ) {
             composable<HomeRoute> {
                 HomeScreen()
