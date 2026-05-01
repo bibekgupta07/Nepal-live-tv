@@ -27,17 +27,17 @@ android {
     productFlavors {
         create("dev") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
+            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("uat") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"https://uat.api.nepallivetv.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("prod") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"https://api.nepallivetv.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
         }
     }
