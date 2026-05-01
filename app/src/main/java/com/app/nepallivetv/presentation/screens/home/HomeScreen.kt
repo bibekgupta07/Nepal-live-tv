@@ -95,32 +95,30 @@ fun HomeScreen() {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        if (selectedChannel != null) {
-            val favoriteUrls by viewModel.favoriteUrls.collectAsState()
-            val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
-            val isCastEnabled by viewModel.isCastEnabled.collectAsState()
+        val favoriteUrls by viewModel.favoriteUrls.collectAsState()
+        val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
+        val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 
-            VideoPlayer(
-                streamUrl = currentStreamUrl,
-                channelName = selectedChannel?.name ?: "Live Stream",
-                isFullScreen = isFullScreen,
-                isInPipMode = isInPipMode,
-                isFavorite = isCurrentFavorite,
-                isCastEnabled = isCastEnabled,
-                onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
-                onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
-                onClose = {
-                    if (isFullScreen) {
-                        viewModel.setFullScreen(false)
-                    } else {
-                        viewModel.closePlayer()
-                    }
-                },
-                modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() else Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-            )
-        }
+        VideoPlayer(
+            streamUrl = currentStreamUrl,
+            channelName = selectedChannel?.name ?: "Loading...",
+            isFullScreen = isFullScreen,
+            isInPipMode = isInPipMode,
+            isFavorite = isCurrentFavorite,
+            isCastEnabled = isCastEnabled,
+            onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
+            onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
+            onClose = {
+                if (isFullScreen) {
+                    viewModel.setFullScreen(false)
+                } else {
+                    viewModel.closePlayer()
+                }
+            },
+            modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() else Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+        )
 
         if (!isFullScreen && !isInPipMode && !isLandscape) {
             Spacer(modifier = Modifier.height(8.dp))

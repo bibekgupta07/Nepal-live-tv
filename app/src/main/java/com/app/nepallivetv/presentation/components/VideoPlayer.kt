@@ -205,7 +205,7 @@ fun VideoPlayer(
     }
 
     LaunchedEffect(streamUrl) {
-        if (streamUrl != null && exoPlayer == null) {
+        if (exoPlayer == null) {
             val dataSourceFactory = DefaultHttpDataSource.Factory()
                 .setAllowCrossProtocolRedirects(true)
                 .setDefaultRequestProperties(
@@ -287,9 +287,8 @@ fun VideoPlayer(
         }
     }
 
-    if (streamUrl != null || isBuffering) {
-        Box(modifier = modifier.background(Color.Black)) {
-            AndroidView(
+    Box(modifier = modifier.background(Color.Black)) {
+        AndroidView(
                 factory = { ctx ->
                     PlayerView(ctx).apply {
                         layoutParams = FrameLayout.LayoutParams(
@@ -568,7 +567,6 @@ fun VideoPlayer(
                 }
             }
         }
-    }
 }
 
 @Composable
