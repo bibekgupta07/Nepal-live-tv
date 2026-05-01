@@ -20,9 +20,26 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-        // IMPORTANT: Replace IP with your actual local network IP where the FastAPI server is running
-        buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
+    }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+        }
+        create("uat") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL", "\"https://uat.api.nepallivetv.com/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+        }
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL", "\"https://api.nepallivetv.com/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+        }
     }
 
     buildTypes {
