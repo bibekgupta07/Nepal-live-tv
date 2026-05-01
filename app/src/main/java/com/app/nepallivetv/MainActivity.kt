@@ -64,7 +64,11 @@ class MainActivity : AppCompatActivity() {
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                // Only enter PiP if a video is actively playing.
+                // Otherwise, let the app minimize normally (which will hit ON_STOP and pause the player).
+                if (sharedViewModel.currentStreamUrl.value != null) {
+                    enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

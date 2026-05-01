@@ -127,12 +127,24 @@ fun VideoPlayer(
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_PAUSE) {
-                if (activity != null && !activity.isInPictureInPictureMode) {
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> {
+                    if (activity != null && !activity.isInPictureInPictureMode) {
+                        exoPlayer?.pause()
+                    }
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    // Always pause on stop to prevent background audio bleeding
+                    // (e.g. when app is fully hidden or PiP is dismissed by user)
                     exoPlayer?.pause()
                 }
-            } else if (event == Lifecycle.Event.ON_RESUME) {
-                exoPlayer?.play()
+                Lifecycle.Event.ON_RESUME -> {
+                    exoPlayer?.play()
+                }
+                Lifecycle.Event.ON_DESTROY -> {
+                    exoPlayer?.release()
+                }
+                else -> {}
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -237,6 +249,7 @@ fun VideoPlayer(
         }
         
         if (streamUrl != null) {
+            isBuffering = true
             val mediaItem = MediaItem.Builder()
                 .setUri(streamUrl)
                 .setLiveConfiguration(
@@ -252,6 +265,11 @@ fun VideoPlayer(
 
             exoPlayer?.setMediaItem(mediaItem)
             exoPlayer?.prepare()
+        } else {
+            // Unload player visually, show loading indicator
+            exoPlayer?.stop()
+            exoPlayer?.clearMediaItems()
+            isBuffering = true
         }
     }
 
@@ -269,7 +287,7 @@ fun VideoPlayer(
         }
     }
 
-    if (streamUrl != null) {
+    if (streamUrl != null || isBuffering) {
         Box(modifier = modifier.background(Color.Black)) {
             AndroidView(
                 factory = { ctx ->

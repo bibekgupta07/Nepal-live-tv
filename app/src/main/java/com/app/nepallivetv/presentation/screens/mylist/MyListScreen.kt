@@ -73,7 +73,7 @@ fun MyListScreen() {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        if (currentStreamUrl != null) {
+        if (selectedChannel != null) {
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
             val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 

@@ -95,7 +95,7 @@ fun HomeScreen() {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        if (currentStreamUrl != null) {
+        if (selectedChannel != null) {
             val favoriteUrls by viewModel.favoriteUrls.collectAsState()
             val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
             val isCastEnabled by viewModel.isCastEnabled.collectAsState()
