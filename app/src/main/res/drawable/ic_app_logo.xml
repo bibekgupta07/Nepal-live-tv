@@ -4,31 +4,48 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <path
-      android:pathData="M18,36h72c5.523,0 10,4.477 10,10v36c0,5.523 -4.477,10 -10,10h-72c-5.523,0 -10,-4.477 -10,-10v-36c0,-5.523 4.477,-10 10,-10z">
-    <aapt:attr name="android:fillColor">
-      <gradient
-          android:startX="18"
-          android:startY="36"
-          android:endX="90"
-          android:endY="92"
-          android:type="linear">
-        <item android:offset="0" android:color="#FF3A1C1C"/>
-        <item android:offset="1" android:color="#FFE50914"/>
-      </gradient>
-    </aapt:attr>
-  </path>
-  <path
-      android:fillColor="#FFFFFF"
-      android:pathData="M46,52v24l22,-12z" />
-  <path
-      android:fillColor="#E50914"
-      android:pathData="M38,24l16,-10l16,10"
-      android:strokeWidth="6"
-      android:strokeColor="#E50914"
-      android:strokeLineCap="round"
-      android:strokeLineJoin="round" />
-  <path
-      android:fillColor="#E50914"
-      android:pathData="M54,16a8,8 0,1 0,16 0a8,8 0,1 0,-16 0" />
+
+    <!-- Outer TV/Circle Gradient Ring -->
+    <path
+        android:pathData="M54,16 c-20.98,0 -38,17.02 -38,38 c0,20.98 17.02,38 38,38 c20.98,0 38,-17.02 38,-38 c0,-20.98 -17.02,-38 -38,-38 z m0,8 c16.56,0 30,13.44 30,30 c0,16.56 -13.44,30 -30,30 c-16.56,0 -30,-13.44 -30,-30 c0,-16.56 13.44,-30 30,-30 z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="16"
+                android:startY="16"
+                android:endX="92"
+                android:endY="92"
+                android:type="linear">
+                <item android:offset="0" android:color="#FF2A2A" />
+                <item android:offset="1" android:color="#003893" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- The Nepal Flag / Play Button -->
+    <path
+        android:pathData="M 44,34 L 72,53 L 52,53 L 74,75 L 44,75 Z"
+        android:strokeWidth="5"
+        android:strokeColor="#003893"
+        android:strokeLineJoin="round">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="44"
+                android:startY="34"
+                android:endX="74"
+                android:endY="75"
+                android:type="linear">
+                <item android:offset="0" android:color="#FF4D4D" />
+                <item android:offset="1" android:color="#DC143C" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Sun and Moon (stylized small white dots for extreme minimalism) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 50,45 a 1.5,1.5 0,1,0 3,0 a 1.5,1.5 0,1,0 -3,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 52,64 a 1.5,1.5 0,1,0 3,0 a 1.5,1.5 0,1,0 -3,0" />
+
 </vector>

@@ -58,7 +58,7 @@ fun SplashScreen(navController: NavController, authToken: String?) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0A0005)), // Dark plum color matching background
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -72,7 +72,7 @@ fun SplashScreen(navController: NavController, authToken: String?) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Nepal Live TV",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp
@@ -80,7 +80,7 @@ fun SplashScreen(navController: NavController, authToken: String?) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Stream Anything, Anytime",
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
         }
