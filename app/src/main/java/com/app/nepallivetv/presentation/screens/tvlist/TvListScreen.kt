@@ -115,6 +115,14 @@ fun TvListScreen() {
         )
 
         if (!isFullScreen && !isInPipMode && !isLandscape) {
+            if (selectedChannel != null) {
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Text(text = "NOW PLAYING", color = MaterialTheme.colorScheme.primary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text(text = selectedChannel?.name ?: "", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "Live Now • HD • ${selectedChannel?.category}", color = Color.Gray, fontSize = 12.sp)
+                }
+            }
+
             val featuredChannels by viewModel.featuredTvListChannels.collectAsState()
 
             if (featuredChannels.isNotEmpty()) {

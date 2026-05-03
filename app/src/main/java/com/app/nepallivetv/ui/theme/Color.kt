@@ -19,3 +19,12 @@ val BrandRed = Color(0xFFE63946)
 val AccentOrange = Color(0xFFFF6B35)
 val LightBg = Color(0xFFF4F4F8)
 val TextGray = Color(0xFFA0A0B0)
+
+// Additional UI Colors
+val BottomNavBg = Color(0xFF21151A)
+val CloseBlue = Color(0xFF6B8AFF)
+val GradientRedStart = Color(0xFF3A1C1C)
+val GradientRedEnd = Color(0xFF1C1C1C)
+val OverlayBlack = Color(0xB3000000) // Color.Black.copy(alpha = 0.7f)
+val MediumOverlayBlack = Color(0x80000000) // Color.Black.copy(alpha = 0.5f)
+val LightOverlayBlack = Color(0x66000000) // Color.Black.copy(alpha = 0.4f)

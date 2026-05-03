@@ -341,7 +341,7 @@ fun VideoPlayer(
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    LiveBadge()
+                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 }
             }
 
@@ -383,18 +383,6 @@ fun VideoPlayer(
                             )
                         }
                     }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                            .clickable { onClose() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color(0xFF6B8AFF), modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                    }
                 }
             }
 
@@ -425,9 +413,6 @@ fun VideoPlayer(
                 modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 16.dp, end = 120.dp)
             ) {
                 Column {
-                    Text(text = channelName, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    Text(text = "Live Now • HD", color = Color.Gray, fontSize = 12.sp)
-                    Spacer(modifier = Modifier.height(8.dp))
                     LinearProgressIndicator(
                         progress = { 1f },
                         color = Color(0xFFE63946),

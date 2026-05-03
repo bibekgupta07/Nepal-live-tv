@@ -48,6 +48,8 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
+import com.app.nepallivetv.ui.theme.BottomNavBg
+
 @Serializable object HomeRoute
 @Serializable object TvListRoute
 @Serializable object ScheduleRoute
@@ -144,9 +146,9 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
     )
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = BottomNavBg, // Matches the dark reddish-brown hue of the provided UI image
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        tonalElevation = 8.dp
+        tonalElevation = 0.dp // Flat design as requested
     ) {
         tabs.forEach { (label, icon, routeObject) ->
             val isSelected = currentDestinationRoute?.contains(routeObject::class.simpleName ?: "") == true
