@@ -10,6 +10,8 @@ import com.app.nepallivetv.domain.usecase.GetMatchDetailUseCase
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.presentation.viewmodel.MatchDetailViewModel
+import com.app.nepallivetv.updater.UpdateManager
+import com.app.nepallivetv.updater.UpdateViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -22,6 +24,8 @@ val appModule = module {
         ChannelRepositoryImpl(get(), androidContext())
     }
 
+    single { UpdateManager(androidContext()) }
+
     factory { GetChannelsUseCase(get()) }
     factory { GetStreamUrlUseCase(get()) }
     factory { GetCricketMatchesUseCase(get()) }
@@ -30,4 +34,5 @@ val appModule = module {
     viewModel { SharedViewModel(get(), get(), get(), get()) }
     viewModel { MatchDetailViewModel(get()) }
     viewModel { AuthViewModel(get(), get()) }
+    viewModel { UpdateViewModel(get()) }
 }

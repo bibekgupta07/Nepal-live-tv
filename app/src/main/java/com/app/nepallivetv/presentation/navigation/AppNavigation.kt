@@ -55,6 +55,9 @@ import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 import com.app.nepallivetv.presentation.screens.auth.LoginScreen
 import com.app.nepallivetv.presentation.screens.auth.RegisterScreen
 import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
+import com.app.nepallivetv.updater.UpdateViewModel
+import com.app.nepallivetv.updater.UpdateManager
+import com.app.nepallivetv.updater.UpdateDialog
 
 @Serializable object LoginRoute
 @Serializable object RegisterRoute
@@ -78,6 +81,9 @@ fun AppNavigation() {
 
     val authViewModel = koinViewModel<AuthViewModel>()
     val authToken by authViewModel.isLoggedIn.collectAsState(initial = null)
+
+    val updateViewModel = koinViewModel<UpdateViewModel>()
+    val updateState by updateViewModel.updateState.collectAsState()
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
@@ -132,6 +138,14 @@ fun AppNavigation() {
             }
         }
     ) { innerPadding ->
+        if (updateState is UpdateManager.UpdateResult.UpdateAvailable) {
+            UpdateDialog(
+                updateResult = updateState as UpdateManager.UpdateResult.UpdateAvailable,
+                onDismiss = { updateViewModel.dismissUpdate() },
+                onConfirm = { url -> updateViewModel.downloadAndInstall(url) }
+            )
+        }
+
         NavHost(
             navController = navController,
             startDestination = if (authToken.isNullOrEmpty()) LoginRoute else HomeRoute,
