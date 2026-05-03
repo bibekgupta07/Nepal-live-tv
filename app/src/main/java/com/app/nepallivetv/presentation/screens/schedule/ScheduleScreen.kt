@@ -83,6 +83,13 @@ fun ScheduleScreen(onMatchClick: (String) -> Unit) {
             currentTimeMs = System.currentTimeMillis()
         }
     }
+    
+    DisposableEffect(Unit) {
+        viewModel.setCricketPollingActive(true)
+        onDispose {
+            viewModel.setCricketPollingActive(false)
+        }
+    }
 
     Column(
         modifier = Modifier

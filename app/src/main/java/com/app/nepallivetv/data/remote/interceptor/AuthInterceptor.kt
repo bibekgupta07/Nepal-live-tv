@@ -31,8 +31,16 @@ class AuthInterceptor(
             requestBuilder.addHeader("Authorization", "Bearer $token")
         }
 
-        // 3. Proceed with the modified request
         val request = requestBuilder.build()
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+        
+        // Auto-logout on 401 Unauthorized
+        if (response.code == 401) {
+            runBlocking {
+                datastorePreferences.clearAuthData()
+            }
+        }
+        
+        return response
     }
 }

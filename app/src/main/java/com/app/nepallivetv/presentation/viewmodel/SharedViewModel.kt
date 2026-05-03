@@ -108,15 +108,23 @@ class SharedViewModel(
     private val _isFullScreen = MutableStateFlow(false)
     val isFullScreen: StateFlow<Boolean> = _isFullScreen
 
+    private var isPollingActive = false
+
     init {
         loadChannels()
         startDataPolling()
+    }
+
+    fun setCricketPollingActive(active: Boolean) {
+        isPollingActive = active
     }
 
     private fun startDataPolling() {
         viewModelScope.launch {
             while (isActive) {
                 delay(15000) // Poll every 15 seconds to keep cricket data fresh
+                if (!isPollingActive) continue
+
                 try {
                     val matches = getCricketMatchesUseCase()
                     if (matches.isNotEmpty()) {

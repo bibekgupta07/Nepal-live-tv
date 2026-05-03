@@ -81,6 +81,15 @@ fun AppNavigation() {
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
+    // Auto-logout effect
+    LaunchedEffect(authToken) {
+        if (authToken == null && currentDestination?.route?.contains("Login") != true && currentDestination?.route?.contains("Register") != true) {
+            navController.navigate(LoginRoute) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
+
     LaunchedEffect(isBottomBarVisible, currentDestination) {
         if (isBottomBarVisible && !isInPipMode) {
             delay(5000)

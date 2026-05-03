@@ -9,6 +9,8 @@ import com.app.nepallivetv.data.remote.LiveTvApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import org.json.JSONObject
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -26,6 +28,24 @@ class AuthViewModel(
     val authState: StateFlow<AuthState> = _authState
 
     val isLoggedIn = datastorePreferences.authTokenFlow
+    
+    private fun parseError(e: Exception): String {
+        return if (e is HttpException) {
+            try {
+                val errorBodyString = e.response()?.errorBody()?.string()
+                if (errorBodyString != null) {
+                    val json = JSONObject(errorBodyString)
+                    json.optString("detail", "An error occurred")
+                } else {
+                    e.message ?: "An error occurred"
+                }
+            } catch (ex: Exception) {
+                e.message ?: "An error occurred"
+            }
+        } else {
+            e.message ?: "An error occurred"
+        }
+    }
 
     fun register(name: String, email: String, phone: String, pass: String) {
         viewModelScope.launch {
@@ -34,7 +54,7 @@ class AuthViewModel(
                 api.register(RegisterRequest(name, email, phone, pass))
                 _authState.value = AuthState.Success
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Registration failed")
+                _authState.value = AuthState.Error(parseError(e))
             }
         }
     }
@@ -47,7 +67,7 @@ class AuthViewModel(
                 datastorePreferences.saveAuthData(res.accessToken, res.userName, res.email)
                 _authState.value = AuthState.Success
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Login failed")
+                _authState.value = AuthState.Error(parseError(e))
             }
         }
     }
