@@ -68,7 +68,7 @@ fun MyListScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBg)
+            .background(MaterialTheme.colorScheme.background)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
@@ -104,12 +104,12 @@ fun MyListScreen() {
                 Column {
                     Text(
                         text = "Saved channels",
-                        color = SettingTextGray,
+                        color = MaterialTheme.customColors.settingTextGray,
                         fontSize = 14.sp
                     )
                     Text(
                         text = "My List",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -124,13 +124,13 @@ fun MyListScreen() {
                 ) {
                     Text(
                         text = "My Favorites",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
                     Text(
                         text = "${channels.size} saved",
-                        color = SettingTextGray,
+                        color = MaterialTheme.customColors.settingTextGray,
                         fontSize = 12.sp
                     )
                 }
@@ -145,7 +145,7 @@ fun MyListScreen() {
                         Card(
                             modifier = Modifier.fillMaxWidth().clickable { viewModel.selectChannel(channel) },
                             shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = if (isSelected) CardActiveBg else CardInactiveBg),
+                            colors = CardDefaults.cardColors(containerColor = if (isSelected) CardActiveBg else MaterialTheme.customColors.cardInactiveBg),
                             border = if (isSelected) BorderStroke(1.dp, CardActiveBorder) else null
                         ) {
                             Row(
@@ -191,7 +191,7 @@ fun MyListScreen() {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = channel.name,
-                                        color = Color.White,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 16.sp,
                                         maxLines = 1,
@@ -200,7 +200,7 @@ fun MyListScreen() {
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
                                         text = channel.category.ifBlank { "Live TV" },
-                                        color = SettingTextGray,
+                                        color = MaterialTheme.customColors.settingTextGray,
                                         fontSize = 12.sp
                                     )
                                 }
@@ -222,7 +222,7 @@ fun MyListScreen() {
                                             .border(1.dp, HdBorder, RoundedCornerShape(4.dp))
                                             .padding(horizontal = 6.dp, vertical = 2.dp)
                                     ) {
-                                        Text("HD", color = SettingTextGray, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                        Text("HD", color = MaterialTheme.customColors.settingTextGray, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                                     }
                                 }
                             }

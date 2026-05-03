@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +69,7 @@ fun calculateCountdown(isoString: String, currentTimeMs: Long): String {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreen(onMatchClick: (String) -> Unit) {
     val viewModel = koinViewModel<SharedViewModel>()
@@ -74,6 +77,9 @@ fun ScheduleScreen(onMatchClick: (String) -> Unit) {
     val isLoading by viewModel.isLoading.collectAsState()
 
     var selectedCategory by remember { mutableStateOf("All") }
+    
+    var isRefreshing by remember { mutableStateOf(false) }
+    val pullToRefreshState = rememberPullToRefreshState()
     
     // Auto-refresh the UI every minute to keep countdowns accurate
     var currentTimeMs by remember { mutableStateOf(System.currentTimeMillis()) }
@@ -91,79 +97,88 @@ fun ScheduleScreen(onMatchClick: (String) -> Unit) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBg)
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            viewModel.refreshCricketMatches()
+            isRefreshing = false
+        },
+        state = pullToRefreshState,
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Text(
-                text = "Cricket",
-                color = SettingTextGray,
-                fontSize = 14.sp
-            )
-            Text(
-                text = "Live & Upcoming",
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Dynamic Categories
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            val formats = matches.map { it.format }.filter { it.isNotBlank() }.distinct()
-            val tabs = listOf("All") + formats
+            Spacer(modifier = Modifier.height(48.dp))
 
-            items(tabs) { tab ->
-                val isSelected = tab == selectedCategory
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (isSelected) BrandRed else CardInactiveBg,
-                    modifier = Modifier
-                        .height(36.dp)
-                        .clickable { selectedCategory = tab }
-                ) {
-                    Box(modifier = Modifier.padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = if (tab == "All") "All Matches (${matches.size})" else tab,
-                            color = if (isSelected) Color.White else SettingTextGray,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(
+                    text = "Cricket",
+                    color = MaterialTheme.customColors.settingTextGray,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "Live & Upcoming",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Dynamic Categories
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val formats = matches.map { it.format }.filter { it.isNotBlank() }.distinct()
+                val tabs = listOf("All") + formats
+
+                items(tabs) { tab ->
+                    val isSelected = tab == selectedCategory
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = if (isSelected) BrandRed else MaterialTheme.customColors.cardInactiveBg,
+                        modifier = Modifier
+                            .height(36.dp)
+                            .clickable { selectedCategory = tab }
+                    ) {
+                        Box(modifier = Modifier.padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = if (tab == "All") "All Matches (${matches.size})" else tab,
+                                color = if (isSelected) Color.White else MaterialTheme.customColors.settingTextGray,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        if (matches.isEmpty() && isLoading) {
-            Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = BrandRed)
-            }
-        } else if (matches.isEmpty()) {
-            Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
-                Text("No live or upcoming matches right now.", color = SettingTextGray)
-            }
-        } else {
-            val filteredMatches = if (selectedCategory == "All") matches else matches.filter { it.format == selectedCategory }
-            val sortedMatches = filteredMatches.sortedBy { it.startTime }
-            
-            LazyColumn(
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 120.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(sortedMatches) { match ->
-                    MatchCard(match = match, onMatchClick = onMatchClick, currentTimeMs = currentTimeMs)
+            if (matches.isEmpty() && isLoading && !isRefreshing) {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = BrandRed)
+                }
+            } else if (matches.isEmpty() && !isLoading) {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                    Text("No live or upcoming matches right now.", color = MaterialTheme.customColors.settingTextGray)
+                }
+            } else {
+                val filteredMatches = if (selectedCategory == "All") matches else matches.filter { it.format == selectedCategory }
+                val sortedMatches = filteredMatches.sortedBy { it.startTime }
+                
+                LazyColumn(
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 120.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(sortedMatches) { match ->
+                        MatchCard(match = match, onMatchClick = onMatchClick, currentTimeMs = currentTimeMs)
+                    }
                 }
             }
         }
@@ -175,7 +190,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
     Card(
         modifier = Modifier.fillMaxWidth().clickable { onMatchClick(match.id) },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = CardInactiveBg)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.customColors.cardInactiveBg)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -190,7 +205,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                     }
                     Text(
                         text = if (match.state == "PRE") "UPCOMING" else match.state,
-                        color = if (match.state == "LIVE") BrandRed else SettingTextGray,
+                        color = if (match.state == "LIVE") BrandRed else MaterialTheme.customColors.settingTextGray,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.sp
@@ -199,7 +214,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                 
                 Text(
                     text = "${match.format} • ${match.subtitle}",
-                    color = SettingTextGray,
+                    color = MaterialTheme.customColors.settingTextGray,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -224,7 +239,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = match.team1?.abbr ?: match.team1?.name ?: "",
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
@@ -243,7 +258,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = match.team2?.abbr ?: match.team2?.name ?: "",
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
@@ -254,13 +269,13 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                     if (match.state == "PRE") {
                         Text(
                             text = "Today",
-                            color = SettingTextGray,
+                            color = MaterialTheme.customColors.settingTextGray,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = formatMatchTime(match.startTime),
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.ExtraBold
                         )
@@ -270,14 +285,14 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                             if (!match.team1?.overs.isNullOrEmpty()) {
                                 Text(
                                     text = "(${match.team1?.overs}) ",
-                                    color = SettingTextGray,
+                                    color = MaterialTheme.customColors.settingTextGray,
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(bottom = 2.dp)
                                 )
                             }
                             Text(
                                 text = match.team1?.score ?: "",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp
                             )
@@ -290,14 +305,14 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
                             if (!match.team2?.overs.isNullOrEmpty()) {
                                 Text(
                                     text = "(${match.team2?.overs}) ",
-                                    color = SettingTextGray,
+                                    color = MaterialTheme.customColors.settingTextGray,
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(bottom = 2.dp)
                                 )
                             }
                             Text(
                                 text = match.team2?.score ?: "",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp
                             )
@@ -316,7 +331,7 @@ fun MatchCard(match: Match, onMatchClick: (String) -> Unit, currentTimeMs: Long)
 
             Text(
                 text = displayStatus,
-                color = SettingTextGray,
+                color = MaterialTheme.customColors.settingTextGray,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.fillMaxWidth()

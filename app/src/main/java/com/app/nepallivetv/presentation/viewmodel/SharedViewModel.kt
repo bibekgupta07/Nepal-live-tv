@@ -119,6 +119,27 @@ class SharedViewModel(
         isPollingActive = active
     }
 
+    fun refreshCricketMatches() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val matches = getCricketMatchesUseCase()
+                if (matches.isNotEmpty()) {
+                    val sorted = matches.sortedWith(Comparator { m1, m2 ->
+                        val p1 = getMatchPriority(m1)
+                        val p2 = getMatchPriority(m2)
+                        if (p1 != p2) p1.compareTo(p2) else m1.startTime.compareTo(m2.startTime)
+                    })
+                    _cricketMatches.value = sorted
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     private fun startDataPolling() {
         viewModelScope.launch {
             while (isActive) {

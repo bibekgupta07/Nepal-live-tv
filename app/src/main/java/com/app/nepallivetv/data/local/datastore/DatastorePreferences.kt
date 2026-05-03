@@ -21,6 +21,7 @@ class DatastorePreferences(private val context: Context) {
     private val TOKEN_KEY = stringPreferencesKey("auth_token")
     private val USER_NAME_KEY = stringPreferencesKey("auth_user_name")
     private val USER_EMAIL_KEY = stringPreferencesKey("auth_user_email")
+    private val USER_PHONE_KEY = stringPreferencesKey("auth_user_phone")
 
     val isDarkModeFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
         prefs[THEME_KEY] ?: true
@@ -45,17 +46,22 @@ class DatastorePreferences(private val context: Context) {
     val userEmailFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
         prefs[USER_EMAIL_KEY]
     }
+    
+    val userPhoneFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
+        prefs[USER_PHONE_KEY]
+    }
 
     suspend fun getToken(): String? {
         val prefs = context.appDataStore.data.first()
         return prefs[TOKEN_KEY]
     }
 
-    suspend fun saveAuthData(token: String, name: String, email: String) {
+    suspend fun saveAuthData(token: String, name: String, email: String, phone: String) {
         context.appDataStore.edit { prefs ->
             prefs[TOKEN_KEY] = token
             prefs[USER_NAME_KEY] = name
             prefs[USER_EMAIL_KEY] = email
+            prefs[USER_PHONE_KEY] = phone
         }
     }
     
@@ -64,6 +70,7 @@ class DatastorePreferences(private val context: Context) {
             prefs.remove(TOKEN_KEY)
             prefs.remove(USER_NAME_KEY)
             prefs.remove(USER_EMAIL_KEY)
+            prefs.remove(USER_PHONE_KEY)
         }
     }
 

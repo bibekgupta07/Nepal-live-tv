@@ -1,8 +1,6 @@
 package com.app.nepallivetv.presentation.screens.setting
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,7 +13,6 @@ import androidx.compose.material.icons.filled.Hd
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.SignalCellularAlt
-import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,19 +31,21 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SettingScreen() {
     val viewModel = koinViewModel<SharedViewModel>()
+    val authViewModel = koinViewModel<com.app.nepallivetv.presentation.viewmodel.AuthViewModel>()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val isCastEnabled by viewModel.isCastEnabled.collectAsState()
     
     val userName by viewModel.datastorePreferences.userNameFlow.collectAsState(initial = "User")
     val userEmail by viewModel.datastorePreferences.userEmailFlow.collectAsState(initial = "user@gmail.com")
-    
+    val userPhone by viewModel.datastorePreferences.userPhoneFlow.collectAsState(initial = "No Phone Saved")
+
     var forceHdCast by remember { mutableStateOf(false) }
     var liveNotifications by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBg)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -54,12 +53,12 @@ fun SettingScreen() {
 
         Text(
             text = "Account",
-            color = SettingTextGray,
+            color = MaterialTheme.customColors.settingTextGray,
             fontSize = 14.sp
         )
         Text(
             text = "Settings",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold
         )
@@ -70,7 +69,7 @@ fun SettingScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Row(
                 modifier = Modifier
@@ -97,43 +96,26 @@ fun SettingScreen() {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = userName ?: "User",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = userEmail ?: "user@gmail.com",
-                        color = SettingTextGray,
+                        color = MaterialTheme.customColors.settingTextGray,
                         fontSize = 14.sp
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier
-                            .background(PremiumBoxBg, RoundedCornerShape(6.dp))
-                            .border(BorderStroke(1.dp, PremiumBoxBorder), RoundedCornerShape(6.dp))
-                            .padding(horizontal = 6.dp, vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Bolt,
-                            contentDescription = "Premium",
-                            tint = PremiumLightning,
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Premium Plan",
-                            color = PremiumTextRed,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                    Text(
+                        text = userPhone ?: "",
+                        color = MaterialTheme.customColors.settingTextGray,
+                        fontSize = 14.sp
+                    )
                 }
                 
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Edit Profile",
-                    tint = SettingTextGray,
+                    tint = MaterialTheme.customColors.settingTextGray,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -145,7 +127,7 @@ fun SettingScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column {
                 SettingToggleItem(
@@ -173,7 +155,7 @@ fun SettingScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column {
                 SettingToggleItem(
@@ -203,7 +185,7 @@ fun SettingScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column {
                 SettingClickableItem(
@@ -231,11 +213,9 @@ fun SettingScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column {
-                val authViewModel = koinViewModel<com.app.nepallivetv.presentation.viewmodel.AuthViewModel>()
-                
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -256,7 +236,7 @@ fun SettingScreen() {
 fun SectionHeader(title: String) {
     Text(
         text = title,
-        color = SettingSectionText,
+        color = MaterialTheme.customColors.settingTextGray,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
@@ -287,38 +267,37 @@ fun SettingToggleItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon, 
-                contentDescription = null, 
+                imageVector = icon,
+                contentDescription = null,
                 tint = iconTintColor,
                 modifier = Modifier.size(24.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = title, 
-                color = Color.White,
+                text = title,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
             Text(
-                text = subtitle, 
-                color = SettingTextGray,
-                fontSize = 12.sp
+                text = subtitle,
+                color = MaterialTheme.customColors.settingTextGray,
+                fontSize = 13.sp
             )
         }
-        
+
         Switch(
             checked = isChecked,
-            onCheckedChange = onCheckedChange,
+            onCheckedChange = null,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = BrandRed,
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFF2C2C35),
-                uncheckedBorderColor = Color.Transparent
+                uncheckedThumbColor = MaterialTheme.customColors.settingTextGray,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
     }
@@ -335,7 +314,7 @@ fun SettingClickableItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {  }
+            .clickable { }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -346,33 +325,33 @@ fun SettingClickableItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon, 
-                contentDescription = null, 
+                imageVector = icon,
+                contentDescription = null,
                 tint = iconTintColor,
                 modifier = Modifier.size(24.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = title, 
-                color = Color.White,
+                text = title,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
             Text(
-                text = subtitle, 
-                color = SettingTextGray,
-                fontSize = 12.sp
+                text = subtitle,
+                color = MaterialTheme.customColors.settingTextGray,
+                fontSize = 13.sp
             )
         }
-        
+
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "Forward",
-            tint = SettingTextGray,
+            contentDescription = null,
+            tint = MaterialTheme.customColors.settingTextGray,
             modifier = Modifier.size(20.dp)
         )
     }

@@ -23,7 +23,7 @@ import com.app.nepallivetv.presentation.viewmodel.AuthState
 import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.ui.theme.BrandRed
 import com.app.nepallivetv.ui.theme.DarkBg
-import com.app.nepallivetv.ui.theme.SettingTextGray
+import com.app.nepallivetv.ui.theme.customColors
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +67,7 @@ fun RegisterScreen(
         )
         Text(
             text = "Sign up to get started",
-            color = SettingTextGray,
+            color = MaterialTheme.customColors.settingTextGray,
             fontSize = 16.sp
         )
 
@@ -76,7 +76,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Full Name", color = SettingTextGray) },
+            label = { Text("Full Name", color = MaterialTheme.customColors.settingTextGray) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
@@ -92,7 +92,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email Address", color = SettingTextGray) },
+            label = { Text("Email Address", color = MaterialTheme.customColors.settingTextGray) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
@@ -108,7 +108,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
-            label = { Text("Phone Number", color = SettingTextGray) },
+            label = { Text("Phone Number", color = MaterialTheme.customColors.settingTextGray) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
@@ -124,12 +124,12 @@ fun RegisterScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password", color = SettingTextGray) },
+            label = { Text("Password", color = MaterialTheme.customColors.settingTextGray) },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = null, tint = SettingTextGray)
+                    Icon(imageVector = image, contentDescription = null, tint = MaterialTheme.customColors.settingTextGray)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -172,7 +172,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Row {
-            Text("Already have an account? ", color = SettingTextGray)
+            Text("Already have an account? ", color = MaterialTheme.customColors.settingTextGray)
             Text(
                 text = "Login",
                 color = BrandRed,

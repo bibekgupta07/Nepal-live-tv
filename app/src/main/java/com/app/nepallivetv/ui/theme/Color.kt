@@ -2,26 +2,37 @@ package com.app.nepallivetv.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Basic Compose Colors
 val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
-
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-// Custom App Colors based on UI design
+// Brand Core Colors (Used in both themes)
+val BrandRed = Color(0xFFE63946)
+val AccentOrange = Color(0xFFFF6B35)
+
+// --- DARK THEME COLORS ---
 val DarkBg = Color(0xFF0A0A0F)
 val DarkBgSurface = Color(0xFF13131A)
 val CardDark = Color(0xFF18181F)
-val LogoAreaDark = Color(0xFF252530)
-val BrandRed = Color(0xFFE63946)
-val AccentOrange = Color(0xFFFF6B35)
-val LightBg = Color(0xFFF4F4F8)
-val TextGray = Color(0xFFA0A0B0)
+val CardInactiveBgDark = Color(0xFF181820)
+val SettingTextGrayDark = Color(0xFF90909C)
+val BottomNavBgDark = Color(0xFF21151A)
+val TextGrayDark = Color(0xFFA0A0B0)
 
-// Additional UI Colors
-val BottomNavBg = Color(0xFF21151A)
+// --- LIGHT THEME COLORS ---
+val LightBg = Color(0xFFF4F4F8)
+val LightBgSurface = Color(0xFFFFFFFF)
+val CardLight = Color(0xFFEAEAF0)
+val CardInactiveBgLight = Color(0xFFF0F0F5)
+val SettingTextGrayLight = Color(0xFF60606C)
+val BottomNavBgLight = Color(0xFFFFF0F2) // Very light warm tint
+val TextGrayLight = Color(0xFF4A4A5A)
+
+// Additional UI Colors (Shared/Specific)
+val LogoAreaDark = Color(0xFF252530)
 val CloseBlue = Color(0xFF6B8AFF)
 val GradientRedStart = Color(0xFF3A1C1C)
 val GradientRedEnd = Color(0xFF1C1C1C)
@@ -42,12 +53,10 @@ val PremiumBoxBorder = Color(0xFF662226)
 val PremiumTextRed = Color(0xFFFF4C4C)
 val PremiumLightning = Color(0xFFFFB703)
 val SettingSectionText = Color(0xFF7A7A8B)
-val SettingTextGray = Color(0xFF90909C)
 
 // My List UI Colors
 val CardActiveBg = Color(0xFF1B0E12)
 val CardActiveBorder = Color(0xFF662226)
-val CardInactiveBg = Color(0xFF181820)
 val NowWatchingLeftBg = Color(0xFF1C253B)
 val HdBorder = Color(0xFF4A4A5A)
 val HdBg = Color(0x33FFFFFF)

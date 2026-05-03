@@ -22,7 +22,7 @@ import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.ui.theme.BrandRed
 import com.app.nepallivetv.ui.theme.DarkBg
 import com.app.nepallivetv.ui.theme.DarkBgSurface
-import com.app.nepallivetv.ui.theme.SettingTextGray
+import com.app.nepallivetv.ui.theme.customColors
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +61,7 @@ fun LoginScreen(
         )
         Text(
             text = "Login to continue",
-            color = SettingTextGray,
+            color = MaterialTheme.customColors.settingTextGray,
             fontSize = 16.sp
         )
 
@@ -70,7 +70,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = loginId,
             onValueChange = { loginId = it },
-            label = { Text("Email or Phone Number", color = SettingTextGray) },
+            label = { Text("Email or Phone Number", color = MaterialTheme.customColors.settingTextGray) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
@@ -86,12 +86,12 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password", color = SettingTextGray) },
+            label = { Text("Password", color = MaterialTheme.customColors.settingTextGray) },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = null, tint = SettingTextGray)
+                    Icon(imageVector = image, contentDescription = null, tint = MaterialTheme.customColors.settingTextGray)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -134,7 +134,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Row {
-            Text("Don't have an account? ", color = SettingTextGray)
+            Text("Don't have an account? ", color = MaterialTheme.customColors.settingTextGray)
             Text(
                 text = "Register",
                 color = BrandRed,

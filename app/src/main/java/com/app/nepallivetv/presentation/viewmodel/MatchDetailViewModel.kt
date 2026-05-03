@@ -41,6 +41,20 @@ class MatchDetailViewModel(
         }
     }
     
+    fun refreshDetails(matchId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val detail = getMatchDetailUseCase(matchId)
+                _matchDetail.value = detail
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         pollingJob?.cancel()

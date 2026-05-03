@@ -27,7 +27,7 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = Color.White,
     onBackground = Color.White,
     onSurface = Color.White,
-    onSurfaceVariant = TextGray
+    onSurfaceVariant = SettingTextGrayDark
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -35,19 +35,19 @@ private val LightColorScheme = lightColorScheme(
     secondary = AccentOrange,
     tertiary = BrandRed,
     background = LightBg,
-    surface = Color.White,
-    surfaceVariant = Color(0xFFEBEBEB),
+    surface = LightBgSurface,
+    surfaceVariant = CardLight,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onBackground = Color(0xFF13131A),
     onSurface = Color(0xFF13131A),
-    onSurfaceVariant = Color(0xFF4A4A5A)
+    onSurfaceVariant = SettingTextGrayLight
 )
 
 @Composable
 fun NepalLiveTvTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Disabled dynamic color to strictly enforce our custom theme
+    dynamicColor: Boolean = false, 
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -58,7 +58,7 @@ fun NepalLiveTvTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -74,3 +74,26 @@ fun NepalLiveTvTheme(
         content = content
     )
 }
+
+// CompositionLocals or extensions to access custom colors (e.g. CardInactiveBg) dynamically
+val MaterialTheme.customColors: CustomColors
+    @Composable
+    get() = if (isSystemInDarkTheme()) DarkCustomColors else LightCustomColors
+
+data class CustomColors(
+    val cardInactiveBg: Color,
+    val bottomNavBg: Color,
+    val settingTextGray: Color
+)
+
+val DarkCustomColors = CustomColors(
+    cardInactiveBg = CardInactiveBgDark,
+    bottomNavBg = BottomNavBgDark,
+    settingTextGray = SettingTextGrayDark
+)
+
+val LightCustomColors = CustomColors(
+    cardInactiveBg = CardInactiveBgLight,
+    bottomNavBg = BottomNavBgLight,
+    settingTextGray = SettingTextGrayLight
+)

@@ -64,7 +64,7 @@ class AuthViewModel(
             _authState.value = AuthState.Loading
             try {
                 val res = api.login(LoginRequest(loginId, pass))
-                datastorePreferences.saveAuthData(res.accessToken, res.userName, res.email)
+                datastorePreferences.saveAuthData(res.accessToken, res.userName, res.email, res.phone)
                 _authState.value = AuthState.Success
             } catch (e: Exception) {
                 _authState.value = AuthState.Error(parseError(e))

@@ -49,7 +49,7 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-import com.app.nepallivetv.ui.theme.BottomNavBg
+import com.app.nepallivetv.ui.theme.customColors
 import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 
 import com.app.nepallivetv.presentation.screens.auth.LoginScreen
@@ -204,7 +204,7 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
     )
 
     NavigationBar(
-        containerColor = BottomNavBg, // Matches the dark reddish-brown hue of the provided UI image
+        containerColor = MaterialTheme.customColors.bottomNavBg,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp // Flat design as requested
     ) {
