@@ -26,12 +26,10 @@ class AuthInterceptor(
         // It is completely safe and standard practice to use `runBlocking` here to read from DataStore
         // synchronously so the network request waits for the token to be fetched before proceeding.
         
-        /* 
-        val token = runBlocking { datastorePreferences.getAuthToken() }
+        val token = runBlocking { datastorePreferences.getToken() }
         if (!token.isNullOrEmpty()) {
             requestBuilder.addHeader("Authorization", "Bearer $token")
         }
-        */
 
         // 3. Proceed with the modified request
         val request = requestBuilder.build()

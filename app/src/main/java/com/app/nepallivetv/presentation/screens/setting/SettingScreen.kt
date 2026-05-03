@@ -37,6 +37,9 @@ fun SettingScreen() {
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val isCastEnabled by viewModel.isCastEnabled.collectAsState()
     
+    val userName by viewModel.datastorePreferences.userNameFlow.collectAsState(initial = "User")
+    val userEmail by viewModel.datastorePreferences.userEmailFlow.collectAsState(initial = "user@gmail.com")
+    
     var forceHdCast by remember { mutableStateOf(false) }
     var liveNotifications by remember { mutableStateOf(true) }
 
@@ -82,7 +85,7 @@ fun SettingScreen() {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "R",
+                        text = userName?.take(1)?.uppercase() ?: "U",
                         color = Color.White,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -93,13 +96,13 @@ fun SettingScreen() {
                 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Rajesh Sharma",
+                        text = userName ?: "User",
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "rajesh@gmail.com",
+                        text = userEmail ?: "user@gmail.com",
                         color = SettingTextGray,
                         fontSize = 14.sp
                     )
@@ -219,6 +222,29 @@ fun SettingScreen() {
                     isChecked = liveNotifications,
                     onCheckedChange = { liveNotifications = it }
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SectionHeader(title = "ACCOUNT")
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = DarkBgSurface)
+        ) {
+            Column {
+                val authViewModel = koinViewModel<com.app.nepallivetv.presentation.viewmodel.AuthViewModel>()
+                
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { authViewModel.logout() }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Logout", color = Color(0xFFFF4C4C), fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
             }
         }
 

@@ -52,6 +52,12 @@ import org.koin.androidx.compose.koinViewModel
 import com.app.nepallivetv.ui.theme.BottomNavBg
 import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 
+import com.app.nepallivetv.presentation.screens.auth.LoginScreen
+import com.app.nepallivetv.presentation.screens.auth.RegisterScreen
+import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
+
+@Serializable object LoginRoute
+@Serializable object RegisterRoute
 @Serializable object HomeRoute
 @Serializable object TvListRoute
 @Serializable object ScheduleRoute
@@ -70,6 +76,9 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    val authViewModel = koinViewModel<AuthViewModel>()
+    val authToken by authViewModel.isLoggedIn.collectAsState(initial = null)
+
     var isBottomBarVisible by remember { mutableStateOf(true) }
 
     LaunchedEffect(isBottomBarVisible, currentDestination) {
@@ -79,9 +88,13 @@ fun AppNavigation() {
         }
     }
 
+    val showBottomBar = !isFullScreen && !isInPipMode && !isLandscape && 
+            currentDestination?.route?.contains("Login") != true && 
+            currentDestination?.route?.contains("Register") != true
+
     Scaffold(
         bottomBar = {
-            if (!isFullScreen && !isInPipMode && !isLandscape) {
+            if (showBottomBar) {
                 AnimatedVisibility(
                     visible = isBottomBarVisible,
                     enter = slideInVertically(initialOffsetY = { it }),
@@ -112,9 +125,35 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = HomeRoute,
+            startDestination = if (authToken.isNullOrEmpty()) LoginRoute else HomeRoute,
             modifier = Modifier.fillMaxSize().then(if (isFullScreen || isLandscape) Modifier else Modifier.padding(innerPadding))
         ) {
+            composable<LoginRoute> {
+                LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate(HomeRoute) {
+                            popUpTo(LoginRoute) { inclusive = true }
+                        }
+                    },
+                    onNavigateToRegister = {
+                        navController.navigate(RegisterRoute)
+                    }
+                )
+            }
+            
+            composable<RegisterRoute> {
+                RegisterScreen(
+                    onRegisterSuccess = {
+                        navController.navigate(LoginRoute) {
+                            popUpTo(RegisterRoute) { inclusive = true }
+                        }
+                    },
+                    onNavigateToLogin = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
             composable<HomeRoute> {
                 HomeScreen()
             }

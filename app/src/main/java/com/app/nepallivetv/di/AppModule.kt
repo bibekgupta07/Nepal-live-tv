@@ -8,6 +8,7 @@ import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
 import com.app.nepallivetv.domain.usecase.GetCricketMatchesUseCase
 import com.app.nepallivetv.domain.usecase.GetMatchDetailUseCase
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.presentation.viewmodel.MatchDetailViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -28,4 +29,5 @@ val appModule = module {
 
     viewModel { SharedViewModel(get(), get(), get(), get()) }
     viewModel { MatchDetailViewModel(get()) }
+    viewModel { AuthViewModel(get(), get()) }
 }

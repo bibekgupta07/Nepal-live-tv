@@ -23,7 +23,7 @@ class SharedViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
     private val getStreamUrlUseCase: GetStreamUrlUseCase,
     private val getCricketMatchesUseCase: GetCricketMatchesUseCase,
-    private val datastorePreferences: DatastorePreferences
+    val datastorePreferences: DatastorePreferences
 ) : ViewModel() {
 
     private val _cricketMatches = MutableStateFlow<List<Match>>(emptyList())

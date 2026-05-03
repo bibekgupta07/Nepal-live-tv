@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 private val Context.appDataStore by preferencesDataStore(name = "app_preferences")
 
@@ -14,6 +16,11 @@ class DatastorePreferences(private val context: Context) {
     private val THEME_KEY = booleanPreferencesKey("is_dark_mode")
     private val FAVORITES_KEY = stringSetPreferencesKey("favorite_channels")
     private val CAST_ENABLED_KEY = booleanPreferencesKey("is_cast_enabled")
+    
+    // Auth Keys
+    private val TOKEN_KEY = stringPreferencesKey("auth_token")
+    private val USER_NAME_KEY = stringPreferencesKey("auth_user_name")
+    private val USER_EMAIL_KEY = stringPreferencesKey("auth_user_email")
 
     val isDarkModeFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
         prefs[THEME_KEY] ?: true
@@ -25,6 +32,39 @@ class DatastorePreferences(private val context: Context) {
     
     val isCastEnabledFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
         prefs[CAST_ENABLED_KEY] ?: true
+    }
+    
+    val authTokenFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
+        prefs[TOKEN_KEY]
+    }
+    
+    val userNameFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
+        prefs[USER_NAME_KEY]
+    }
+    
+    val userEmailFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
+        prefs[USER_EMAIL_KEY]
+    }
+
+    suspend fun getToken(): String? {
+        val prefs = context.appDataStore.data.first()
+        return prefs[TOKEN_KEY]
+    }
+
+    suspend fun saveAuthData(token: String, name: String, email: String) {
+        context.appDataStore.edit { prefs ->
+            prefs[TOKEN_KEY] = token
+            prefs[USER_NAME_KEY] = name
+            prefs[USER_EMAIL_KEY] = email
+        }
+    }
+    
+    suspend fun clearAuthData() {
+        context.appDataStore.edit { prefs ->
+            prefs.remove(TOKEN_KEY)
+            prefs.remove(USER_NAME_KEY)
+            prefs.remove(USER_EMAIL_KEY)
+        }
     }
 
     suspend fun setDarkMode(isDark: Boolean) {
