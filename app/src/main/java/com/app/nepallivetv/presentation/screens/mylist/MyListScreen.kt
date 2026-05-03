@@ -160,7 +160,7 @@ fun MyListScreen() {
                                         modifier = Modifier
                                             .size(56.dp)
                                             .clip(RoundedCornerShape(12.dp))
-                                            .background(Color.White)
+                                            .background(MaterialTheme.colorScheme.onSurface)
                                             .padding(4.dp)
                                     )
                                 } else {
@@ -179,7 +179,7 @@ fun MyListScreen() {
                                     ) {
                                         Text(
                                             text = channel.name.take(2).uppercase(),
-                                            color = Color.White,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 16.sp
                                         )
@@ -212,9 +212,9 @@ fun MyListScreen() {
                                             .padding(horizontal = 6.dp, vertical = 2.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Box(modifier = Modifier.size(4.dp).background(Color.White, CircleShape))
+                                        Box(modifier = Modifier.size(4.dp).background(MaterialTheme.colorScheme.onSurface, CircleShape))
                                         Spacer(modifier = Modifier.width(4.dp))
-                                        Text("LIVE", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                        Text("LIVE", color = MaterialTheme.colorScheme.onSurface, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                                     }
                                     Spacer(modifier = Modifier.height(6.dp))
                                     Box(

@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -50,6 +51,7 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 import com.app.nepallivetv.ui.theme.customColors
+import com.app.nepallivetv.presentation.screens.splash.SplashScreen
 import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 
 import com.app.nepallivetv.presentation.screens.auth.LoginScreen
@@ -61,12 +63,17 @@ import com.app.nepallivetv.updater.UpdateDialog
 
 @Serializable object LoginRoute
 @Serializable object RegisterRoute
+@Serializable object PreLoginGraph
+
 @Serializable object HomeRoute
 @Serializable object TvListRoute
 @Serializable object ScheduleRoute
 @Serializable data class MatchDetailRoute(val matchId: String)
 @Serializable object MyListRoute
 @Serializable object SettingRoute
+@Serializable object PostLoginGraph
+
+@Serializable object SplashRoute
 
 @Composable
 fun AppNavigation() {
@@ -80,7 +87,8 @@ fun AppNavigation() {
     val currentDestination = navBackStackEntry?.destination
 
     val authViewModel = koinViewModel<AuthViewModel>()
-    val authToken by authViewModel.isLoggedIn.collectAsState(initial = null)
+    // Start with a special string to indicate "loading" state
+    val authToken by authViewModel.isLoggedIn.collectAsState(initial = "LOADING")
 
     val updateViewModel = koinViewModel<UpdateViewModel>()
     val updateState by updateViewModel.updateState.collectAsState()
@@ -89,9 +97,9 @@ fun AppNavigation() {
 
     // Auto-logout effect
     LaunchedEffect(authToken) {
-        if (authToken == null && currentDestination?.route?.contains("Login") != true && currentDestination?.route?.contains("Register") != true) {
-            navController.navigate(LoginRoute) {
-                popUpTo(0) { inclusive = true }
+        if (authToken != "LOADING" && authToken == null && currentDestination?.route?.contains("Login") != true && currentDestination?.route?.contains("Register") != true && currentDestination?.route?.contains("Splash") != true) {
+            navController.navigate(PreLoginGraph) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
         }
     }
@@ -105,7 +113,8 @@ fun AppNavigation() {
 
     val showBottomBar = !isFullScreen && !isInPipMode && !isLandscape && 
             currentDestination?.route?.contains("Login") != true && 
-            currentDestination?.route?.contains("Register") != true
+            currentDestination?.route?.contains("Register") != true &&
+            currentDestination?.route?.contains("Splash") != true
 
     Scaffold(
         bottomBar = {
@@ -148,60 +157,68 @@ fun AppNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = if (authToken.isNullOrEmpty()) LoginRoute else HomeRoute,
+            startDestination = SplashRoute,
             modifier = Modifier.fillMaxSize().then(if (isFullScreen || isLandscape) Modifier else Modifier.padding(innerPadding))
         ) {
-            composable<LoginRoute> {
-                LoginScreen(
-                    onLoginSuccess = {
-                        navController.navigate(HomeRoute) {
-                            popUpTo(LoginRoute) { inclusive = true }
-                        }
-                    },
-                    onNavigateToRegister = {
-                        navController.navigate(RegisterRoute)
-                    }
-                )
+            composable<SplashRoute> {
+                SplashScreen(navController = navController, authToken = authToken)
             }
             
-            composable<RegisterRoute> {
-                RegisterScreen(
-                    onRegisterSuccess = {
-                        navController.navigate(LoginRoute) {
-                            popUpTo(RegisterRoute) { inclusive = true }
+            navigation<PreLoginGraph>(startDestination = LoginRoute) {
+                composable<LoginRoute> {
+                    LoginScreen(
+                        onLoginSuccess = {
+                            navController.navigate(PostLoginGraph) {
+                                popUpTo(PreLoginGraph) { inclusive = true }
+                            }
+                        },
+                        onNavigateToRegister = {
+                            navController.navigate(RegisterRoute)
                         }
-                    },
-                    onNavigateToLogin = {
-                        navController.popBackStack()
-                    }
-                )
+                    )
+                }
+                
+                composable<RegisterRoute> {
+                    RegisterScreen(
+                        onRegisterSuccess = {
+                            navController.navigate(LoginRoute) {
+                                popUpTo(RegisterRoute) { inclusive = true }
+                            }
+                        },
+                        onNavigateToLogin = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
 
-            composable<HomeRoute> {
-                HomeScreen()
-            }
-            
-            composable<TvListRoute> {
-                TvListScreen()
-            }
-            
-            composable<ScheduleRoute> {
-                ScheduleScreen(onMatchClick = { matchId ->
-                    navController.navigate(MatchDetailRoute(matchId))
-                })
-            }
-            
-            composable<MatchDetailRoute> { backStackEntry ->
-                val route = backStackEntry.toRoute<MatchDetailRoute>()
-                MatchDetailScreen(matchId = route.matchId, onBack = { navController.popBackStack() })
-            }
-            
-            composable<MyListRoute> {
-                MyListScreen()
-            }
-            
-            composable<SettingRoute> {
-                SettingScreen()
+            navigation<PostLoginGraph>(startDestination = HomeRoute) {
+                composable<HomeRoute> {
+                    HomeScreen()
+                }
+                
+                composable<TvListRoute> {
+                    TvListScreen()
+                }
+                
+                composable<ScheduleRoute> {
+                    ScheduleScreen(onMatchClick = { matchId ->
+                        navController.navigate(MatchDetailRoute(matchId))
+                    })
+                }
+                
+                composable<MatchDetailRoute> { backStackEntry ->
+                    val route = backStackEntry.toRoute<MatchDetailRoute>()
+                    MatchDetailScreen(matchId = route.matchId, onBack = { navController.popBackStack() })
+                }
+                
+                composable<MyListRoute> {
+                    MyListScreen()
+                }
+                
+                composable<SettingRoute> {
+                    SettingScreen()
+                }
             }
         }
     }
@@ -218,7 +235,7 @@ fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) ->
     )
 
     NavigationBar(
-        containerColor = MaterialTheme.customColors.bottomNavBg,
+        containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp // Flat design as requested
     ) {

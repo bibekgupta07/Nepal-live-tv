@@ -85,7 +85,7 @@ fun SettingScreen() {
                 ) {
                     Text(
                         text = userName?.take(1)?.uppercase() ?: "U",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -296,7 +296,7 @@ fun SettingToggleItem(
             checked = isChecked,
             onCheckedChange = null,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
+                checkedThumbColor = MaterialTheme.colorScheme.onSurface,
                 checkedTrackColor = BrandRed,
                 uncheckedThumbColor = MaterialTheme.customColors.settingTextGray,
                 uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant

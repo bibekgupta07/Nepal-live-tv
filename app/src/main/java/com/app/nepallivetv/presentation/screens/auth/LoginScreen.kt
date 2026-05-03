@@ -55,7 +55,7 @@ fun LoginScreen(
     ) {
         Text(
             text = "Welcome Back",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold
         )
@@ -75,8 +75,8 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
                 unfocusedBorderColor = Color(0xFF2C2C35),
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
             singleLine = true
         )
@@ -98,8 +98,8 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BrandRed,
                 unfocusedBorderColor = Color(0xFF2C2C35),
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
             singleLine = true
         )
@@ -125,7 +125,7 @@ fun LoginScreen(
             enabled = authState !is AuthState.Loading
         ) {
             if (authState is AuthState.Loading) {
-                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
             } else {
                 Text("Login", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }

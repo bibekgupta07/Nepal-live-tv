@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-        
+
         super.onCreate(savedInstanceState)
         
         enableEdgeToEdge()
@@ -64,9 +64,9 @@ class MainActivity : AppCompatActivity() {
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                // Only enter PiP if a video is actively playing.
-                // Otherwise, let the app minimize normally (which will hit ON_STOP and pause the player).
-                if (sharedViewModel.currentStreamUrl.value != null) {
+                // Only enter PiP if a video is actively playing AND we are in full screen / landscape
+                val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                if (sharedViewModel.currentStreamUrl.value != null && isLandscape) {
                     enterPictureInPictureMode(PictureInPictureParams.Builder().build())
                 }
             } catch (e: Exception) {
@@ -81,5 +81,9 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         isInPipMode = isInPictureInPictureMode
+        if (!isInPictureInPictureMode) {
+            // Restored from PiP, ensure we remain in full screen / landscape
+            sharedViewModel.setFullScreen(true)
+        }
     }
 }

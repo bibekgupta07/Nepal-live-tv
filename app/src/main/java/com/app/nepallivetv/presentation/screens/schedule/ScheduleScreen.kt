@@ -149,7 +149,7 @@ fun ScheduleScreen(onMatchClick: (String) -> Unit) {
                         Box(modifier = Modifier.padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
                             Text(
                                 text = if (tab == "All") "All Matches (${matches.size})" else tab,
-                                color = if (isSelected) Color.White else MaterialTheme.customColors.settingTextGray,
+                                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.customColors.settingTextGray,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.SemiBold
                             )

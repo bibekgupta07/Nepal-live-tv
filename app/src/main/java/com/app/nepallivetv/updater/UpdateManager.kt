@@ -18,6 +18,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
+import com.app.nepallivetv.utils.isVersionGreaterThan
+
 class UpdateManager(private val context: Context) {
 
     private val githubOwner = "bibekgupta07" 
@@ -39,7 +41,7 @@ class UpdateManager(private val context: Context) {
             val latestVersion = latestRelease.tagName.removePrefix("v")
             val currentVersion = BuildConfig.VERSION_NAME.removePrefix("v")
 
-            if (isVersionGreater(latestVersion, currentVersion)) {
+            if (latestVersion.isVersionGreaterThan(currentVersion)) {
                 val apkAsset = latestRelease.assets.firstOrNull { it.downloadUrl.endsWith(".apk") }
                 if (apkAsset != null) {
                     return@withContext UpdateResult.UpdateAvailable(
@@ -91,20 +93,6 @@ class UpdateManager(private val context: Context) {
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
             ContextCompat.RECEIVER_EXPORTED
         )
-    }
-
-    private fun isVersionGreater(latest: String, current: String): Boolean {
-        val latestParts = latest.split(".").mapNotNull { it.toIntOrNull() }
-        val currentParts = current.split(".").mapNotNull { it.toIntOrNull() }
-
-        val length = maxOf(latestParts.size, currentParts.size)
-        for (i in 0 until length) {
-            val l = latestParts.getOrElse(i) { 0 }
-            val c = currentParts.getOrElse(i) { 0 }
-            if (l > c) return true
-            if (l < c) return false
-        }
-        return false
     }
 
     sealed class UpdateResult {

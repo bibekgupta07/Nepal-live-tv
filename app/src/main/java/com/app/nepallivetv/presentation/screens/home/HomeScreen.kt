@@ -47,6 +47,7 @@ import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
 import com.app.nepallivetv.presentation.components.LiveBadge
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import com.app.nepallivetv.utils.showToast
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +85,7 @@ fun HomeScreen() {
             activity?.finish()
         } else {
             backPressedTime = currentTime
-            Toast.makeText(context, "Press back again to exit", Toast.LENGTH_SHORT).show()
+            context.showToast("Press back again to exit")
         }
     }
 
@@ -127,8 +128,8 @@ fun HomeScreen() {
             if (selectedChannel != null) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     Text(text = "NOW PLAYING", color = MaterialTheme.colorScheme.primary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    Text(text = selectedChannel?.name ?: "", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Live Now • HD • ${selectedChannel?.category}", color = Color.Gray, fontSize = 12.sp)
+                    Text(text = selectedChannel?.name ?: "", color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "Live Now • HD • ${selectedChannel?.category}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                 }
             }
 
@@ -189,7 +190,7 @@ fun HomeScreen() {
                 ) {
                     Text(
                         text = "All Channels",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
@@ -390,7 +391,7 @@ fun ChannelGridItem(
                 }
                 Text(
                     text = channel.name,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 12.sp,
                     maxLines = 2,
@@ -456,7 +457,7 @@ fun ChannelListItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = channel.name,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     maxLines = 1,
@@ -465,7 +466,7 @@ fun ChannelListItem(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = channel.category,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp
                 )
             }
