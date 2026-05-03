@@ -415,7 +415,7 @@ fun VideoPlayer(
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = channelName.uppercase(), color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
 
@@ -489,7 +489,7 @@ fun VideoPlayer(
                     Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = Color.White,
                         modifier = Modifier.size(centerPlayIconSize)
                     )
                 }
@@ -548,7 +548,7 @@ fun VideoPlayer(
                         ) {
                             videoQualities.forEach { option ->
                                 DropdownMenuItem(
-                                    text = { Text(text = option.resolutionText, color = MaterialTheme.colorScheme.onSurface) },
+                                    text = { Text(text = option.resolutionText, color = Color.White) },
                                     onClick = {
                                         isQualityMenuExpanded = false
                                         if (option.isAuto) {
@@ -594,7 +594,7 @@ fun VideoPlayer(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = if (isVolumeIndicator) "VOLUME" else "BRIGHTNESS",
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = Color.White,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -626,7 +626,7 @@ fun VideoPlayer(
                 ) {
                     Icon(Icons.Default.CastConnected, contentDescription = "Casting", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Casting to TV", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
+                    Text("Casting to TV", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
 
@@ -687,8 +687,8 @@ fun VideoPlayer(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Channels", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            Icon(Icons.Default.Clear, contentDescription = "Close", tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.clickable { isChannelDrawerOpen = false })
+                            Text("Channels", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color.White, modifier = Modifier.clickable { isChannelDrawerOpen = false })
                         }
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
@@ -710,13 +710,13 @@ fun VideoPlayer(
                                         AsyncImage(
                                             model = channel.logo,
                                             contentDescription = channel.name,
-                                            modifier = Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onSurface),
+                                            modifier = Modifier.size(36.dp).clip(CircleShape).background(Color.White),
                                             contentScale = ContentScale.Fit
                                         )
                                         Spacer(modifier = Modifier.width(12.dp))
                                     }
                                     Column {
-                                        Text(text = channel.name, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.SemiBold)
+                                        Text(text = channel.name, color = Color.White, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.SemiBold)
                                         Text(text = channel.category, color = Color.Gray, fontSize = 12.sp)
                                     }
                                 }
@@ -744,7 +744,7 @@ fun PlayerIconButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = Color.White,
             modifier = Modifier.size(iconSize)
         )
     }

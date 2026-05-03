@@ -98,8 +98,8 @@ fun AppNavigation() {
     // Auto-logout effect
     LaunchedEffect(authToken) {
         if (authToken != "LOADING" && authToken == null && currentDestination?.route?.contains("Login") != true && currentDestination?.route?.contains("Register") != true && currentDestination?.route?.contains("Splash") != true) {
-            navController.navigate(PreLoginGraph) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            navController.navigate(LoginRoute) {
+                popUpTo(0) { inclusive = true }
             }
         }
     }
@@ -157,14 +157,14 @@ fun AppNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = SplashRoute,
+            startDestination = PreLoginGraph,
             modifier = Modifier.fillMaxSize().then(if (isFullScreen || isLandscape) Modifier else Modifier.padding(innerPadding))
         ) {
-            composable<SplashRoute> {
-                SplashScreen(navController = navController, authToken = authToken)
-            }
-            
-            navigation<PreLoginGraph>(startDestination = LoginRoute) {
+            navigation<PreLoginGraph>(startDestination = SplashRoute) {
+                composable<SplashRoute> {
+                    SplashScreen(navController = navController, authToken = authToken)
+                }
+
                 composable<LoginRoute> {
                     LoginScreen(
                         onLoginSuccess = {

@@ -19,6 +19,8 @@ import androidx.navigation.NavController
 import com.app.nepallivetv.R
 import com.app.nepallivetv.presentation.navigation.PreLoginGraph
 import com.app.nepallivetv.presentation.navigation.PostLoginGraph
+import com.app.nepallivetv.presentation.navigation.LoginRoute
+import com.app.nepallivetv.presentation.navigation.SplashRoute
 import kotlinx.coroutines.delay
 
 @Composable
@@ -42,12 +44,12 @@ fun SplashScreen(navController: NavController, authToken: String?) {
             // Ensure minimum splash screen duration
             delay(1200)
             if (authToken.isNullOrEmpty()) {
-                navController.navigate(PreLoginGraph) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                navController.navigate(LoginRoute) {
+                    popUpTo(SplashRoute) { inclusive = true }
                 }
             } else {
                 navController.navigate(PostLoginGraph) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                    popUpTo(PreLoginGraph) { inclusive = true }
                 }
             }
         }
