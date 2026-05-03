@@ -10,11 +10,15 @@ import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +29,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Crop
@@ -33,18 +38,24 @@ import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
 import androidx.compose.material3.*
 import com.app.nepallivetv.presentation.components.LiveBadge
+import com.app.nepallivetv.data.model.Channel
+import coil.compose.AsyncImage
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -71,6 +82,21 @@ import com.google.android.gms.cast.framework.CastContext
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection
+import androidx.compose.material.icons.filled.Settings
+import androidx.media3.common.C
+import androidx.media3.common.TrackGroup
+import androidx.media3.common.TrackSelectionOverride
+import androidx.media3.common.Tracks
+
+data class VideoQualityOption(
+    val resolutionText: String,
+    val trackGroup: TrackGroup? = null,
+    val trackIndex: Int = -1,
+    val isAuto: Boolean = false
+)
+
 /**
  * A gesture-enabled Jetpack Compose wrapper for ExoPlayer.
  * Supports Fullscreen toggling, Picture-in-Picture mode, live-stream optimizations,
@@ -86,6 +112,9 @@ fun VideoPlayer(
     isInPipMode: Boolean = false,
     isFavorite: Boolean = false,
     isCastEnabled: Boolean = true,
+    channels: List<Channel> = emptyList(),
+    selectedChannel: Channel? = null,
+    onChannelSelected: (Channel) -> Unit = {},
     onToggleFavorite: () -> Unit = {},
     onToggleFullScreen: () -> Unit,
     onClose: () -> Unit
@@ -97,6 +126,8 @@ fun VideoPlayer(
     var castPlayer by remember { mutableStateOf<CastPlayer?>(null) }
     var isCasting by remember { mutableStateOf(false) }
 
+    var isChannelDrawerOpen by remember { mutableStateOf(false) }
+
     var resizeMode by remember { mutableIntStateOf(AspectRatioFrameLayout.RESIZE_MODE_FIT) }
     var isMuted by remember { mutableStateOf(false) }
     var isBuffering by remember { mutableStateOf(true) }
@@ -106,6 +137,13 @@ fun VideoPlayer(
     var indicatorValue by remember { mutableFloatStateOf(0f) }
     var isVolumeIndicator by remember { mutableStateOf(true) }
     var showIndicator by remember { mutableStateOf(false) }
+
+    var isQualityMenuExpanded by remember { mutableStateOf(false) }
+    var videoQualities by remember { mutableStateOf(emptyList<VideoQualityOption>()) }
+    
+    val trackSelector = remember { DefaultTrackSelector(context, AdaptiveTrackSelection.Factory()) }
+
+    var isPlaying by remember { mutableStateOf(true) }
 
     DisposableEffect(isFullScreen) {
         val window = activity?.window
@@ -225,12 +263,42 @@ fun VideoPlayer(
                 )
                 .build()
 
+            // Configure to proactively downgrade quality if network is poor
+            trackSelector.parameters = trackSelector.buildUponParameters()
+                .setMaxVideoSizeSd() // Start with SD to ensure fast playback, it will adapt up if network is good
+                .build()
+
             val player = ExoPlayer.Builder(context)
                 .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
                 .setLoadControl(loadControl)
+                .setTrackSelector(trackSelector)
                 .build()
                 
             player.addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlayingState: Boolean) {
+                    isPlaying = isPlayingState
+                }
+
+                override fun onTracksChanged(tracks: Tracks) {
+                    val options = mutableListOf<VideoQualityOption>()
+                    options.add(VideoQualityOption("Auto", isAuto = true))
+                    
+                    for (group in tracks.groups) {
+                        if (group.type == C.TRACK_TYPE_VIDEO) {
+                            for (i in 0 until group.length) {
+                                val format = group.getTrackFormat(i)
+                                val height = format.height
+                                if (height > 0) {
+                                    options.add(VideoQualityOption("${height}p", group.mediaTrackGroup, i))
+                                }
+                            }
+                        }
+                    }
+                    // Sort descending (e.g. 1080p, 720p, 480p)
+                    val uniqueOptions = options.distinctBy { it.resolutionText }.sortedByDescending { it.resolutionText.replace("p", "").toIntOrNull() ?: 9999 }
+                    videoQualities = uniqueOptions
+                }
+
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     isBuffering = playbackState == Player.STATE_BUFFERING
                     if (playbackState == Player.STATE_READY) {
@@ -287,6 +355,13 @@ fun VideoPlayer(
         }
     }
 
+    val controlButtonSize = if (isFullScreen) 48.dp else 32.dp
+    val controlIconSize = if (isFullScreen) 24.dp else 16.dp
+    val topButtonSize = if (isFullScreen) 40.dp else 28.dp
+    val topIconSize = if (isFullScreen) 20.dp else 14.dp
+    val centerPlayBgSize = if (isFullScreen) 64.dp else 48.dp
+    val centerPlayIconSize = if (isFullScreen) 32.dp else 24.dp
+
     Box(modifier = modifier.background(Color.Black)) {
         AndroidView(
                 factory = { ctx ->
@@ -337,11 +412,10 @@ fun VideoPlayer(
                 exit = fadeOut(),
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .then(if (!isFullScreen) Modifier.statusBarsPadding() else Modifier)
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
 
@@ -351,8 +425,7 @@ fun VideoPlayer(
                 exit = fadeOut(),
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .then(if (!isFullScreen) Modifier.statusBarsPadding() else Modifier)
-                    .padding(16.dp)
+                    .padding(8.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -362,10 +435,18 @@ fun VideoPlayer(
                         icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Toggle Favorite",
                         onClick = onToggleFavorite,
-                        modifier = Modifier.size(32.dp),
-                        iconSize = 18.dp
+                        modifier = Modifier.size(topButtonSize),
+                        iconSize = topIconSize
                     )
-                    
+
+                    PlayerIconButton(
+                        icon = Icons.AutoMirrored.Filled.FormatListBulleted,
+                        contentDescription = "Channel List",
+                        onClick = { isChannelDrawerOpen = !isChannelDrawerOpen },
+                        modifier = Modifier.size(topButtonSize),
+                        iconSize = topIconSize
+                    )
+
                     if (isCastEnabled) {
                         Box(
                             modifier = Modifier
@@ -392,33 +473,24 @@ fun VideoPlayer(
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.FastRewind, contentDescription = "Rewind", tint = Color.White, modifier = Modifier.size(32.dp).background(Color.Black.copy(alpha = 0.4f), CircleShape).padding(6.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(Color(0xFFE63946), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Default.Pause, contentDescription = "Pause", tint = Color.White, modifier = Modifier.size(32.dp))
-                    }
-                    Icon(Icons.Default.FastForward, contentDescription = "Forward", tint = Color.White, modifier = Modifier.size(32.dp).background(Color.Black.copy(alpha = 0.4f), CircleShape).padding(6.dp))
-                }
-            }
-
-            AnimatedVisibility(
-                visible = isControlsVisible && !isInPipMode,
-                enter = fadeIn(),
-                exit = fadeOut(),
-                modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 16.dp, end = 120.dp)
-            ) {
-                Column {
-                    LinearProgressIndicator(
-                        progress = { 1f },
-                        color = Color(0xFFE63946),
-                        trackColor = Color.DarkGray,
-                        modifier = Modifier.fillMaxWidth().height(4.dp),
-                        strokeCap = StrokeCap.Round
+                Box(
+                    modifier = Modifier
+                        .size(centerPlayBgSize)
+                        .background(Color(0xFFE63946), CircleShape)
+                        .clickable {
+                            if (isPlaying) {
+                                exoPlayer?.pause()
+                            } else {
+                                exoPlayer?.play()
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        tint = Color.White,
+                        modifier = Modifier.size(centerPlayIconSize)
                     )
                 }
             }
@@ -448,24 +520,61 @@ fun VideoPlayer(
                                 else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
                             }
                         },
-                        modifier = Modifier.size(36.dp),
-                        iconSize = 20.dp
+                        modifier = Modifier.size(controlButtonSize),
+                        iconSize = controlIconSize
                     )
                     
                     PlayerIconButton(
                         icon = if (isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeUp,
                         contentDescription = "Mute Toggle",
                         onClick = { isMuted = !isMuted },
-                        modifier = Modifier.size(36.dp),
-                        iconSize = 20.dp
+                        modifier = Modifier.size(controlButtonSize),
+                        iconSize = controlIconSize
                     )
                     
+                    Box {
+                        PlayerIconButton(
+                            icon = Icons.Default.Settings,
+                            contentDescription = "Video Quality",
+                            onClick = { isQualityMenuExpanded = true },
+                            modifier = Modifier.size(controlButtonSize),
+                            iconSize = controlIconSize
+                        )
+
+                        DropdownMenu(
+                            expanded = isQualityMenuExpanded,
+                            onDismissRequest = { isQualityMenuExpanded = false },
+                            modifier = Modifier.background(Color.Black.copy(alpha = 0.9f))
+                        ) {
+                            videoQualities.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(text = option.resolutionText, color = Color.White) },
+                                    onClick = {
+                                        isQualityMenuExpanded = false
+                                        if (option.isAuto) {
+                                            trackSelector.parameters = trackSelector.buildUponParameters()
+                                                .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+                                                .build()
+                                        } else {
+                                            option.trackGroup?.let { group ->
+                                                trackSelector.parameters = trackSelector.buildUponParameters()
+                                                    .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+                                                    .addOverride(TrackSelectionOverride(group, listOf(option.trackIndex)))
+                                                    .build()
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                     PlayerIconButton(
                         icon = if (isFullScreen) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen,
                         contentDescription = "Toggle Orientation",
                         onClick = onToggleFullScreen,
-                        modifier = Modifier.size(36.dp),
-                        iconSize = 20.dp
+                        modifier = Modifier.size(controlButtonSize),
+                        iconSize = controlIconSize
                     )
                 }
             }
@@ -548,6 +657,71 @@ fun VideoPlayer(
                         exoPlayer?.prepare()
                     }) {
                         Text("Retry")
+                    }
+                }
+            }
+
+            AnimatedVisibility(
+                visible = isChannelDrawerOpen && !isInPipMode,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box(modifier = Modifier.fillMaxSize().clickable { isChannelDrawerOpen = false })
+            }
+
+            AnimatedVisibility(
+                visible = isChannelDrawerOpen && !isInPipMode,
+                enter = slideInHorizontally(initialOffsetX = { it }),
+                exit = slideOutHorizontally(targetOffsetX = { it }),
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(if (isFullScreen) 0.4f else 0.7f)
+                        .background(Color.Black.copy(alpha = 0.95f))
+                ) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Channels", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            Icon(Icons.Default.Clear, contentDescription = "Close", tint = Color.White, modifier = Modifier.clickable { isChannelDrawerOpen = false })
+                        }
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 16.dp)
+                        ) {
+                            items(channels) { channel ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { 
+                                            onChannelSelected(channel)
+                                            isChannelDrawerOpen = false 
+                                        }
+                                        .background(if (channel == selectedChannel) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else Color.Transparent)
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (!channel.logo.isNullOrEmpty()) {
+                                        AsyncImage(
+                                            model = channel.logo,
+                                            contentDescription = channel.name,
+                                            modifier = Modifier.size(36.dp).clip(CircleShape).background(Color.White),
+                                            contentScale = ContentScale.Fit
+                                        )
+                                        Spacer(modifier = Modifier.width(12.dp))
+                                    }
+                                    Column {
+                                        Text(text = channel.name, color = Color.White, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.SemiBold)
+                                        Text(text = channel.category, color = Color.Gray, fontSize = 12.sp)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

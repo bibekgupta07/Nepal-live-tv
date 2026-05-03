@@ -106,6 +106,9 @@ fun HomeScreen() {
             isInPipMode = isInPipMode,
             isFavorite = isCurrentFavorite,
             isCastEnabled = isCastEnabled,
+            channels = channels,
+            selectedChannel = selectedChannel,
+            onChannelSelected = { viewModel.selectChannel(it) },
             onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
             onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
             onClose = {
