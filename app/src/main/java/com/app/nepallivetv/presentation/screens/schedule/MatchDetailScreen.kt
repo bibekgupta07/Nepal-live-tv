@@ -35,17 +35,6 @@ fun MatchDetailScreen(matchId: String, onBack: () -> Unit) {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(matchDetail?.title ?: "Match Details", color = MaterialTheme.colorScheme.onSurface) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
-            )
-        },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         PullToRefreshBox(
@@ -56,102 +45,123 @@ fun MatchDetailScreen(matchId: String, onBack: () -> Unit) {
                 isRefreshing = false
             },
             state = pullToRefreshState,
-            modifier = Modifier.fillMaxSize().padding(padding)
+            modifier = Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding())
         ) {
-            if (isLoading && !isRefreshing) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = BrandRed)
-                }
-            } else if (matchDetail == null && !isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Failed to load match details", color = MaterialTheme.customColors.settingTextGray)
-                }
-            } else if (matchDetail != null) {
-                val detail = matchDetail!!
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+            Column(modifier = Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
                 ) {
-                    item {
-                        Text(
-                            text = detail.statusText,
-                            color = PremiumLightning,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                     }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = matchDetail?.title ?: "Match Details",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
-                    items(detail.scorecards) { scorecard ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(scorecard.team, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.ExtraBold, fontSize = 18.sp)
-                                    Text("${scorecard.score} (${scorecard.overs} ov)", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                                }
+                if (isLoading && !isRefreshing) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = BrandRed)
+                    }
+                } else if (matchDetail == null && !isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Failed to load match details", color = MaterialTheme.customColors.settingTextGray)
+                    }
+                } else if (matchDetail != null) {
+                    val detail = matchDetail!!
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        item {
+                            Text(
+                                text = detail.statusText,
+                                color = PremiumLightning,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
 
-                                Spacer(modifier = Modifier.height(16.dp))
-                                
-                                // BATTING HEADER
-                                Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.customColors.cardInactiveBg).padding(8.dp)) {
-                                    Text("BATTING", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
-                                    Text("R", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("B", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("4s", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("6s", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("SR", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f))
-                                }
-                                
-                                Spacer(modifier = Modifier.height(4.dp))
+                        items(detail.scorecards) { scorecard ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(scorecard.team, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.ExtraBold, fontSize = 18.sp)
+                                        Text("${scorecard.score} (${scorecard.overs} ov)", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                                    }
 
-                                scorecard.batsmen.forEach { bat ->
-                                    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Column(modifier = Modifier.weight(3f)) {
-                                            Text(bat.name, color = if(bat.isOut) MaterialTheme.colorScheme.onSurface else BrandRed, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                                            if (!bat.dismissal?.long.isNullOrBlank()) {
-                                                Text(bat.dismissal.long, color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp)
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    
+                                    // BATTING HEADER
+                                    Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.customColors.cardInactiveBg).padding(8.dp)) {
+                                        Text("BATTING", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
+                                        Text("R", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("B", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("4s", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("6s", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("SR", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f))
+                                    }
+                                    
+                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    scorecard.batsmen.forEach { bat ->
+                                        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            Column(modifier = Modifier.weight(3f)) {
+                                                Text(bat.name, color = if(bat.isOut) MaterialTheme.colorScheme.onSurface else BrandRed, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                                if (!bat.dismissal?.long.isNullOrBlank()) {
+                                                    Text(bat.dismissal.long, color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp)
+                                                }
                                             }
+                                            Text(bat.runs?.toString() ?: "-", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                            Text(bat.balls?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bat.fours?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bat.sixes?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bat.strikeRate?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1.5f))
                                         }
-                                        Text(bat.runs?.toString() ?: "-", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                        Text(bat.balls?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bat.fours?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bat.sixes?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bat.strikeRate?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1.5f))
+                                        HorizontalDivider(color = MaterialTheme.customColors.cardInactiveBg, thickness = 1.dp)
                                     }
-                                    HorizontalDivider(color = MaterialTheme.customColors.cardInactiveBg, thickness = 1.dp)
-                                }
-                                
-                                Spacer(modifier = Modifier.height(16.dp))
-                                
-                                // BOWLING HEADER
-                                Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.customColors.cardInactiveBg).padding(8.dp)) {
-                                    Text("BOWLING", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
-                                    Text("O", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("M", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("R", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("W", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                                    Text("ECON", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f))
-                                }
-                                
-                                Spacer(modifier = Modifier.height(4.dp))
-                                
-                                scorecard.bowlers.forEach { bowl ->
-                                    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Text(bowl.name, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
-                                        Text(bowl.overs?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bowl.maidens?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bowl.runs?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
-                                        Text(bowl.wickets?.toString() ?: "-", color = BrandRed, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
-                                        Text(bowl.economy?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1.5f))
+                                    
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    
+                                    // BOWLING HEADER
+                                    Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.customColors.cardInactiveBg).padding(8.dp)) {
+                                        Text("BOWLING", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
+                                        Text("O", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("M", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("R", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("W", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                                        Text("ECON", color = MaterialTheme.customColors.settingTextGray, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f))
                                     }
-                                    HorizontalDivider(color = MaterialTheme.customColors.cardInactiveBg, thickness = 1.dp)
+                                    
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    
+                                    scorecard.bowlers.forEach { bowl ->
+                                        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            Text(bowl.name, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(3f))
+                                            Text(bowl.overs?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bowl.maidens?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bowl.runs?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                                            Text(bowl.wickets?.toString() ?: "-", color = BrandRed, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+                                            Text(bowl.economy?.toString() ?: "-", color = MaterialTheme.customColors.settingTextGray, fontSize = 14.sp, modifier = Modifier.weight(1.5f))
+                                        }
+                                        HorizontalDivider(color = MaterialTheme.customColors.cardInactiveBg, thickness = 1.dp)
+                                    }
                                 }
                             }
                         }

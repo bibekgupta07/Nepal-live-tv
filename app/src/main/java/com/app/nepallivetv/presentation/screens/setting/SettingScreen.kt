@@ -105,11 +105,13 @@ fun SettingScreen() {
                         color = MaterialTheme.customColors.settingTextGray,
                         fontSize = 14.sp
                     )
-                    Text(
-                        text = userPhone ?: "",
-                        color = MaterialTheme.customColors.settingTextGray,
-                        fontSize = 14.sp
-                    )
+                    if (!userPhone.isNullOrBlank() && userPhone != "No Phone Saved") {
+                        Text(
+                            text = userPhone ?: "",
+                            color = MaterialTheme.customColors.settingTextGray,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
                 
                 Icon(

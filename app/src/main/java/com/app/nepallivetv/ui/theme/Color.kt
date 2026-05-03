@@ -23,13 +23,13 @@ val BottomNavBgDark = Color(0xFF21151A)
 val TextGrayDark = Color(0xFFA0A0B0)
 
 // --- LIGHT THEME COLORS ---
-val LightBg = Color(0xFFF4F4F8)
+val LightBg = Color(0xFFF6F6F9)
 val LightBgSurface = Color(0xFFFFFFFF)
-val CardLight = Color(0xFFEAEAF0)
-val CardInactiveBgLight = Color(0xFFF0F0F5)
-val SettingTextGrayLight = Color(0xFF60606C)
-val BottomNavBgLight = Color(0xFFFFF0F2) // Very light warm tint
-val TextGrayLight = Color(0xFF4A4A5A)
+val CardLight = Color(0xFFFFFFFF)
+val CardInactiveBgLight = Color(0xFFFFFFFF)
+val SettingTextGrayLight = Color(0xFF6F6F63)
+val BottomNavBgLight = Color(0xFFFFFFFF)
+val TextGrayLight = Color(0xFF5F5F4F)
 
 // Additional UI Colors (Shared/Specific)
 val LogoAreaDark = Color(0xFF252530)
