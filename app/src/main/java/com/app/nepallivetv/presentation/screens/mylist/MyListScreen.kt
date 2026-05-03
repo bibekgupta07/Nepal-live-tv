@@ -4,12 +4,12 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -28,28 +28,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.app.nepallivetv.LocalPipMode
-import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
-import com.app.nepallivetv.presentation.components.LiveBadge
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import com.app.nepallivetv.ui.theme.*
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyListScreen() {
     val viewModel = koinViewModel<SharedViewModel>()
-    val isInPipMode = LocalPipMode.current
     val channels by viewModel.favoriteChannels.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
     val selectedChannel by viewModel.selectedChannel.collectAsState()
-
     val isFullScreen by viewModel.isFullScreen.collectAsState()
+    val isInPipMode = LocalPipMode.current
+    val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
+    
+    val favoriteUrls by viewModel.favoriteUrls.collectAsState()
+    val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
+    val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 
-    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val activity = context as? android.app.Activity
     var backPressedTime by remember { mutableLongStateOf(0L) }
+    val focusManager = LocalFocusManager.current
 
     BackHandler(enabled = isFullScreen && !isInPipMode) {
         viewModel.setFullScreen(false)
@@ -68,14 +68,11 @@ fun MyListScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(DarkBg)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        val favoriteUrls by viewModel.favoriteUrls.collectAsState()
-        val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
-        val isCastEnabled by viewModel.isCastEnabled.collectAsState()
-
         VideoPlayer(
             streamUrl = currentStreamUrl,
             channelName = selectedChannel?.name ?: "Loading...",
@@ -101,129 +98,136 @@ fun MyListScreen() {
         )
 
         if (!isFullScreen && !isInPipMode) {
-            if (selectedChannel != null) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(text = "NOW PLAYING", color = MaterialTheme.colorScheme.primary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    Text(text = selectedChannel?.name ?: "", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Live Now • HD • ${selectedChannel?.category}", color = Color.Gray, fontSize = 12.sp)
-                }
-            }
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Text(
-                    text = "My Favorites",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                )
-                Text(
-                    text = "${channels.size} saved →",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-            if (isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                Column {
+                    Text(
+                        text = "Saved channels",
+                        color = SettingTextGray,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "My List",
+                        color = Color.White,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 }
-            } else if (channels.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = "You haven't added any favorite channels yet.",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = "My Favorites",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = "${channels.size} saved",
+                        color = SettingTextGray,
+                        fontSize = 12.sp
                     )
                 }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(channels) { channel ->
-                        FavoriteGridItem(
-                            channel = channel,
-                            isSelected = channel == selectedChannel,
-                            onClick = {
-                                viewModel.selectChannel(channel)
-                                focusManager.clearFocus()
-                            }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
+                        val isSelected = channel == selectedChannel
+                        Card(
+                            modifier = Modifier.fillMaxWidth().clickable { viewModel.selectChannel(channel) },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = if (isSelected) CardActiveBg else CardInactiveBg),
+                            border = if (isSelected) BorderStroke(1.dp, CardActiveBorder) else null
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (!channel.logo.isNullOrEmpty()) {
+                                    AsyncImage(
+                                        model = channel.logo,
+                                        contentDescription = channel.name,
+                                        contentScale = ContentScale.Fit,
+                                        modifier = Modifier
+                                            .size(56.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(Color.White)
+                                            .padding(4.dp)
+                                    )
+                                } else {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(56.dp)
+                                            .background(
+                                                color = if (channel.name.contains("M2", true)) M2GradientStart 
+                                                        else if (channel.name.contains("Kantipur", true)) KBlueBg 
+                                                        else if (channel.name.contains("AP1", true)) AP1PurpleBg 
+                                                        else if (channel.name.contains("Nepal TV", true)) NTVGreenBg 
+                                                        else M2GradientStart, 
+                                                shape = RoundedCornerShape(12.dp)
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = channel.name.take(2).uppercase(),
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
+                                    }
+                                }
 
-@Composable
-fun FavoriteGridItem(
-    channel: Channel,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                if (!channel.logo.isNullOrEmpty()) {
-                    AsyncImage(
-                        model = channel.logo,
-                        contentDescription = channel.name,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                Text(
-                    text = channel.name,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                if (isSelected) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    LiveBadge()
+                                Spacer(modifier = Modifier.width(16.dp))
+
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = channel.name,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = channel.category.ifBlank { "Live TV" },
+                                        color = SettingTextGray,
+                                        fontSize = 12.sp
+                                    )
+                                }
+
+                                Column(horizontalAlignment = Alignment.End) {
+                                    Row(
+                                        modifier = Modifier
+                                            .background(BrandRed, RoundedCornerShape(4.dp))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(modifier = Modifier.size(4.dp).background(Color.White, CircleShape))
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text("LIVE", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                    }
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Box(
+                                        modifier = Modifier
+                                            .border(1.dp, HdBorder, RoundedCornerShape(4.dp))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Text("HD", color = SettingTextGray, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
