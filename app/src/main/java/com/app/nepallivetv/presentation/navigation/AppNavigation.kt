@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.app.nepallivetv.LocalFullScreenMode
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
@@ -49,10 +50,12 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 import com.app.nepallivetv.ui.theme.BottomNavBg
+import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 
 @Serializable object HomeRoute
 @Serializable object TvListRoute
 @Serializable object ScheduleRoute
+@Serializable data class MatchDetailRoute(val matchId: String)
 @Serializable object MyListRoute
 @Serializable object SettingRoute
 
@@ -121,7 +124,14 @@ fun AppNavigation() {
             }
             
             composable<ScheduleRoute> {
-                ScheduleScreen()
+                ScheduleScreen(onMatchClick = { matchId ->
+                    navController.navigate(MatchDetailRoute(matchId))
+                })
+            }
+            
+            composable<MatchDetailRoute> { backStackEntry ->
+                val route = backStackEntry.toRoute<MatchDetailRoute>()
+                MatchDetailScreen(matchId = route.matchId, onBack = { navController.popBackStack() })
             }
             
             composable<MyListRoute> {

@@ -3,6 +3,8 @@ package com.app.nepallivetv.data.repository
 import android.content.Context
 import android.util.Log
 import com.app.nepallivetv.data.model.Channel
+import com.app.nepallivetv.data.model.Match
+import com.app.nepallivetv.data.model.MatchDetail
 import com.app.nepallivetv.data.remote.LiveTvApi
 import com.app.nepallivetv.domain.repository.ChannelRepository
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +43,26 @@ class ChannelRepositoryImpl(
             } catch (fallbackEx: Exception) {
                 emptyList()
             }
+        }
+    }
+
+    override suspend fun getCricketMatches(): List<Match> = withContext(Dispatchers.IO) {
+        try {
+            api.getCricketMatches()
+        } catch (e: Exception) {
+            Log.e("ChannelRepository", "Error fetching cricket matches", e)
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    override suspend fun getMatchDetail(matchId: String): MatchDetail? = withContext(Dispatchers.IO) {
+        try {
+            api.getMatchDetail(matchId)
+        } catch (e: Exception) {
+            Log.e("ChannelRepository", "Error fetching match details", e)
+            e.printStackTrace()
+            null
         }
     }
 }

@@ -27,7 +27,10 @@ android {
     productFlavors {
         create("dev") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
+            // Use local machine IP to test python backend locally before pushing!
+            // If using Android Emulator, use "http://10.0.2.2:8000/"
+            // Since you are using a real phone on the same WiFi, use your PC's local IP:
+            buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("uat") {

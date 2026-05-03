@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.nepallivetv.data.local.datastore.DatastorePreferences
 import com.app.nepallivetv.data.model.Channel
+import com.app.nepallivetv.data.model.Match
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
+import com.app.nepallivetv.domain.usecase.GetCricketMatchesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,11 +16,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+
 class SharedViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
     private val getStreamUrlUseCase: GetStreamUrlUseCase,
+    private val getCricketMatchesUseCase: GetCricketMatchesUseCase,
     private val datastorePreferences: DatastorePreferences
 ) : ViewModel() {
+
+    private val _cricketMatches = MutableStateFlow<List<Match>>(emptyList())
+    val cricketMatches: StateFlow<List<Match>> = _cricketMatches
 
     private val _channels = MutableStateFlow<List<Channel>>(emptyList())
     val channels: StateFlow<List<Channel>> = _channels
@@ -101,13 +110,64 @@ class SharedViewModel(
 
     init {
         loadChannels()
+        startDataPolling()
+    }
+
+    private fun startDataPolling() {
+        viewModelScope.launch {
+            while (isActive) {
+                delay(15000) // Poll every 15 seconds to keep cricket data fresh
+                try {
+                    val matches = getCricketMatchesUseCase()
+                    if (matches.isNotEmpty()) {
+                        // Apply custom sorting (IPL / International prioritizing)
+                        val sorted = matches.sortedWith(Comparator { m1, m2 ->
+                            val p1 = getMatchPriority(m1)
+                            val p2 = getMatchPriority(m2)
+                            if (p1 != p2) p1.compareTo(p2) else m1.startTime.compareTo(m2.startTime)
+                        })
+                        _cricketMatches.value = sorted
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun getMatchPriority(match: Match): Int {
+        val title = match.title.uppercase()
+        val format = match.format.uppercase()
+        val subtitle = match.subtitle.uppercase()
+        if (title.contains("IPL") || subtitle.contains("INDIAN PREMIER LEAGUE")) return 0
+        if (format in listOf("T20I", "ODI", "TEST")) return 1
+        if (title.contains("INTERNATIONAL") || subtitle.contains("INTERNATIONAL")) return 1
+        if (title.contains("PSL") || title.contains("BBL") || title.contains("CPL")) return 2
+        return 3 // Domestic games
     }
 
     private fun loadChannels() {
         viewModelScope.launch {
             _isLoading.value = true
+            
+            // Fetch channels
             val fetchedChannels = getChannelsUseCase()
             _channels.value = fetchedChannels
+            
+            // Fetch cricket matches simultaneously
+            try {
+                val matches = getCricketMatchesUseCase()
+                if (matches.isNotEmpty()) {
+                    val sorted = matches.sortedWith(Comparator { m1, m2 ->
+                        val p1 = getMatchPriority(m1)
+                        val p2 = getMatchPriority(m2)
+                        if (p1 != p2) p1.compareTo(p2) else m1.startTime.compareTo(m2.startTime)
+                    })
+                    _cricketMatches.value = sorted
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             
             val uniqueCategories = fetchedChannels
                 .map { it.category }
