@@ -144,9 +144,9 @@ fun MoviesScreen(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { viewModel.onSearchQueryChange(it) },
-                    placeholder = { Text("Search...", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    placeholder = { Text("Search...", color = Color.Gray) },
                     leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon", tint = Color.Gray)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -296,7 +296,7 @@ fun MoviesScreen(
                                             text = quality.uppercase(),
                                             fontWeight = FontWeight.Medium,
                                             fontSize = 14.sp,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = Color.Gray,
                                             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
                                         )
                                     }
@@ -326,7 +326,7 @@ fun MoviesScreen(
                     Text(
                         text = "No movies or series found.",
                         modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = Color.Gray
                     )
                 }
             }
@@ -382,7 +382,7 @@ fun PremiumMovieCard(movie: Movie, onClick: () -> Unit) {
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    Icon(Icons.Default.Movie, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha=0.5f))
+                    Icon(Icons.Default.Movie, contentDescription = null, tint = Color.Gray.copy(alpha=0.5f))
                 }
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -397,12 +397,12 @@ fun PremiumMovieCard(movie: Movie, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = movie.quality.uppercase(), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Medium)
-                    Text(text = " • ", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(text = "${movie.size_bytes / (1024 * 1024)} MB", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = movie.quality.uppercase(), fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Medium)
+                    Text(text = " • ", fontSize = 12.sp, color = Color.Gray)
+                    Text(text = "${movie.size_bytes / (1024 * 1024)} MB", fontSize = 12.sp, color = Color.Gray)
                 }
             }
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(28.dp))
+            Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(28.dp))
         }
     }
 }
@@ -439,7 +439,7 @@ fun PremiumSeriesFolderCard(title: String, seasonCount: Int, episodeCount: Int, 
                             modifier = Modifier.fillMaxSize()
                         )
                     } else {
-                        Icon(Icons.Default.Folder, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha=0.5f))
+                        Icon(Icons.Default.Folder, contentDescription = null, tint = Color.Gray.copy(alpha=0.5f))
                     }
                 }
                 Spacer(modifier = Modifier.width(12.dp))
@@ -453,9 +453,9 @@ fun PremiumSeriesFolderCard(title: String, seasonCount: Int, episodeCount: Int, 
                         overflow = if (expanded) TextOverflow.Visible else TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "$seasonCount Seasons • $episodeCount Episodes total", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = "$seasonCount Seasons • $episodeCount Episodes total", fontSize = 12.sp, color = Color.Gray)
                 }
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Open", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(28.dp))
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Open", tint = Color.Gray, modifier = Modifier.size(28.dp))
             }
             if (expanded) {
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 1.dp, modifier = Modifier.padding(horizontal = 12.dp))
@@ -490,7 +490,7 @@ fun PremiumEpisodeCard(episode: Movie, onClick: () -> Unit) {
                 text = episode.episode?.replace("Episode ", "E") ?: "E?",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color.Gray,
                 modifier = Modifier.width(40.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -503,9 +503,9 @@ fun PremiumEpisodeCard(episode: Movie, onClick: () -> Unit) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(text = "${episode.size_bytes / (1024 * 1024)} MB", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(text = "${episode.size_bytes / (1024 * 1024)} MB", fontSize = 12.sp, color = Color.Gray)
             }
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(24.dp))
+            Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(24.dp))
         }
     }
 }
