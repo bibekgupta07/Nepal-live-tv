@@ -136,6 +136,8 @@ fun VideoPlayer(
 
     var indicatorValue by remember { mutableFloatStateOf(0f) }
     var isVolumeIndicator by remember { mutableStateOf(true) }
+    var isSeekIndicator by remember { mutableStateOf(false) }
+    var seekText by remember { mutableStateOf("") }
     var showIndicator by remember { mutableStateOf(false) }
 
     var isQualityMenuExpanded by remember { mutableStateOf(false) }
@@ -386,10 +388,32 @@ fun VideoPlayer(
                         isInPipMode = isInPipMode,
                         onTap = { isControlsVisible = !isControlsVisible },
                         onSwipe = { value, isVolume ->
+                            isSeekIndicator = false
                             indicatorValue = value
                             isVolumeIndicator = isVolume
                             showIndicator = true
                             if (isVolume && value > 0 && isMuted) isMuted = false
+                        },
+                        onSeekSwipe = { timeChangeMs, isFinal ->
+                            isSeekIndicator = true
+                            showIndicator = true
+                            val currentPos = exoPlayer?.currentPosition ?: 0L
+                            val duration = exoPlayer?.duration?.takeIf { it > 0 } ?: 1L
+                            val newPos = (currentPos + timeChangeMs).coerceIn(0L, duration)
+                            
+                            val sign = if (timeChangeMs > 0) "+" else ""
+                            val seconds = timeChangeMs / 1000
+                            val formatTime = String.format(java.util.Locale.US, "%02d:%02d", abs(seconds) / 60, abs(seconds) % 60)
+                            seekText = "$sign$formatTime"
+                            
+                            indicatorValue = newPos.toFloat() / duration.toFloat()
+                            
+                            if (isFinal) {
+                                exoPlayer?.seekTo(newPos)
+                                exoPlayer?.play() // Ensure it unpauses if it was paused during seeking
+                                showIndicator = false
+                                isSeekIndicator = false
+                            }
                         }
                     )
             )
@@ -593,7 +617,7 @@ fun VideoPlayer(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = if (isVolumeIndicator) "VOLUME" else "BRIGHTNESS",
+                            text = if (isSeekIndicator) seekText else if (isVolumeIndicator) "VOLUME" else "BRIGHTNESS",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium
@@ -755,7 +779,8 @@ private fun Modifier.videoPlayerGestures(
     activity: Activity?,
     isInPipMode: Boolean,
     onTap: () -> Unit,
-    onSwipe: (value: Float, isVolume: Boolean) -> Unit
+    onSwipe: (value: Float, isVolume: Boolean) -> Unit,
+    onSeekSwipe: (timeChangeMs: Long, isFinal: Boolean) -> Unit
 ): Modifier = composed {
     if (isInPipMode) return@composed this
 
@@ -766,6 +791,7 @@ private fun Modifier.videoPlayerGestures(
     var startY = 0f
     var isVolumeSwipe = false
     var isBrightnessSwipe = false
+    var isHorizontalSeek = false
     var startVolume = 0
     var startBrightness = 0f
 
@@ -782,25 +808,44 @@ private fun Modifier.videoPlayerGestures(
                     startBrightness = activity?.window?.attributes?.screenBrightness ?: 0.5f
                     if (startBrightness < 0) startBrightness = 0.5f
                     
-                    val halfScreenWidth = size.width / 2
-                    if (startX > halfScreenWidth) {
-                        isVolumeSwipe = true
-                        isBrightnessSwipe = false
-                    } else {
-                        isBrightnessSwipe = true
-                        isVolumeSwipe = false
-                    }
-                },
-                onDragEnd = {
                     isVolumeSwipe = false
                     isBrightnessSwipe = false
+                    isHorizontalSeek = false
+                },
+                onDragEnd = {
+                    if (isHorizontalSeek) {
+                        onSeekSwipe(0L, true) // Commit the seek
+                    }
+                    isVolumeSwipe = false
+                    isBrightnessSwipe = false
+                    isHorizontalSeek = false
                 },
                 onDrag = { change, dragAmount ->
                     change.consume()
                     val deltaY = startY - change.position.y
-                    val percent = deltaY / size.height
+                    val deltaX = change.position.x - startX
+                    
+                    // Determine dominant swipe direction initially
+                    if (!isVolumeSwipe && !isBrightnessSwipe && !isHorizontalSeek) {
+                        if (abs(deltaX) > abs(deltaY) && abs(deltaX) > 40) {
+                            isHorizontalSeek = true
+                        } else if (abs(deltaY) > 40) {
+                            val halfScreenWidth = size.width / 2
+                            if (startX > halfScreenWidth) {
+                                isVolumeSwipe = true
+                            } else {
+                                isBrightnessSwipe = true
+                            }
+                        }
+                    }
 
-                    if (abs(deltaY) > 50) {
+                    if (isHorizontalSeek) {
+                        // Max horizontal swipe = 3 minutes (180000ms)
+                        val percentX = deltaX / size.width
+                        val seekChangeMs = (percentX * 180000).toLong()
+                        onSeekSwipe(seekChangeMs, false)
+                    } else if (abs(deltaY) > 50) {
+                        val percent = deltaY / size.height
                         if (isVolumeSwipe) {
                             val volChange = (percent * maxVolume).toInt()
                             val newVolume = (startVolume + volChange).coerceIn(0, maxVolume)

@@ -55,4 +55,15 @@ class ChannelRepositoryImpl(
             emptyList()
         }
     }
+
+    override suspend fun searchMovies(query: String, limit: Int, offset: Int): List<Movie> = withContext(Dispatchers.IO) {
+        try {
+            val response = api.searchMovies(query, limit, offset)
+            response.movies
+        } catch (e: Exception) {
+            Log.e("ChannelRepository", "Error searching movies", e)
+            e.printStackTrace()
+            emptyList()
+        }
+    }
 }
