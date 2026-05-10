@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmarks
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -37,22 +35,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.app.nepallivetv.LocalFullScreenMode
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
+import com.app.nepallivetv.presentation.screens.movies.MoviePlayerScreen
+import com.app.nepallivetv.presentation.screens.movies.MoviesScreen
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
 import com.app.nepallivetv.presentation.screens.setting.SettingScreen
-import com.app.nepallivetv.presentation.screens.schedule.ScheduleScreen
-import com.app.nepallivetv.presentation.screens.tvlist.TvListScreen
+import androidx.compose.material.icons.filled.Movie
+import androidx.navigation.toRoute
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-import com.app.nepallivetv.ui.theme.customColors
 import com.app.nepallivetv.presentation.screens.splash.SplashScreen
-import com.app.nepallivetv.presentation.screens.schedule.MatchDetailScreen
 
 import com.app.nepallivetv.presentation.screens.auth.LoginScreen
 import com.app.nepallivetv.presentation.screens.auth.RegisterScreen
@@ -66,9 +63,8 @@ import com.app.nepallivetv.updater.UpdateDialog
 @Serializable object PreLoginGraph
 
 @Serializable object HomeRoute
-@Serializable object TvListRoute
-@Serializable object ScheduleRoute
-@Serializable data class MatchDetailRoute(val matchId: String)
+@Serializable object MoviesRoute
+@Serializable data class MoviePlayerRoute(val title: String, val streamUrl: String)
 @Serializable object MyListRoute
 @Serializable object SettingRoute
 @Serializable object PostLoginGraph
@@ -196,20 +192,20 @@ fun AppNavigation() {
                 composable<HomeRoute> {
                     HomeScreen()
                 }
-                
-                composable<TvListRoute> {
-                    TvListScreen()
-                }
-                
-                composable<ScheduleRoute> {
-                    ScheduleScreen(onMatchClick = { matchId ->
-                        navController.navigate(MatchDetailRoute(matchId))
+
+                composable<MoviesRoute> {
+                    MoviesScreen(onNavigateToPlayer = { title, url ->
+                        navController.navigate(MoviePlayerRoute(title, url))
                     })
                 }
-                
-                composable<MatchDetailRoute> { backStackEntry ->
-                    val route = backStackEntry.toRoute<MatchDetailRoute>()
-                    MatchDetailScreen(matchId = route.matchId, onBack = { navController.popBackStack() })
+
+                composable<MoviePlayerRoute> { backStackEntry ->
+                    val route = backStackEntry.toRoute<MoviePlayerRoute>()
+                    MoviePlayerScreen(
+                        title = route.title,
+                        streamUrl = route.streamUrl,
+                        onBack = { navController.popBackStack() }
+                    )
                 }
                 
                 composable<MyListRoute> {
@@ -228,8 +224,7 @@ fun AppNavigation() {
 fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) -> Unit) {
     val tabs = listOf(
         Triple("Home", Icons.Default.Home, HomeRoute),
-        Triple("TV List", Icons.Default.LiveTv, TvListRoute),
-        Triple("Schedule", Icons.Default.CalendarMonth, ScheduleRoute),
+        Triple("Movies", Icons.Default.Movie, MoviesRoute),
         Triple("My List", Icons.Default.Bookmarks, MyListRoute),
         Triple("Settings", Icons.Default.Settings, SettingRoute)
     )

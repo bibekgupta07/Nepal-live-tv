@@ -1,6 +1,5 @@
 package com.app.nepallivetv.data.model
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,16 +16,13 @@ data class RegisterResponse(
 )
 
 @Serializable
-data class LoginRequest(
-    @SerialName("login_id") val loginId: String,
-    val password: String
-)
-
-@Serializable
 data class TokenResponse(
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,
-    @SerialName("user_name") val userName: String,
+    val access_token: String,
+    val token_type: String,
+    val user_name: String,
     val email: String,
     val phone: String
-)
+) {
+    val accessToken: String get() = access_token
+    val userName: String get() = user_name
+}

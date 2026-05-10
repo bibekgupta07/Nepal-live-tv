@@ -1,11 +1,9 @@
 package com.app.nepallivetv.domain.repository
 
 import com.app.nepallivetv.data.model.Channel
-import com.app.nepallivetv.data.model.Match
-import com.app.nepallivetv.data.model.MatchDetail
+import com.app.nepallivetv.data.model.Movie
 
 interface ChannelRepository {
     suspend fun getChannels(): List<Channel>
-    suspend fun getCricketMatches(): List<Match>
-    suspend fun getMatchDetail(matchId: String): MatchDetail?
+    suspend fun getMovies(limit: Int, offset: Int): List<Movie>
 }

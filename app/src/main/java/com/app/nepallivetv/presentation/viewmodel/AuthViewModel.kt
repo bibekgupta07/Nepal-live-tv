@@ -3,7 +3,6 @@ package com.app.nepallivetv.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.nepallivetv.data.local.datastore.DatastorePreferences
-import com.app.nepallivetv.data.model.LoginRequest
 import com.app.nepallivetv.data.model.RegisterRequest
 import com.app.nepallivetv.data.remote.LiveTvApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +62,7 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             try {
-                val res = api.login(LoginRequest(loginId, pass))
+                val res = api.login(loginId, pass)
                 datastorePreferences.saveAuthData(res.accessToken, res.userName, res.email, res.phone)
                 _authState.value = AuthState.Success
             } catch (e: Exception) {
