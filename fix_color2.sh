@@ -1,0 +1,1 @@
+sed -i 's/color = Color.Black/color = MaterialTheme.colorScheme.surface/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt

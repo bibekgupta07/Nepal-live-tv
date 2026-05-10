@@ -1,0 +1,1 @@
+sed -i 's/import androidx.compose.foundation.lazy.grid.*//g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt

@@ -1,0 +1,8 @@
+sed -i 's/color = Color.White/color = MaterialTheme.colorScheme.onSurface/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color(0xFF2A2A2A)/MaterialTheme.colorScheme.surfaceVariant/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color(0xFF3A3A3A)/MaterialTheme.colorScheme.surfaceVariant/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color.Gray/MaterialTheme.colorScheme.onSurfaceVariant/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color.LightGray/MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha=0.5f)/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color(0xFF1E1E1E)/MaterialTheme.colorScheme.surfaceVariant/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/tint = Color.White/tint = MaterialTheme.colorScheme.onSurface/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
+sed -i 's/Color(0xFF141414)/MaterialTheme.colorScheme.background/g' /home/bibek/project_development/backend-fastapi/zinx/NepalLiveTv/app/src/main/java/com/app/nepallivetv/presentation/screens/movies/MoviesScreen.kt
