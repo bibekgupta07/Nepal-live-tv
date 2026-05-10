@@ -42,4 +42,11 @@ interface LiveTvApi {
         @Query("limit") limit: Int = 20,
         @Query("offset") offset: Int = 0
     ): MovieResponse
+
+    @GET("api/movies/search")
+    suspend fun searchMovies(
+        @Query("query") query: String,
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0
+    ): MovieResponse
 }

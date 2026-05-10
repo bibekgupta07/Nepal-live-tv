@@ -6,6 +6,7 @@ import com.app.nepallivetv.domain.repository.ChannelRepository
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
 import com.app.nepallivetv.domain.usecase.GetMoviesUseCase
+import com.app.nepallivetv.domain.usecase.SearchMoviesUseCase
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.presentation.viewmodel.MoviesViewModel
@@ -28,9 +29,10 @@ val appModule = module {
     factory { GetChannelsUseCase(get()) }
     factory { GetStreamUrlUseCase(get()) }
     factory { GetMoviesUseCase(get()) }
+    factory { SearchMoviesUseCase(get()) }
 
     viewModel { SharedViewModel(get(), get(), get()) }
-    viewModel { MoviesViewModel(get()) }
+    viewModel { MoviesViewModel(get(), get()) }
     viewModel { AuthViewModel(get(), get()) }
     viewModel { UpdateViewModel(get()) }
 }
