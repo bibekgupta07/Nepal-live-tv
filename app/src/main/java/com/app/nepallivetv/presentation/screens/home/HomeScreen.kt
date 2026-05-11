@@ -1,11 +1,8 @@
 package com.app.nepallivetv.presentation.screens.home
 
-import android.widget.Toast
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,28 +11,57 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,7 +71,6 @@ import coil.compose.AsyncImage
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.presentation.components.VideoPlayer
-import com.app.nepallivetv.presentation.components.LiveBadge
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.utils.showToast
 import org.koin.androidx.compose.koinViewModel
@@ -81,7 +106,7 @@ fun HomeScreen() {
 
     BackHandler(enabled = !isFullScreen && !isInPipMode) {
         val currentTime = System.currentTimeMillis()
-        if (currentTime - backPressedTime < 2000) {
+        if ((currentTime - backPressedTime) < 2000) {
             activity?.finish()
         } else {
             backPressedTime = currentTime
@@ -93,46 +118,42 @@ fun HomeScreen() {
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures(onTap = { focusManager.clearFocus() })
+                detectTapGestures { focusManager.clearFocus() }
             }
     ) {
         val favoriteUrls by viewModel.favoriteUrls.collectAsState()
         val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
         val isCastEnabled by viewModel.isCastEnabled.collectAsState()
 
-        VideoPlayer(
-            streamUrl = currentStreamUrl,
-            channelName = selectedChannel?.name ?: "Loading...",
-            isFullScreen = isFullScreen,
-            isInPipMode = isInPipMode,
-            isFavorite = isCurrentFavorite,
-            isCastEnabled = isCastEnabled,
-            channels = channels,
-            selectedChannel = selectedChannel,
-            onChannelSelected = { viewModel.selectChannel(it) },
-            onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
-            onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
-            onClose = {
-                if (isFullScreen) {
-                    viewModel.setFullScreen(false)
-                } else {
-                    viewModel.closePlayer()
-                }
-            },
-            modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() else Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-        )
+        val isPlaying = currentStreamUrl != null
+
+        if (currentStreamUrl != null || isFullScreen || isInPipMode || isLandscape) {
+            VideoPlayer(
+                streamUrl = currentStreamUrl,
+                channelName = selectedChannel?.name ?: "Loading...",
+                isFullScreen = isFullScreen,
+                isMiniPlayer = isPlaying && !isFullScreen && !isInPipMode && !isLandscape,
+                isInPipMode = isInPipMode,
+                isFavorite = isCurrentFavorite,
+                isCastEnabled = isCastEnabled,
+                channels = channels,
+                selectedChannel = selectedChannel,
+                onChannelSelected = { viewModel.selectChannel(it) },
+                onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
+                onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
+                onClose = {
+                    if (isFullScreen) {
+                        viewModel.setFullScreen(false)
+                    } else {
+                        viewModel.closePlayer()
+                    }
+                },
+                modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() 
+                else Modifier.fillMaxWidth().height(56.dp)
+            )
+        }
 
         if (!isFullScreen && !isInPipMode && !isLandscape) {
-            if (selectedChannel != null) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(text = "NOW PLAYING", color = MaterialTheme.colorScheme.primary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    Text(text = selectedChannel?.name ?: "", color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Live Now • HD • ${selectedChannel?.category}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
-                }
-            }
-
             Spacer(modifier = Modifier.height(8.dp))
 
             CategoryAndSearchRow(
@@ -167,9 +188,12 @@ fun HomeScreen() {
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(channels) { channel ->
+                            val isFavorite = channel.encodedUrl in favoriteUrls
                             ChannelListItem(
                                 channel = channel,
                                 isSelected = channel == selectedChannel,
+                                isFavorite = isFavorite,
+                                onToggleFavorite = { viewModel.toggleFavorite(channel) },
                                 onClick = {
                                     viewModel.selectChannel(channel)
                                     viewModel.onSearchQueryChanged("")
@@ -195,7 +219,7 @@ fun HomeScreen() {
                         fontSize = 18.sp
                     )
                     Text(
-                        text = "${channels.size} live →",
+                        text = "${channels.size} channels →",
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
@@ -224,19 +248,20 @@ fun HomeScreen() {
                         )
                     }
                 } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f)
+                            .weight(1f),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(channels) { channel ->
-                            ChannelGridItem(
+                            val isFavorite = channel.encodedUrl in favoriteUrls
+                            ChannelListItem(
                                 channel = channel,
                                 isSelected = channel == selectedChannel,
+                                isFavorite = isFavorite,
+                                onToggleFavorite = { viewModel.toggleFavorite(channel) },
                                 onClick = {
                                     viewModel.selectChannel(channel)
                                     focusManager.clearFocus()
@@ -261,6 +286,15 @@ fun CategoryAndSearchRow(
     isSearchExpanded: Boolean,
     onSearchExpandedChanged: (Boolean) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(isSearchExpanded) {
+        if (isSearchExpanded) {
+            kotlinx.coroutines.delay(100)
+            focusRequester.requestFocus()
+        }
+    }
+
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -313,22 +347,13 @@ fun CategoryAndSearchRow(
                         modifier = Modifier
                             .width(200.dp)
                             .height(50.dp)
+                            .focusRequester(focusRequester)
                     )
                 }
             }
         }
         items(categories) { category ->
             val isSelected = category == selectedCategory
-            val emoji = when (category) {
-                "All" -> "📺"
-                "News" -> "📰"
-                "Sports" -> "🏏"
-                "Entertainment" -> "🎬"
-                "Music" -> "🎵"
-                "Kids" -> "🧸"
-                "Movies" -> "🍿"
-                else -> "✨"
-            }
             Surface(
                 shape = RoundedCornerShape(24.dp),
                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
@@ -340,8 +365,6 @@ fun CategoryAndSearchRow(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = emoji, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = category,
                         color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -355,62 +378,11 @@ fun CategoryAndSearchRow(
 }
 
 @Composable
-fun ChannelGridItem(
-    channel: Channel,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                if (!channel.logo.isNullOrEmpty()) {
-                    AsyncImage(
-                        model = channel.logo,
-                        contentDescription = channel.name,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                Text(
-                    text = channel.name,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                if (isSelected) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    LiveBadge()
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun ChannelListItem(
     channel: Channel,
     isSelected: Boolean,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
     onClick: () -> Unit
 ) {
     Card(
@@ -465,14 +437,28 @@ fun ChannelListItem(
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = channel.category,
+                    text = "On Air • ${channel.category}",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp
                 )
             }
             if (isSelected) {
                 Spacer(modifier = Modifier.width(8.dp))
-                LiveBadge()
+                Text(
+                    text = "Playing",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(onClick = onToggleFavorite) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "Toggle Favorite",
+                    tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

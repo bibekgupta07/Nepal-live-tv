@@ -9,12 +9,15 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import com.app.nepallivetv.data.model.Channel
 
 private val Context.appDataStore by preferencesDataStore(name = "app_preferences")
 
 class DatastorePreferences(private val context: Context) {
     private val THEME_KEY = booleanPreferencesKey("is_dark_mode")
-    private val FAVORITES_KEY = stringSetPreferencesKey("favorite_channels")
+    private val FAVORITES_KEY = stringSetPreferencesKey("favorite_channels_json")
     private val CAST_ENABLED_KEY = booleanPreferencesKey("is_cast_enabled")
     
     // Auth Keys
@@ -27,8 +30,19 @@ class DatastorePreferences(private val context: Context) {
         prefs[THEME_KEY] ?: true
     }
 
-    val favoriteUrlsFlow: Flow<Set<String>> = context.appDataStore.data.map { prefs ->
-        prefs[FAVORITES_KEY] ?: emptySet()
+    val favoriteChannelsFlow: Flow<List<Channel>> = context.appDataStore.data.map { prefs ->
+        val jsonSet = prefs[FAVORITES_KEY] ?: emptySet()
+        jsonSet.mapNotNull { jsonString ->
+            try {
+                Json.decodeFromString<Channel>(jsonString)
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+    
+    val favoriteUrlsFlow: Flow<Set<String>> = favoriteChannelsFlow.map { channels ->
+        channels.map { it.encodedUrl }.toSet()
     }
     
     val isCastEnabledFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
@@ -82,16 +96,23 @@ class DatastorePreferences(private val context: Context) {
         context.appDataStore.edit { prefs -> prefs[CAST_ENABLED_KEY] = isEnabled }
     }
 
-    suspend fun toggleFavorite(encodedUrl: String) {
+    suspend fun toggleFavorite(channel: Channel) {
         context.appDataStore.edit { prefs ->
             val currentFavorites = prefs[FAVORITES_KEY] ?: emptySet()
-            val newFavorites = currentFavorites.toMutableSet()
-            if (newFavorites.contains(encodedUrl)) {
-                newFavorites.remove(encodedUrl)
-            } else {
-                newFavorites.add(encodedUrl)
+            val channels = currentFavorites.mapNotNull { jsonStr -> 
+                try { Json.decodeFromString<Channel>(jsonStr) } catch (e: Exception) { null } 
             }
-            prefs[FAVORITES_KEY] = newFavorites
+            
+            val newFavorites = channels.toMutableList()
+            val existing = newFavorites.find { it.encodedUrl == channel.encodedUrl }
+            
+            if (existing != null) {
+                newFavorites.remove(existing)
+            } else {
+                newFavorites.add(channel)
+            }
+            
+            prefs[FAVORITES_KEY] = newFavorites.map { Json.encodeToString(it) }.toSet()
         }
     }
 }

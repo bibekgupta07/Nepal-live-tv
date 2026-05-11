@@ -13,37 +13,58 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.CastConnected
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.FastForward
-import androidx.compose.material.icons.filled.FastRewind
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.CastConnected
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Crop
-import androidx.compose.material.icons.filled.AspectRatio
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FitScreen
-import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material3.*
-import com.app.nepallivetv.presentation.components.LiveBadge
-import com.app.nepallivetv.data.model.Channel
-import coil.compose.AsyncImage
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.ZoomOutMap
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -65,37 +86,27 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.cast.CastPlayer
+import androidx.media3.cast.SessionAvailabilityListener
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import androidx.media3.cast.CastPlayer
-import androidx.media3.cast.SessionAvailabilityListener
 import androidx.mediarouter.app.MediaRouteButton
+import coil.compose.AsyncImage
+import com.app.nepallivetv.data.model.Channel
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.google.android.gms.cast.framework.CastContext
 import kotlinx.coroutines.delay
 import kotlin.math.abs
-
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection
-import androidx.compose.material.icons.filled.Settings
-import androidx.media3.common.C
-import androidx.media3.common.TrackGroup
-import androidx.media3.common.TrackSelectionOverride
-import androidx.media3.common.Tracks
-
-data class VideoQualityOption(
-    val resolutionText: String,
-    val trackGroup: TrackGroup? = null,
-    val trackIndex: Int = -1,
-    val isAuto: Boolean = false
-)
 
 /**
  * A gesture-enabled Jetpack Compose wrapper for ExoPlayer.
@@ -109,6 +120,7 @@ fun VideoPlayer(
     streamUrl: String?,
     channelName: String = "Live Stream",
     isFullScreen: Boolean,
+    isMiniPlayer: Boolean = false,
     isInPipMode: Boolean = false,
     isFavorite: Boolean = false,
     isCastEnabled: Boolean = true,
@@ -139,9 +151,6 @@ fun VideoPlayer(
     var isSeekIndicator by remember { mutableStateOf(false) }
     var seekText by remember { mutableStateOf("") }
     var showIndicator by remember { mutableStateOf(false) }
-
-    var isQualityMenuExpanded by remember { mutableStateOf(false) }
-    var videoQualities by remember { mutableStateOf(emptyList<VideoQualityOption>()) }
     
     val trackSelector = remember { DefaultTrackSelector(context, AdaptiveTrackSelection.Factory()) }
 
@@ -282,23 +291,7 @@ fun VideoPlayer(
                 }
 
                 override fun onTracksChanged(tracks: Tracks) {
-                    val options = mutableListOf<VideoQualityOption>()
-                    options.add(VideoQualityOption("Auto", isAuto = true))
-                    
-                    for (group in tracks.groups) {
-                        if (group.type == C.TRACK_TYPE_VIDEO) {
-                            for (i in 0 until group.length) {
-                                val format = group.getTrackFormat(i)
-                                val height = format.height
-                                if (height > 0) {
-                                    options.add(VideoQualityOption("${height}p", group.mediaTrackGroup, i))
-                                }
-                            }
-                        }
-                    }
-                    // Sort descending (e.g. 1080p, 720p, 480p)
-                    val uniqueOptions = options.distinctBy { it.resolutionText }.sortedByDescending { it.resolutionText.replace("p", "").toIntOrNull() ?: 9999 }
-                    videoQualities = uniqueOptions
+                    // Track changes can be handled here if needed
                 }
 
                 override fun onPlaybackStateChanged(playbackState: Int) {
@@ -431,7 +424,7 @@ fun VideoPlayer(
             )
 
             AnimatedVisibility(
-                visible = isControlsVisible && !isInPipMode,
+                visible = isControlsVisible && !isInPipMode && !isMiniPlayer,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier
@@ -444,7 +437,7 @@ fun VideoPlayer(
             }
 
             AnimatedVisibility(
-                visible = isControlsVisible && !isInPipMode,
+                visible = isControlsVisible && !isInPipMode && !isMiniPlayer,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier
@@ -492,7 +485,7 @@ fun VideoPlayer(
             }
 
             AnimatedVisibility(
-                visible = isControlsVisible && !isInPipMode,
+                visible = isControlsVisible && !isInPipMode && !isMiniPlayer,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.Center)
@@ -520,7 +513,7 @@ fun VideoPlayer(
             }
 
             AnimatedVisibility(
-                visible = isControlsVisible && !isInPipMode,
+                visible = isControlsVisible && !isInPipMode && !isMiniPlayer,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 16.dp)
@@ -532,7 +525,7 @@ fun VideoPlayer(
                     PlayerIconButton(
                         icon = when (resizeMode) {
                             AspectRatioFrameLayout.RESIZE_MODE_FIT -> Icons.Filled.FitScreen
-                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.ZoomIn
+                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> Icons.Filled.ZoomOutMap
                             AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> Icons.Filled.Crop
                             else -> Icons.Filled.FitScreen
                         },
@@ -555,43 +548,6 @@ fun VideoPlayer(
                         modifier = Modifier.size(controlButtonSize),
                         iconSize = controlIconSize
                     )
-                    
-                    Box {
-                        PlayerIconButton(
-                            icon = Icons.Default.Settings,
-                            contentDescription = "Video Quality",
-                            onClick = { isQualityMenuExpanded = true },
-                            modifier = Modifier.size(controlButtonSize),
-                            iconSize = controlIconSize
-                        )
-
-                        DropdownMenu(
-                            expanded = isQualityMenuExpanded,
-                            onDismissRequest = { isQualityMenuExpanded = false },
-                            modifier = Modifier.background(Color.Black.copy(alpha = 0.9f))
-                        ) {
-                            videoQualities.forEach { option ->
-                                DropdownMenuItem(
-                                    text = { Text(text = option.resolutionText, color = Color.White) },
-                                    onClick = {
-                                        isQualityMenuExpanded = false
-                                        if (option.isAuto) {
-                                            trackSelector.parameters = trackSelector.buildUponParameters()
-                                                .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
-                                                .build()
-                                        } else {
-                                            option.trackGroup?.let { group ->
-                                                trackSelector.parameters = trackSelector.buildUponParameters()
-                                                    .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
-                                                    .addOverride(TrackSelectionOverride(group, listOf(option.trackIndex)))
-                                                    .build()
-                                            }
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
 
                     PlayerIconButton(
                         icon = if (isFullScreen) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen,
@@ -600,6 +556,58 @@ fun VideoPlayer(
                         modifier = Modifier.size(controlButtonSize),
                         iconSize = controlIconSize
                     )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = isMiniPlayer,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.6f))
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (selectedChannel != null && !selectedChannel.logo.isNullOrEmpty()) {
+                        AsyncImage(
+                            model = selectedChannel.logo,
+                            contentDescription = selectedChannel.name,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(text = channelName, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(text = "Playing", color = Color.Gray, fontSize = 12.sp)
+                    }
+                    IconButton(onClick = { if (isPlaying) exoPlayer?.pause() else exoPlayer?.play() }) {
+                        Icon(
+                            imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            contentDescription = if (isPlaying) "Pause" else "Play",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = onToggleFullScreen) {
+                        Icon(
+                            imageVector = Icons.Default.Fullscreen,
+                            contentDescription = "Expand",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Close",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 

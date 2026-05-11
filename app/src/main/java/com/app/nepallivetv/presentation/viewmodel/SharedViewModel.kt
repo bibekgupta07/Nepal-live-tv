@@ -52,12 +52,8 @@ class SharedViewModel(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val favoriteChannels: StateFlow<List<Channel>> = combine(
-        _channels,
-        favoriteUrls
-    ) { channels, favs ->
-        channels.filter { it.encodedUrl in favs }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val favoriteChannels: StateFlow<List<Channel>> = datastorePreferences.favoriteChannelsFlow
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _currentStreamUrl = MutableStateFlow<String?>(null)
     val currentStreamUrl: StateFlow<String?> = _currentStreamUrl
@@ -121,7 +117,7 @@ class SharedViewModel(
 
     fun toggleFavorite(channel: Channel) {
         viewModelScope.launch {
-            datastorePreferences.toggleFavorite(channel.encodedUrl)
+            datastorePreferences.toggleFavorite(channel)
         }
     }
 
