@@ -1,7 +1,6 @@
 package com.app.nepallivetv.data.remote
 
 import com.app.nepallivetv.data.model.Channel
-import com.app.nepallivetv.data.model.MovieResponse
 import com.app.nepallivetv.data.model.RegisterRequest
 import com.app.nepallivetv.data.model.RegisterResponse
 import com.app.nepallivetv.data.model.TokenResponse
@@ -36,17 +35,4 @@ interface LiveTvApi {
 
     @GET("api/stream/{channel_id}")
     suspend fun getStreamUrl(@Path("channel_id") channelId: String): StreamResponse
-
-    @GET("api/movies")
-    suspend fun getMovies(
-        @Query("limit") limit: Int = 20,
-        @Query("offset") offset: Int = 0
-    ): MovieResponse
-
-    @GET("api/movies/search")
-    suspend fun searchMovies(
-        @Query("query") query: String,
-        @Query("limit") limit: Int = 20,
-        @Query("offset") offset: Int = 0
-    ): MovieResponse
 }

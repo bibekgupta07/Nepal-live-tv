@@ -39,11 +39,8 @@ import com.app.nepallivetv.LocalFullScreenMode
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
-import com.app.nepallivetv.presentation.screens.movies.MoviePlayerScreen
-import com.app.nepallivetv.presentation.screens.movies.MoviesScreen
 import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
 import com.app.nepallivetv.presentation.screens.setting.SettingScreen
-import androidx.compose.material.icons.filled.Movie
 import androidx.navigation.toRoute
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
@@ -63,8 +60,6 @@ import com.app.nepallivetv.updater.UpdateDialog
 @Serializable object PreLoginGraph
 
 @Serializable object HomeRoute
-@Serializable object MoviesRoute
-@Serializable data class MoviePlayerRoute(val title: String, val streamUrl: String)
 @Serializable object MyListRoute
 @Serializable object SettingRoute
 @Serializable object PostLoginGraph
@@ -192,21 +187,6 @@ fun AppNavigation() {
                 composable<HomeRoute> {
                     HomeScreen()
                 }
-
-                composable<MoviesRoute> {
-                    MoviesScreen(onNavigateToPlayer = { title, url ->
-                        navController.navigate(MoviePlayerRoute(title, url))
-                    })
-                }
-
-                composable<MoviePlayerRoute> { backStackEntry ->
-                    val route = backStackEntry.toRoute<MoviePlayerRoute>()
-                    MoviePlayerScreen(
-                        title = route.title,
-                        streamUrl = route.streamUrl,
-                        onBack = { navController.popBackStack() }
-                    )
-                }
                 
                 composable<MyListRoute> {
                     MyListScreen()
@@ -224,7 +204,6 @@ fun AppNavigation() {
 fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) -> Unit) {
     val tabs = listOf(
         Triple("Home", Icons.Default.Home, HomeRoute),
-        Triple("Movies", Icons.Default.Movie, MoviesRoute),
         Triple("My List", Icons.Default.Bookmarks, MyListRoute),
         Triple("Settings", Icons.Default.Settings, SettingRoute)
     )

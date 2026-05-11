@@ -3,7 +3,6 @@ package com.app.nepallivetv.data.repository
 import android.content.Context
 import android.util.Log
 import com.app.nepallivetv.data.model.Channel
-import com.app.nepallivetv.data.model.Movie
 import com.app.nepallivetv.data.remote.LiveTvApi
 import com.app.nepallivetv.domain.repository.ChannelRepository
 import kotlinx.coroutines.Dispatchers
@@ -42,28 +41,6 @@ class ChannelRepositoryImpl(
             } catch (fallbackEx: Exception) {
                 emptyList()
             }
-        }
-    }
-
-    override suspend fun getMovies(limit: Int, offset: Int): List<Movie> = withContext(Dispatchers.IO) {
-        try {
-            val response = api.getMovies(limit, offset)
-            response.movies
-        } catch (e: Exception) {
-            Log.e("ChannelRepository", "Error fetching movies", e)
-            e.printStackTrace()
-            emptyList()
-        }
-    }
-
-    override suspend fun searchMovies(query: String, limit: Int, offset: Int): List<Movie> = withContext(Dispatchers.IO) {
-        try {
-            val response = api.searchMovies(query, limit, offset)
-            response.movies
-        } catch (e: Exception) {
-            Log.e("ChannelRepository", "Error searching movies", e)
-            e.printStackTrace()
-            emptyList()
         }
     }
 }

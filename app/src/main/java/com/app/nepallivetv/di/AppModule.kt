@@ -5,11 +5,8 @@ import com.app.nepallivetv.data.repository.ChannelRepositoryImpl
 import com.app.nepallivetv.domain.repository.ChannelRepository
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
-import com.app.nepallivetv.domain.usecase.GetMoviesUseCase
-import com.app.nepallivetv.domain.usecase.SearchMoviesUseCase
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
-import com.app.nepallivetv.presentation.viewmodel.MoviesViewModel
 import com.app.nepallivetv.updater.UpdateManager
 import com.app.nepallivetv.updater.UpdateViewModel
 import org.koin.android.ext.koin.androidContext
@@ -28,11 +25,8 @@ val appModule = module {
 
     factory { GetChannelsUseCase(get()) }
     factory { GetStreamUrlUseCase(get()) }
-    factory { GetMoviesUseCase(get()) }
-    factory { SearchMoviesUseCase(get()) }
 
     viewModel { SharedViewModel(get(), get(), get()) }
-    viewModel { MoviesViewModel(get(), get()) }
     viewModel { AuthViewModel(get(), get()) }
     viewModel { UpdateViewModel(get()) }
 }
