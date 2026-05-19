@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import com.app.nepallivetv.data.model.Channel
+import com.app.nepallivetv.data.local.datastore.dto.ChannelPersistDto
+import com.app.nepallivetv.domain.model.Channel
 
 private val Context.appDataStore by preferencesDataStore(name = "app_preferences")
 
@@ -34,7 +35,7 @@ class DatastorePreferences(private val context: Context) {
         val jsonSet = prefs[FAVORITES_KEY] ?: emptySet()
         jsonSet.mapNotNull { jsonString ->
             try {
-                Json.decodeFromString<Channel>(jsonString)
+                Json.decodeFromString<ChannelPersistDto>(jsonString).toDomain()
             } catch (e: Exception) {
                 null
             }
@@ -98,21 +99,18 @@ class DatastorePreferences(private val context: Context) {
 
     suspend fun toggleFavorite(channel: Channel) {
         context.appDataStore.edit { prefs ->
-            val currentFavorites = prefs[FAVORITES_KEY] ?: emptySet()
-            val channels = currentFavorites.mapNotNull { jsonStr -> 
-                try { Json.decodeFromString<Channel>(jsonStr) } catch (e: Exception) { null } 
-            }
-            
-            val newFavorites = channels.toMutableList()
-            val existing = newFavorites.find { it.encodedUrl == channel.encodedUrl }
-            
+            val current = (prefs[FAVORITES_KEY] ?: emptySet()).mapNotNull { jsonStr ->
+                try { Json.decodeFromString<ChannelPersistDto>(jsonStr) } catch (e: Exception) { null }
+            }.toMutableList()
+
+            val existing = current.find { it.encodedUrl == channel.encodedUrl }
             if (existing != null) {
-                newFavorites.remove(existing)
+                current.remove(existing)
             } else {
-                newFavorites.add(channel)
+                current.add(ChannelPersistDto.fromDomain(channel))
             }
-            
-            prefs[FAVORITES_KEY] = newFavorites.map { Json.encodeToString(it) }.toSet()
+
+            prefs[FAVORITES_KEY] = current.map { Json.encodeToString(it) }.toSet()
         }
     }
 }

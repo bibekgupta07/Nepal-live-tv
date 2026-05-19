@@ -1,6 +1,5 @@
 package com.app.nepallivetv.presentation.screens.mylist
 
-import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -26,15 +25,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.aspectRatio
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.components.VideoPlayer
 import com.app.nepallivetv.presentation.screens.home.ChannelListItem
+import com.app.nepallivetv.presentation.viewmodel.PlayerMode
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.ui.theme.customColors
 import com.app.nepallivetv.utils.showToast
@@ -45,12 +45,10 @@ fun MyListScreen() {
     val viewModel = koinViewModel<SharedViewModel>()
     val channels by viewModel.favoriteChannels.collectAsState()
     val selectedChannel by viewModel.selectedChannel.collectAsState()
-    val isFullScreen by viewModel.isFullScreen.collectAsState()
+    val playerMode by viewModel.playerMode.collectAsState()
+    val isFullScreen = playerMode == PlayerMode.FULL
     val isInPipMode = LocalPipMode.current
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
-    
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     
     val favoriteUrls by viewModel.favoriteUrls.collectAsState()
     val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
@@ -83,14 +81,20 @@ fun MyListScreen() {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
-        val isPlaying = currentStreamUrl != null
+        val effectiveMode = if (isInPipMode) PlayerMode.FULL else playerMode
 
-        if (currentStreamUrl != null || isFullScreen || isInPipMode || isLandscape) {
+        if (currentStreamUrl != null || effectiveMode != PlayerMode.MINI) {
+            val playerModifier = when (effectiveMode) {
+                PlayerMode.FULL -> Modifier.fillMaxSize()
+                PlayerMode.EXPANDED -> Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                PlayerMode.MINI -> Modifier.fillMaxWidth().height(56.dp)
+            }
             VideoPlayer(
                 streamUrl = currentStreamUrl,
                 channelName = selectedChannel?.name ?: "Loading...",
-                isFullScreen = isFullScreen,
-                isMiniPlayer = isPlaying && !isFullScreen && !isInPipMode && !isLandscape,
+                playerMode = effectiveMode,
                 isInPipMode = isInPipMode,
                 isFavorite = isCurrentFavorite,
                 isCastEnabled = isCastEnabled,
@@ -98,6 +102,8 @@ fun MyListScreen() {
                 selectedChannel = selectedChannel,
                 onChannelSelected = { viewModel.selectChannel(it) },
                 onToggleFavorite = { selectedChannel?.let { viewModel.toggleFavorite(it) } },
+                onExpand = { viewModel.expandPlayer() },
+                onMinimize = { viewModel.minimizePlayer() },
                 onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
                     if (isFullScreen) {
@@ -106,12 +112,11 @@ fun MyListScreen() {
                         viewModel.closePlayer()
                     }
                 },
-                modifier = if (isFullScreen || isInPipMode || isLandscape) Modifier.fillMaxSize() 
-                else Modifier.fillMaxWidth().height(56.dp)
+                modifier = playerModifier
             )
         }
 
-        if (!isFullScreen && !isInPipMode && !isLandscape) {
+        if (effectiveMode != PlayerMode.FULL) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Spacer(modifier = Modifier.height(16.dp))
 

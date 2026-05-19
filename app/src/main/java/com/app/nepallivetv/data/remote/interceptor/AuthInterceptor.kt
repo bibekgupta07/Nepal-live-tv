@@ -17,11 +17,13 @@ class AuthInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
 
-        // 1. Add static required headers
+        // Don't force Content-Type here — Retrofit sets the right one per call
+        // (application/json for @Body, application/x-www-form-urlencoded for
+        // @FormUrlEncoded). Overriding it here broke the login endpoint, which
+        // uses OAuth2PasswordRequestForm and rejects JSON content-type.
         requestBuilder.addHeader("Accept", "application/json")
-        requestBuilder.addHeader("Content-Type", "application/json")
 
-        // 2. Add Dynamic Auth Token (Example)
+        // Dynamic Auth Token
         // OkHttp interceptors run on a background worker thread.
         // It is completely safe and standard practice to use `runBlocking` here to read from DataStore
         // synchronously so the network request waits for the token to be fetched before proceeding.

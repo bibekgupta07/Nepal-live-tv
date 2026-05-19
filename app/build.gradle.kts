@@ -27,10 +27,27 @@ android {
     productFlavors {
         create("dev") {
             dimension = "environment"
-            // Use local machine IP to test python backend locally before pushing!
-            // If using Android Emulator, use "http://10.0.2.2:8000/"
-            // Since you are using a real phone on the same WiFi, use your PC's local IP:
-            buildConfigField("String", "BASE_URL", "\"http://192.168.18.74:8000/\"")
+            // Points the app at the phone's own loopback. The phone reaches the
+            // host's backend through an `adb reverse` USB tunnel:
+            //
+            //     adb reverse tcp:8001 tcp:8001
+            //
+            // The tunnel re-routes the phone's 127.0.0.1:8001 to the host's
+            // 127.0.0.1:8001 where uvicorn is listening. This works regardless
+            // of whether the phone and host share a network, and it doesn't
+            // depend on knowing either device's IP.
+            //
+            // Re-run `adb reverse tcp:8001 tcp:8001` after every reboot, USB
+            // reconnect, or `adb kill-server`. List active tunnels with
+            // `adb reverse --list`.
+            //
+            // For an Android emulator, swap this for "http://10.0.2.2:8001/"
+            // (the emulator's built-in loopback alias for the host).
+            //
+            // Start the backend on the host (port 8001 because 8000 is taken
+            // here by something else):
+            //     uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+            buildConfigField("String", "BASE_URL", "\"http://127.0.0.1:8001/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("uat") {

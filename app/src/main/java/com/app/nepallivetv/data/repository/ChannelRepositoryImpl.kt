@@ -1,46 +1,42 @@
 package com.app.nepallivetv.data.repository
 
-import android.content.Context
+import android.util.Base64
 import android.util.Log
-import com.app.nepallivetv.data.model.Channel
 import com.app.nepallivetv.data.remote.LiveTvApi
+import com.app.nepallivetv.domain.model.Channel
 import com.app.nepallivetv.domain.repository.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 
 class ChannelRepositoryImpl(
-    private val api: LiveTvApi,
-    private val context: Context
+    private val api: LiveTvApi
 ) : ChannelRepository {
 
     override suspend fun getChannels(): List<Channel> = withContext(Dispatchers.IO) {
         try {
-            api.getChannels()
+            api.getChannels().map { it.toDomain() }
         } catch (e: Exception) {
-            Log.e("ChannelRepository", "Error fetching channels from backend", e)
-            e.printStackTrace()
-            
-            // Fallback to local JSON if backend is offline
-            try {
-                val jsonString = context.assets.open("channels.json").bufferedReader().use { it.readText() }
-                val jsonArray = JSONArray(jsonString)
-                val channels = mutableListOf<Channel>()
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    channels.add(
-                        Channel(
-                            name = jsonObject.getString("name"),
-                            encodedUrl = jsonObject.getString("encodedUrl"),
-                            logo = jsonObject.optString("logo"),
-                            category = jsonObject.optString("category", "All")
-                        )
-                    )
-                }
-                channels
-            } catch (fallbackEx: Exception) {
-                emptyList()
+            // No offline fallback — a stale bundled snapshot would surface
+            // dead channels that can't actually play, which is worse UX than
+            // an honest empty state. The screen already shows "No channels
+            // found." when this returns empty.
+            Log.e("ChannelRepository", "Failed to fetch channels from backend", e)
+            emptyList()
+        }
+    }
+
+    override suspend fun getStreamUrl(encodedUrl: String): String = withContext(Dispatchers.IO) {
+        try {
+            // Pure numeric IDs (techjail IDs) round-trip through the backend so
+            // we always get a fresh tokenized URL. Older base64-encoded entries
+            // (legacy data) decode locally.
+            if (encodedUrl.all { it.isDigit() }) {
+                return@withContext api.getStreamUrl(encodedUrl).stream_url
             }
+            String(Base64.decode(encodedUrl, Base64.DEFAULT))
+        } catch (e: Exception) {
+            Log.e("ChannelRepository", "Error fetching stream url", e)
+            ""
         }
     }
 }

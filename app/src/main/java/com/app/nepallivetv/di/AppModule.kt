@@ -18,13 +18,14 @@ val appModule = module {
     single { DatastorePreferences(androidContext()) }
 
     single<ChannelRepository> {
-        ChannelRepositoryImpl(get(), androidContext())
+        ChannelRepositoryImpl(get())
     }
 
     single { UpdateManager(androidContext()) }
 
     factory { GetChannelsUseCase(get()) }
-    factory { GetStreamUrlUseCase(get()) }
+    // Use case now depends on the domain ChannelRepository, not LiveTvApi directly.
+    factory { GetStreamUrlUseCase(get<ChannelRepository>()) }
 
     viewModel { SharedViewModel(get(), get(), get()) }
     viewModel { AuthViewModel(get(), get()) }

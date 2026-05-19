@@ -39,12 +39,14 @@ import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.CastConnected
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.CloseFullscreen
 import androidx.compose.material.icons.filled.Crop
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.filled.OpenInFull
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.ZoomOutMap
@@ -102,7 +104,8 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import androidx.mediarouter.app.MediaRouteButton
 import coil.compose.AsyncImage
-import com.app.nepallivetv.data.model.Channel
+import com.app.nepallivetv.domain.model.Channel
+import com.app.nepallivetv.presentation.viewmodel.PlayerMode
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.google.android.gms.cast.framework.CastContext
 import kotlinx.coroutines.delay
@@ -119,8 +122,7 @@ fun VideoPlayer(
     modifier: Modifier = Modifier,
     streamUrl: String?,
     channelName: String = "Live Stream",
-    isFullScreen: Boolean,
-    isMiniPlayer: Boolean = false,
+    playerMode: PlayerMode,
     isInPipMode: Boolean = false,
     isFavorite: Boolean = false,
     isCastEnabled: Boolean = true,
@@ -128,9 +130,14 @@ fun VideoPlayer(
     selectedChannel: Channel? = null,
     onChannelSelected: (Channel) -> Unit = {},
     onToggleFavorite: () -> Unit = {},
+    onExpand: () -> Unit = {},
+    onMinimize: () -> Unit = {},
     onToggleFullScreen: () -> Unit,
     onClose: () -> Unit
 ) {
+    val isFullScreen = playerMode == PlayerMode.FULL
+    val isMiniPlayer = playerMode == PlayerMode.MINI
+    val isExpanded = playerMode == PlayerMode.EXPANDED
     val context = LocalContext.current
     val activity = context as? Activity
     
@@ -156,19 +163,31 @@ fun VideoPlayer(
 
     var isPlaying by remember { mutableStateOf(true) }
 
+    // Orientation, system chrome, and keep-screen-on are all driven by the mode.
+    //
+    // Orientation strategy: persistent lock per mode. No release on alignment,
+    // no rotation→mode auto-flip. Mode changes only via buttons / system back;
+    // the OS then rotates the activity to match the new lock.
+    //
+    //   MINI / EXPANDED → SCREEN_ORIENTATION_PORTRAIT   (no tilt-driven flips)
+    //   FULL            → SCREEN_ORIENTATION_SENSOR_LANDSCAPE (L or R landscape OK)
+    //
+    // Earlier attempts released the lock to UNSPECIFIED mid-flight; the sensor
+    // would then read the user's actual grip, snap the activity back, and a
+    // LaunchedEffect would flip the mode in response — feedback loop.
     DisposableEffect(isFullScreen) {
         val window = activity?.window
         val insetsController = window?.let { WindowCompat.getInsetsController(it, it.decorView) }
-
         if (isFullScreen) {
             window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             insetsController?.hide(WindowInsetsCompat.Type.systemBars())
-            insetsController?.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            insetsController?.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         } else {
             window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             insetsController?.show(WindowInsetsCompat.Type.systemBars())
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
         onDispose { }
     }
@@ -302,7 +321,25 @@ fun VideoPlayer(
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
-                    errorMessage = "Playback failed. Please try again."
+                    // Map the IO/parsing/runtime error code to a message a non-technical
+                    // viewer can act on. "Playback failed" alone hides the difference
+                    // between a dropped Wi-Fi connection and a permanently dead stream.
+                    errorMessage = when (error.errorCode) {
+                        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED ->
+                            "Can't reach the stream. Check your connection."
+                        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT ->
+                            "Connection too slow. Try again."
+                        PlaybackException.ERROR_CODE_IO_NO_PERMISSION,
+                        PlaybackException.ERROR_CODE_IO_CLEARTEXT_NOT_PERMITTED ->
+                            "This stream is blocked on your network."
+                        PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND,
+                        PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS ->
+                            "This channel is offline right now."
+                        in PlaybackException.ERROR_CODE_IO_UNSPECIFIED..
+                            PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE ->
+                            "Network issue. Please try again."
+                        else -> "Playback failed. Please try again."
+                    }
                     isBuffering = false
                 }
             })
@@ -429,10 +466,27 @@ fun VideoPlayer(
                 exit = fadeOut(),
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(16.dp)
+                    .padding(start = 8.dp, top = 8.dp, end = 8.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = channelName.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    // Half-screen has a clear "drop to mini" affordance; FULL relies on
+                    // rotation / the system back button instead, to keep the chrome quiet.
+                    if (isExpanded) {
+                        PlayerIconButton(
+                            icon = Icons.Default.CloseFullscreen,
+                            contentDescription = "Minimize",
+                            onClick = onMinimize,
+                            modifier = Modifier.size(topButtonSize),
+                            iconSize = topIconSize
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(
+                        text = channelName.uppercase(),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = if (isFullScreen) 16.sp else 14.sp
+                    )
                 }
             }
 
@@ -568,7 +622,12 @@ fun VideoPlayer(
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.6f))
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(Color.Black.copy(alpha = 0.85f), Color.Black.copy(alpha = 0.55f))
+                            )
+                        )
+                        .clickable { onExpand() }
                         .padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -580,12 +639,33 @@ fun VideoPlayer(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.08f))
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
                     }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = channelName, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(text = "Playing", color = Color.Gray, fontSize = 12.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(6.dp)
+                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                "LIVE",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
+                        Text(
+                            text = channelName,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                     IconButton(onClick = { if (isPlaying) exoPlayer?.pause() else exoPlayer?.play() }) {
                         Icon(
@@ -594,9 +674,10 @@ fun VideoPlayer(
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = onToggleFullScreen) {
+                    // Tap to lift the player into the half-screen EXPANDED layout.
+                    IconButton(onClick = onExpand) {
                         Icon(
-                            imageVector = Icons.Default.Fullscreen,
+                            imageVector = Icons.Default.OpenInFull,
                             contentDescription = "Expand",
                             tint = Color.White
                         )
