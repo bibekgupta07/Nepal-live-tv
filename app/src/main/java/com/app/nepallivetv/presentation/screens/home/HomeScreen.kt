@@ -2,11 +2,8 @@ package com.app.nepallivetv.presentation.screens.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -23,18 +20,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,25 +56,37 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.app.nepallivetv.LocalPipMode
-import com.app.nepallivetv.domain.model.Channel
-import com.app.nepallivetv.presentation.components.ChannelLoadingSkeleton
-import com.app.nepallivetv.presentation.components.LiveBadge
+import com.app.nepallivetv.presentation.components.ChannelCircleItem
+import com.app.nepallivetv.presentation.components.ChannelGridItem
+import com.app.nepallivetv.presentation.components.HeroCard
+import com.app.nepallivetv.presentation.components.HeroCardSkeleton
+import com.app.nepallivetv.presentation.components.SectionHeader
 import com.app.nepallivetv.presentation.components.VideoPlayer
 import com.app.nepallivetv.presentation.viewmodel.PlayerMode
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
 import com.app.nepallivetv.utils.showToast
-import androidx.compose.ui.graphics.Brush
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * Multi-section home feed.
+ *
+ *   ┌─ Top bar (greeting + search affordance)
+ *   ├─ Featured hero pager (HorizontalPager, 1 hero per page)
+ *   ├─ Continue Watching strip (only if non-empty)
+ *   ├─ Favorites strip          (only if non-empty)
+ *   ├─ Category chips           (synthetic categories from CategoryClassifier)
+ *   └─ All-channels grid        (LazyVerticalGrid, 3 columns)
+ *
+ * Layout is one LazyVerticalGrid; non-grid sections occupy
+ * GridItemSpan(maxLineSpan) so they look like full-width rows.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
@@ -90,6 +100,12 @@ fun HomeScreen() {
     val currentStreamUrl by viewModel.currentStreamUrl.collectAsState()
     val selectedChannel by viewModel.selectedChannel.collectAsState()
     val categories by viewModel.categories.collectAsState()
+    val favoriteUrls by viewModel.favoriteUrls.collectAsState()
+    val favorites by viewModel.favoriteChannels.collectAsState()
+    val recents by viewModel.recentlyWatched.collectAsState()
+    val featured by viewModel.featuredChannels.collectAsState()
+    val isCastEnabled by viewModel.isCastEnabled.collectAsState()
+    val userName by viewModel.datastorePreferences.userNameFlow.collectAsState(initial = null)
 
     val playerMode by viewModel.playerMode.collectAsState()
     val isFullScreen = playerMode == PlayerMode.FULL
@@ -114,28 +130,18 @@ fun HomeScreen() {
         }
     }
 
+    val effectiveMode = if (isInPipMode) PlayerMode.FULL else playerMode
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures { focusManager.clearFocus() }
-            }
+            .background(MaterialTheme.colorScheme.background)
+            .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
     ) {
-        val favoriteUrls by viewModel.favoriteUrls.collectAsState()
-        val isCurrentFavorite = selectedChannel?.encodedUrl in favoriteUrls
-        val isCastEnabled by viewModel.isCastEnabled.collectAsState()
-
-        // PiP forces FULL because Android renders us full-bleed in PiP regardless
-        // of what we ask for. Otherwise, mode is whatever the user explicitly chose
-        // — orientation is then enforced by VideoPlayer to match.
-        val effectiveMode = if (isInPipMode) PlayerMode.FULL else playerMode
-
         if (currentStreamUrl != null || effectiveMode != PlayerMode.MINI) {
             val playerModifier = when (effectiveMode) {
                 PlayerMode.FULL -> Modifier.fillMaxSize()
-                PlayerMode.EXPANDED -> Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
+                PlayerMode.EXPANDED -> Modifier.fillMaxWidth().aspectRatio(16f / 9f)
                 PlayerMode.MINI -> Modifier.fillMaxWidth().height(56.dp)
             }
             VideoPlayer(
@@ -143,7 +149,7 @@ fun HomeScreen() {
                 channelName = selectedChannel?.name ?: "Loading...",
                 playerMode = effectiveMode,
                 isInPipMode = isInPipMode,
-                isFavorite = isCurrentFavorite,
+                isFavorite = selectedChannel?.encodedUrl in favoriteUrls,
                 isCastEnabled = isCastEnabled,
                 channels = channels,
                 selectedChannel = selectedChannel,
@@ -153,132 +159,163 @@ fun HomeScreen() {
                 onMinimize = { viewModel.minimizePlayer() },
                 onToggleFullScreen = { viewModel.setFullScreen(!isFullScreen) },
                 onClose = {
-                    if (isFullScreen) {
-                        viewModel.setFullScreen(false)
-                    } else {
-                        viewModel.closePlayer()
-                    }
+                    if (isFullScreen) viewModel.setFullScreen(false) else viewModel.closePlayer()
                 },
                 modifier = playerModifier
             )
         }
 
         if (effectiveMode != PlayerMode.FULL) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CategoryAndSearchRow(
+            FeedBody(
+                isLoading = isLoading,
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) },
+                isSearchVisible = isSearchVisible,
+                onSearchVisibleChanged = { isSearchVisible = it },
+                userName = userName,
+                featured = featured,
+                recents = recents,
+                favorites = favorites,
+                channels = channels,
+                favoriteUrls = favoriteUrls,
+                selectedChannel = selectedChannel,
                 categories = categories,
                 selectedCategory = selectedCategory,
                 onCategorySelected = { viewModel.onCategorySelected(it) },
-                searchQuery = searchQuery,
-                onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) },
-                isSearchExpanded = isSearchVisible,
-                onSearchExpandedChanged = { isSearchVisible = it }
+                onChannelClicked = { ch ->
+                    viewModel.selectChannel(ch)
+                    if (searchQuery.isNotEmpty()) {
+                        viewModel.onSearchQueryChanged("")
+                        isSearchVisible = false
+                    }
+                    focusManager.clearFocus()
+                },
+                onToggleFavorite = { viewModel.toggleFavorite(it) },
             )
+        }
+    }
+}
 
-            if (searchQuery.isNotEmpty()) {
-                if (channels.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No channels found for \"$searchQuery\".",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(channels) { channel ->
-                            val isFavorite = channel.encodedUrl in favoriteUrls
-                            ChannelListItem(
-                                channel = channel,
-                                isSelected = channel == selectedChannel,
-                                isFavorite = isFavorite,
-                                onToggleFavorite = { viewModel.toggleFavorite(channel) },
-                                onClick = {
-                                    viewModel.selectChannel(channel)
-                                    viewModel.onSearchQueryChanged("")
-                                    isSearchVisible = false
-                                    focusManager.clearFocus()
-                                }
-                            )
-                        }
-                    }
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Text(
-                        text = "All Channels",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                    Text(
-                        text = "${channels.size} channels →",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FeedBody(
+    isLoading: Boolean,
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+    isSearchVisible: Boolean,
+    onSearchVisibleChanged: (Boolean) -> Unit,
+    userName: String?,
+    featured: List<com.app.nepallivetv.domain.model.Channel>,
+    recents: List<com.app.nepallivetv.domain.model.Channel>,
+    favorites: List<com.app.nepallivetv.domain.model.Channel>,
+    channels: List<com.app.nepallivetv.domain.model.Channel>,
+    favoriteUrls: Set<String>,
+    selectedChannel: com.app.nepallivetv.domain.model.Channel?,
+    categories: List<String>,
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit,
+    onChannelClicked: (com.app.nepallivetv.domain.model.Channel) -> Unit,
+    onToggleFavorite: (com.app.nepallivetv.domain.model.Channel) -> Unit,
+) {
+    val isSearching = searchQuery.isNotEmpty()
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // ── Top bar ───────────────────────────────────────────────────────
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            TopGreetingBar(
+                userName = userName,
+                searchQuery = searchQuery,
+                onSearchQueryChanged = onSearchQueryChanged,
+                isSearchVisible = isSearchVisible,
+                onSearchVisibleChanged = onSearchVisibleChanged,
+            )
+        }
+
+        if (!isSearching) {
+            // ── Hero pager ────────────────────────────────────────────────
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                if (isLoading && featured.isEmpty()) {
+                    HeroCardSkeleton(modifier = Modifier.padding(horizontal = 4.dp))
+                } else if (featured.isNotEmpty()) {
+                    FeaturedPager(
+                        items = featured,
+                        onClick = onChannelClicked,
                     )
                 }
+            }
 
-                if (isLoading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        ChannelLoadingSkeleton()
-                    }
-                } else if (channels.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No channels found.",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+            // ── Continue watching ─────────────────────────────────────────
+            if (recents.isNotEmpty()) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column {
+                        SectionHeader(title = "Continue Watching", count = recents.size)
+                        ChannelStrip(
+                            items = recents,
+                            selectedId = selectedChannel?.encodedUrl,
+                            onClick = onChannelClicked,
                         )
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(channels) { channel ->
-                            val isFavorite = channel.encodedUrl in favoriteUrls
-                            ChannelListItem(
-                                channel = channel,
-                                isSelected = channel == selectedChannel,
-                                isFavorite = isFavorite,
-                                onToggleFavorite = { viewModel.toggleFavorite(channel) },
-                                onClick = {
-                                    viewModel.selectChannel(channel)
-                                    focusManager.clearFocus()
-                                }
-                            )
-                        }
+                }
+            }
+
+            // ── Favorites ─────────────────────────────────────────────────
+            if (favorites.isNotEmpty()) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column {
+                        SectionHeader(title = "Your Favorites", count = favorites.size)
+                        ChannelStrip(
+                            items = favorites,
+                            selectedId = selectedChannel?.encodedUrl,
+                            onClick = onChannelClicked,
+                        )
                     }
                 }
+            }
+
+            // ── Category chips ───────────────────────────────────────────
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                CategoryChips(
+                    categories = categories,
+                    selected = selectedCategory,
+                    onSelect = onCategorySelected,
+                )
+            }
+
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                SectionHeader(
+                    title = if (selectedCategory == "All") "All Channels" else selectedCategory,
+                    count = channels.size,
+                )
+            }
+        }
+
+        // ── Grid ──────────────────────────────────────────────────────────
+        if (isLoading && channels.isEmpty()) {
+            items(6) {
+                GridSkeleton()
+            }
+        } else if (channels.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                EmptyState(
+                    message = if (isSearching) "No channels match \"$searchQuery\""
+                    else "No channels available."
+                )
+            }
+        } else {
+            items(channels, key = { it.encodedUrl }) { ch ->
+                ChannelGridItem(
+                    channel = ch,
+                    isSelected = ch == selectedChannel,
+                    isFavorite = ch.encodedUrl in favoriteUrls,
+                    onClick = { onChannelClicked(ch) },
+                    onToggleFavorite = { onToggleFavorite(ch) },
+                )
             }
         }
     }
@@ -286,200 +323,135 @@ fun HomeScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryAndSearchRow(
-    categories: List<String>,
-    selectedCategory: String,
-    onCategorySelected: (String) -> Unit,
+private fun TopGreetingBar(
+    userName: String?,
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
-    isSearchExpanded: Boolean,
-    onSearchExpandedChanged: (Boolean) -> Unit
+    isSearchVisible: Boolean,
+    onSearchVisibleChanged: (Boolean) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(isSearchExpanded) {
-        if (isSearchExpanded) {
-            kotlinx.coroutines.delay(100)
+    LaunchedEffect(isSearchVisible) {
+        if (isSearchVisible) {
+            delay(100)
             focusRequester.requestFocus()
         }
     }
 
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AnimatedVisibility(
-                    visible = !isSearchExpanded,
-                    enter = fadeIn() + expandHorizontally(),
-                    exit = fadeOut() + shrinkHorizontally()
-                ) {
-                    IconButton(
-                        onClick = { onSearchExpandedChanged(true) },
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                            .size(48.dp)
-                    ) {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
-
-                AnimatedVisibility(
-                    visible = isSearchExpanded,
-                    enter = fadeIn() + expandHorizontally(),
-                    exit = fadeOut() + shrinkHorizontally()
-                ) {
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = onSearchQueryChanged,
-                        placeholder = { Text("Search...", fontSize = 14.sp) },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", modifier = Modifier.size(20.dp)) },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                onSearchQueryChanged("")
-                                onSearchExpandedChanged(false)
-                            }) {
-                                Icon(Icons.Default.Clear, contentDescription = "Clear", modifier = Modifier.size(18.dp))
-                            }
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        modifier = Modifier
-                            .width(200.dp)
-                            .height(50.dp)
-                            .focusRequester(focusRequester)
-                    )
-                }
-            }
-        }
-        items(categories) { category ->
-            val isSelected = category == selectedCategory
-            Surface(
-                shape = RoundedCornerShape(24.dp),
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable { onCategorySelected(category) }
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = category,
-                        color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ChannelListItem(
-    channel: Channel,
-    isSelected: Boolean,
-    isFavorite: Boolean,
-    onToggleFavorite: () -> Unit,
-    onClick: () -> Unit
-) {
-    val surface = MaterialTheme.colorScheme.surfaceVariant
-    val surfaceTop = MaterialTheme.colorScheme.surface
-    // Subtle vertical gradient lifts the card off a flat background — the
-    // single tone otherwise felt cheap next to the rest of the player UI.
-    val background = if (isSelected) {
-        Brush.verticalGradient(
-            listOf(
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.06f),
-            )
-        )
-    } else {
-        Brush.verticalGradient(listOf(surfaceTop, surface))
-    }
-
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        border = if (isSelected) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 6.dp else 2.dp)
+            .padding(horizontal = 4.dp, vertical = 8.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(background)
-                .padding(horizontal = 12.dp, vertical = 14.dp),
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ChannelLogoTile(channel = channel, showLiveBadge = isSelected)
-
-            Spacer(modifier = Modifier.width(14.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = channel.name,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    text = if (!userName.isNullOrBlank()) "Hi, $userName" else "Welcome back",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = channel.category,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
+                Text(
+                    text = "What's on?",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                )
+            }
+            AnimatedVisibility(visible = !isSearchVisible, enter = fadeIn(), exit = fadeOut()) {
+                IconButton(
+                    onClick = { onSearchVisibleChanged(true) },
+                    modifier = Modifier
+                        .size(46.dp)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                ) {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .background(
-                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.12f),
-                                RoundedCornerShape(4.dp)
-                            )
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = "HD",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
                 }
             }
+        }
 
-            if (isSelected) {
-                Text(
-                    text = "Playing",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
+        AnimatedVisibility(visible = isSearchVisible, enter = fadeIn(), exit = fadeOut()) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChanged,
+                placeholder = { Text("Search channels...", fontSize = 14.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, null, modifier = Modifier.size(20.dp)) },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        onSearchQueryChanged("")
+                        onSearchVisibleChanged(false)
+                    }) {
+                        Icon(Icons.Default.Clear, null, modifier = Modifier.size(18.dp))
+                    }
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(14.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+                    .focusRequester(focusRequester)
+            )
+        }
+    }
+}
 
-            IconButton(onClick = onToggleFavorite) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Toggle Favorite",
-                    tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FeaturedPager(
+    items: List<com.app.nepallivetv.domain.model.Channel>,
+    onClick: (com.app.nepallivetv.domain.model.Channel) -> Unit,
+) {
+    val pagerState = rememberPagerState(pageCount = { items.size })
+
+    // Auto-advance every 5s so the carousel feels alive but isn't aggressive.
+    LaunchedEffect(items.size) {
+        if (items.size <= 1) return@LaunchedEffect
+        while (true) {
+            delay(5000)
+            val next = (pagerState.currentPage + 1) % items.size
+            pagerState.animateScrollToPage(next)
+        }
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 4.dp)) {
+        HorizontalPager(
+            state = pagerState,
+            pageSpacing = 12.dp,
+            contentPadding = PaddingValues(horizontal = 0.dp),
+        ) { page ->
+            HeroCard(channel = items[page], onClick = { onClick(items[page]) })
+        }
+        Spacer(Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            items.indices.forEach { i ->
+                val active = i == pagerState.currentPage
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 3.dp)
+                        .height(6.dp)
+                        .width(if (active) 18.dp else 6.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(
+                            if (active) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f)
+                        )
                 )
             }
         }
@@ -487,53 +459,83 @@ fun ChannelListItem(
 }
 
 @Composable
-private fun ChannelLogoTile(channel: Channel, showLiveBadge: Boolean) {
-    Box(modifier = Modifier.size(56.dp)) {
-        if (!channel.logo.isNullOrEmpty()) {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                AsyncImage(
-                    model = channel.logo,
-                    contentDescription = channel.name,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(6.dp)
-                )
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.35f),
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                            )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = channel.name.take(1).uppercase(),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 22.sp
-                )
-            }
-        }
-        if (showLiveBadge) {
-            LiveBadge(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(2.dp)
+private fun ChannelStrip(
+    items: List<com.app.nepallivetv.domain.model.Channel>,
+    selectedId: String?,
+    onClick: (com.app.nepallivetv.domain.model.Channel) -> Unit,
+) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        items(items, key = { it.encodedUrl }) { ch ->
+            ChannelCircleItem(
+                channel = ch,
+                isSelected = ch.encodedUrl == selectedId,
+                onClick = { onClick(ch) },
             )
         }
+    }
+}
+
+@Composable
+private fun CategoryChips(
+    categories: List<String>,
+    selected: String,
+    onSelect: (String) -> Unit,
+) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(categories) { cat ->
+            val isSelected = cat == selected
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = if (isSelected) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable { onSelect(cat) }
+            ) {
+                Text(
+                    text = cat,
+                    color = if (isSelected) Color.White
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GridSkeleton() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.75f)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+    )
+}
+
+@Composable
+private fun EmptyState(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 14.sp,
+        )
     }
 }

@@ -19,6 +19,7 @@ private val Context.appDataStore by preferencesDataStore(name = "app_preferences
 class DatastorePreferences(private val context: Context) {
     private val THEME_KEY = booleanPreferencesKey("is_dark_mode")
     private val FAVORITES_KEY = stringSetPreferencesKey("favorite_channels_json")
+    private val RECENTS_KEY = stringPreferencesKey("recently_watched_json")
     private val CAST_ENABLED_KEY = booleanPreferencesKey("is_cast_enabled")
     
     // Auth Keys
@@ -44,6 +45,20 @@ class DatastorePreferences(private val context: Context) {
     
     val favoriteUrlsFlow: Flow<Set<String>> = favoriteChannelsFlow.map { channels ->
         channels.map { it.encodedUrl }.toSet()
+    }
+
+    /**
+     * Recently-watched channels, most-recent first. Capped at [MAX_RECENTS]
+     * entries so it doesn't grow unbounded. Persisted as a single JSON array
+     * because order matters here (a Set, like favorites, would lose it).
+     */
+    val recentlyWatchedFlow: Flow<List<Channel>> = context.appDataStore.data.map { prefs ->
+        val jsonString = prefs[RECENTS_KEY] ?: return@map emptyList()
+        try {
+            Json.decodeFromString<List<ChannelPersistDto>>(jsonString).map { it.toDomain() }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
     
     val isCastEnabledFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
@@ -97,6 +112,22 @@ class DatastorePreferences(private val context: Context) {
         context.appDataStore.edit { prefs -> prefs[CAST_ENABLED_KEY] = isEnabled }
     }
 
+    suspend fun pushRecentlyWatched(channel: Channel) {
+        context.appDataStore.edit { prefs ->
+            val current = (prefs[RECENTS_KEY]?.let {
+                try { Json.decodeFromString<List<ChannelPersistDto>>(it) } catch (e: Exception) { null }
+            } ?: emptyList()).toMutableList()
+
+            // Move-to-front: dedupe by encodedUrl and put the new entry at index 0
+            // so the carousel reads as most-recent first.
+            current.removeAll { it.encodedUrl == channel.encodedUrl }
+            current.add(0, ChannelPersistDto.fromDomain(channel))
+            val capped = current.take(MAX_RECENTS)
+
+            prefs[RECENTS_KEY] = Json.encodeToString(capped)
+        }
+    }
+
     suspend fun toggleFavorite(channel: Channel) {
         context.appDataStore.edit { prefs ->
             val current = (prefs[FAVORITES_KEY] ?: emptySet()).mapNotNull { jsonStr ->
@@ -112,5 +143,9 @@ class DatastorePreferences(private val context: Context) {
 
             prefs[FAVORITES_KEY] = current.map { Json.encodeToString(it) }.toSet()
         }
+    }
+
+    private companion object {
+        const val MAX_RECENTS = 15
     }
 }

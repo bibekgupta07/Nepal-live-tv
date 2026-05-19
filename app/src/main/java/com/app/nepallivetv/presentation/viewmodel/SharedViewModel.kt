@@ -6,6 +6,7 @@ import com.app.nepallivetv.data.local.datastore.DatastorePreferences
 import com.app.nepallivetv.domain.model.Channel
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
 import com.app.nepallivetv.domain.usecase.GetStreamUrlUseCase
+import com.app.nepallivetv.presentation.util.CategoryClassifier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,14 +27,22 @@ class SharedViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
-    private val _selectedCategory = MutableStateFlow("All")
-    val selectedCategory: StateFlow<String> = _selectedCategory
+    /** "All" plus the synthetic [CategoryClassifier.Bucket] labels. */
+    val categories: StateFlow<List<String>> = MutableStateFlow(
+        listOf(CATEGORY_ALL) + CategoryClassifier.Bucket.all().map { it.label }
+    )
 
-    private val _categories = MutableStateFlow<List<String>>(listOf("All"))
-    val categories: StateFlow<List<String>> = _categories
+    private val _selectedCategory = MutableStateFlow(CATEGORY_ALL)
+    val selectedCategory: StateFlow<String> = _selectedCategory
 
     val favoriteUrls: StateFlow<Set<String>> = datastorePreferences.favoriteUrlsFlow
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
+
+    val favoriteChannels: StateFlow<List<Channel>> = datastorePreferences.favoriteChannelsFlow
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val recentlyWatched: StateFlow<List<Channel>> = datastorePreferences.recentlyWatchedFlow
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val isDarkMode: StateFlow<Boolean> = datastorePreferences.isDarkModeFlow
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
@@ -41,6 +50,12 @@ class SharedViewModel(
     val isCastEnabled: StateFlow<Boolean> = datastorePreferences.isCastEnabledFlow
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
+    /**
+     * Channels filtered by both the search box and the selected synthetic
+     * category. The upstream `category` field is ignored — we classify by
+     * name via [CategoryClassifier] because the API returns "All" for almost
+     * every row.
+     */
     val filteredChannels: StateFlow<List<Channel>> = combine(
         _channels,
         _searchQuery,
@@ -48,28 +63,47 @@ class SharedViewModel(
     ) { channels, query, category ->
         channels.filter { channel ->
             val matchesQuery = channel.name.contains(query, ignoreCase = true)
-            val matchesCategory = category == "All" || channel.category.equals(category, ignoreCase = true)
+            val matchesCategory = category == CATEGORY_ALL ||
+                CategoryClassifier.classify(channel).label.equals(category, ignoreCase = true)
             matchesQuery && matchesCategory
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val favoriteChannels: StateFlow<List<Channel>> = datastorePreferences.favoriteChannelsFlow
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    /**
+     * A small rotation of channels to feature in the hero carousel. Drawn
+     * from recently-watched first (personalization), then padded with
+     * arbitrary live channels so a fresh install still has something to
+     * showcase.
+     */
+    val featuredChannels: StateFlow<List<Channel>> = combine(
+        _channels,
+        recentlyWatched,
+        favoriteChannels
+    ) { all, recents, favs ->
+        val seen = mutableSetOf<String>()
+        val out = mutableListOf<Channel>()
+        // Prefer recents (most personal), then favorites, then arbitrary HD picks.
+        sequenceOf(recents, favs, all.filter { CategoryClassifier.isHd(it) }, all)
+            .flatten()
+            .forEach { ch ->
+                if (out.size >= FEATURED_LIMIT) return@forEach
+                if (seen.add(ch.encodedUrl)) out += ch
+            }
+        out
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _currentStreamUrl = MutableStateFlow<String?>(null)
     val currentStreamUrl: StateFlow<String?> = _currentStreamUrl
 
     private val _selectedChannel = MutableStateFlow<Channel?>(null)
     val selectedChannel: StateFlow<Channel?> = _selectedChannel
-    
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _playerMode = MutableStateFlow(PlayerMode.MINI)
     val playerMode: StateFlow<PlayerMode> = _playerMode
 
-    // Backwards-compatible convenience: many call sites just want to know
-    // "is the player taking the whole screen right now?"
     val isFullScreen: StateFlow<Boolean> = _playerMode
         .map { it == PlayerMode.FULL }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
@@ -81,66 +115,42 @@ class SharedViewModel(
     private fun loadChannels() {
         viewModelScope.launch {
             _isLoading.value = true
-            
-            // Fetch channels
-            val fetchedChannels = getChannelsUseCase()
-            _channels.value = fetchedChannels
-            
-            val uniqueCategories = fetchedChannels
-                .map { it.category }
-                .filter { it.isNotBlank() }
-                .distinct()
-                .sorted()
-                
-            _categories.value = listOf("All") + uniqueCategories
-            
-            if (fetchedChannels.isNotEmpty() && _selectedChannel.value == null) {
-                selectChannel(fetchedChannels.first())
-            }
-
+            _channels.value = getChannelsUseCase()
+            // We don't auto-select a channel on startup any more. A flat
+            // auto-play surprised the user with audio on app launch and
+            // forced the player into the layout regardless of intent.
             _isLoading.value = false
         }
     }
 
-    fun onSearchQueryChanged(query: String) {
-        _searchQuery.value = query
-    }
+    fun onSearchQueryChanged(query: String) { _searchQuery.value = query }
 
-    fun onCategorySelected(category: String) {
-        _selectedCategory.value = category
-    }
+    fun onCategorySelected(category: String) { _selectedCategory.value = category }
 
     fun toggleTheme(isDark: Boolean) {
-        viewModelScope.launch {
-            datastorePreferences.setDarkMode(isDark)
-        }
+        viewModelScope.launch { datastorePreferences.setDarkMode(isDark) }
     }
 
     fun setCastEnabled(isEnabled: Boolean) {
-        viewModelScope.launch {
-            datastorePreferences.setCastEnabled(isEnabled)
-        }
+        viewModelScope.launch { datastorePreferences.setCastEnabled(isEnabled) }
     }
 
     fun toggleFavorite(channel: Channel) {
-        viewModelScope.launch {
-            datastorePreferences.toggleFavorite(channel)
-        }
+        viewModelScope.launch { datastorePreferences.toggleFavorite(channel) }
     }
 
     fun selectChannel(channel: Channel) {
         _selectedChannel.value = channel
         _currentStreamUrl.value = null
-        
         viewModelScope.launch {
-            val url = getStreamUrlUseCase(channel.encodedUrl)
-            _currentStreamUrl.value = url
+            // Record in recently-watched alongside the stream fetch. Done in
+            // parallel because there's no dependency between them.
+            launch { datastorePreferences.pushRecentlyWatched(channel) }
+            _currentStreamUrl.value = getStreamUrlUseCase(channel.encodedUrl)
         }
     }
-    
-    fun setPlayerMode(mode: PlayerMode) {
-        _playerMode.value = mode
-    }
+
+    fun setPlayerMode(mode: PlayerMode) { _playerMode.value = mode }
 
     /**
      * Going to fullscreen is unambiguous. Coming back, we drop to EXPANDED rather
@@ -159,5 +169,10 @@ class SharedViewModel(
         _selectedChannel.value = null
         _currentStreamUrl.value = null
         _playerMode.value = PlayerMode.MINI
+    }
+
+    private companion object {
+        const val CATEGORY_ALL = "All"
+        const val FEATURED_LIMIT = 6
     }
 }
