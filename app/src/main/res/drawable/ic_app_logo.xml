@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!--
+      Drishya icon. A bold Devanagari "द" (the first letter of दृश्य) rendered
+      as a single compound path — the distinctive horizontal shirorekha at
+      top plus the characteristic curl-and-descender body.
+
+      Geometry sits in a 108x108 viewport. Adaptive-icon mask trims the
+      outer 18dp safe zone, so all key shapes are within ±36 of center.
+    -->
+
+    <!-- The glyph: shirorekha (top bar) + left descender + right curl body.
+         Drawn as one closed path filled with the brand gradient. -->
+    <path
+        android:pathData="M16,26 L92,26 L92,34 L82,34 L82,68 Q82,82 68,82 L38,82 L38,72 L64,72 Q72,72 72,64 L72,34 L26,34 L26,52 L16,52 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="16" android:startY="26"
+                android:endX="92" android:endY="82"
+                android:type="linear">
+                <item android:offset="0" android:color="#FFFF8A4D"/>
+                <item android:offset="0.5" android:color="#FFE63946"/>
+                <item android:offset="1" android:color="#FFB31F2A"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Thin specular highlight on the shirorekha — fakes a light source
+         hitting the top of the bar so the glyph feels three-dimensional. -->
+    <path
+        android:pathData="M22,28 L86,28 L86,30 L22,30 Z"
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.30"/>
+
+    <!-- Small inner shadow underneath the shirorekha to add depth -->
+    <path
+        android:pathData="M26,34 L82,34 L82,36 L26,36 Z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.15"/>
+</vector>

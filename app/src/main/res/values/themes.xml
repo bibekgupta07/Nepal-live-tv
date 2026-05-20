@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.NepalLiveTv.Starting" parent="Theme.SplashScreen">
-        <!-- The background color of the splash screen (very dark plum from your icon) -->
-        <item name="windowSplashScreenBackground">#0A0005</item>
+        <!-- The background color of the splash screen -->
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
         <!-- The animated icon to draw on the splash screen -->
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_app_logo</item>
         <!-- The theme to switch to after the splash screen is done -->
         <item name="postSplashScreenTheme">@style/Theme.NepalLiveTv</item>
     </style>
 
-    <style name="Theme.NepalLiveTv" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.NepalLiveTv" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Ensures no white flash before Compose takes over -->
+        <item name="android:windowBackground">@color/splash_background</item>
+    </style>
 </resources>

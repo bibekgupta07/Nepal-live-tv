@@ -11,13 +11,27 @@ composeBom = "2026.02.01"
 media3 = "1.5.0"
 lifecycleViewmodelCompose = "2.8.7"
 retrofit = "2.11.0"
+okhttp = "4.12.0"
 jsoup = "1.18.3"
 coil = "2.7.0"
 koin = "4.0.0"
 navigationCompose = "2.8.5"
 kotlinxSerialization = "1.7.3"
 
+appcompat = "1.7.0"
+media3Cast = "1.5.0"
+playServicesCastFramework = "21.4.0"
+mediarouter = "1.7.0"
+datastorePreferences = "1.1.1"
+coreSplashscreen = "1.2.0"
+
 [libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-media3-cast = { group = "androidx.media3", name = "media3-cast", version.ref = "media3Cast" }
+play-services-cast-framework = { group = "com.google.android.gms", name = "play-services-cast-framework", version.ref = "playServicesCastFramework" }
+androidx-mediarouter = { group = "androidx.mediarouter", name = "mediarouter", version.ref = "mediarouter" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +55,9 @@ androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.re
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+retrofit-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
