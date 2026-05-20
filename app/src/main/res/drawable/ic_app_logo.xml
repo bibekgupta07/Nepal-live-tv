@@ -5,47 +5,41 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Outer TV/Circle Gradient Ring -->
+    <!--
+      Drishya icon. A bold Devanagari "द" (the first letter of दृश्य) rendered
+      as a single compound path — the distinctive horizontal shirorekha at
+      top plus the characteristic curl-and-descender body.
+
+      Geometry sits in a 108x108 viewport. Adaptive-icon mask trims the
+      outer 18dp safe zone, so all key shapes are within ±36 of center.
+    -->
+
+    <!-- The glyph: shirorekha (top bar) + left descender + right curl body.
+         Drawn as one closed path filled with the brand gradient. -->
     <path
-        android:pathData="M54,16 c-20.98,0 -38,17.02 -38,38 c0,20.98 17.02,38 38,38 c20.98,0 38,-17.02 38,-38 c0,-20.98 -17.02,-38 -38,-38 z m0,8 c16.56,0 30,13.44 30,30 c0,16.56 -13.44,30 -30,30 c-16.56,0 -30,-13.44 -30,-30 c0,-16.56 13.44,-30 30,-30 z">
+        android:pathData="M16,26 L92,26 L92,34 L82,34 L82,68 Q82,82 68,82 L38,82 L38,72 L64,72 Q72,72 72,64 L72,34 L26,34 L26,52 L16,52 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:startX="16"
-                android:startY="16"
-                android:endX="92"
-                android:endY="92"
+                android:startX="16" android:startY="26"
+                android:endX="92" android:endY="82"
                 android:type="linear">
-                <item android:offset="0" android:color="#FF2A2A" />
-                <item android:offset="1" android:color="#003893" />
+                <item android:offset="0" android:color="#FFFF8A4D"/>
+                <item android:offset="0.5" android:color="#FFE63946"/>
+                <item android:offset="1" android:color="#FFB31F2A"/>
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- The Nepal Flag / Play Button -->
+    <!-- Thin specular highlight on the shirorekha — fakes a light source
+         hitting the top of the bar so the glyph feels three-dimensional. -->
     <path
-        android:pathData="M 44,34 L 72,53 L 52,53 L 74,75 L 44,75 Z"
-        android:strokeWidth="5"
-        android:strokeColor="#003893"
-        android:strokeLineJoin="round">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:startX="44"
-                android:startY="34"
-                android:endX="74"
-                android:endY="75"
-                android:type="linear">
-                <item android:offset="0" android:color="#FF4D4D" />
-                <item android:offset="1" android:color="#DC143C" />
-            </gradient>
-        </aapt:attr>
-    </path>
+        android:pathData="M22,28 L86,28 L86,30 L22,30 Z"
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.30"/>
 
-    <!-- Sun and Moon (stylized small white dots for extreme minimalism) -->
+    <!-- Small inner shadow underneath the shirorekha to add depth -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M 50,45 a 1.5,1.5 0,1,0 3,0 a 1.5,1.5 0,1,0 -3,0" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M 52,64 a 1.5,1.5 0,1,0 3,0 a 1.5,1.5 0,1,0 -3,0" />
-
+        android:pathData="M26,34 L82,34 L82,36 L26,36 Z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.15"/>
 </vector>

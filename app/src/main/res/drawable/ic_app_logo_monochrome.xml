@@ -4,11 +4,13 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
+    <!--
+      Monochrome glyph for Android 13+ themed icons. The system re-tints
+      this to whatever the user's wallpaper-based theme picks, so all
+      paths must be a single solid color. Same Devanagari "द" silhouette
+      as the foreground.
+    -->
     <path
         android:fillColor="#000000"
-        android:pathData="M54,16 c-20.98,0 -38,17.02 -38,38 c0,20.98 17.02,38 38,38 c20.98,0 38,-17.02 38,-38 c0,-20.98 -17.02,-38 -38,-38 z m0,8 c16.56,0 30,13.44 30,30 c0,16.56 -13.44,30 -30,30 c-16.56,0 -30,-13.44 -30,-30 c0,-16.56 13.44,-30 30,-30 z" />
-
-    <path
-        android:fillColor="#000000"
-        android:pathData="M 44,34 L 72,53 L 52,53 L 74,75 L 44,75 Z" />
+        android:pathData="M16,26 L92,26 L92,34 L82,34 L82,68 Q82,82 68,82 L38,82 L38,72 L64,72 Q72,72 72,64 L72,34 L26,34 L26,52 L16,52 Z"/>
 </vector>

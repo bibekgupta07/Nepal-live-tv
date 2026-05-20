@@ -60,10 +60,10 @@ class UpdateManager(private val context: Context) {
 
     fun downloadAndInstallUpdate(url: String) {
         val request = DownloadManager.Request(url.toUri())
-            .setTitle("NepalLiveTv Update")
+            .setTitle("Drishya Update")
             .setDescription("Downloading latest version...")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "NepalLiveTv-update.apk")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Drishya-update.apk")
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadId = downloadManager.enqueue(request)

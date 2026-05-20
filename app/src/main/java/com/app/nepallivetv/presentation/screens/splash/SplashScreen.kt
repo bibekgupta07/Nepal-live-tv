@@ -71,17 +71,18 @@ fun SplashScreen(navController: NavController, authToken: String?) {
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Nepal Live TV",
+                text = "Drishya",
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 2.sp
+                fontSize = 28.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 3.sp
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Stream Anything, Anytime",
+                text = "Live TV, on every screen",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 14.sp
+                fontSize = 13.sp,
+                letterSpacing = 1.sp
             )
         }
     }
