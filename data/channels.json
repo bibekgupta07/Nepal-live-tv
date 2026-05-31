@@ -1,11 +1,5 @@
 [
   {
-    "name": "Kantipur Max 2 HD",
-    "encodedUrl": "1413",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_Max_HD_2024-01-01_05:01:02.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Kantipur HD",
     "encodedUrl": "516",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_HD_2021-05-03_10:05:22.png",
@@ -660,6 +654,12 @@
     "category": "Entertainment"
   },
   {
+    "name": "Star Bharat HD",
+    "encodedUrl": "371",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Bharat_HD_2021-05-05_08:05:27.png",
+    "category": "Entertainment"
+  },
+  {
     "name": "Sony Sab HD",
     "encodedUrl": "916",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Sab_HD_2022-11-06_09:11:49.png",
@@ -681,6 +681,12 @@
     "name": "Star Plus",
     "encodedUrl": "1259",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Plus_2020-10-29_01:10:08.png",
+    "category": "Entertainment"
+  },
+  {
+    "name": "Star Bharat",
+    "encodedUrl": "1303",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Bharat_2021-01-20_07:01:58.jpg",
     "category": "Entertainment"
   },
   {
@@ -720,6 +726,12 @@
     "category": "Entertainment"
   },
   {
+    "name": "Star Movies HD",
+    "encodedUrl": "1285",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_HD_2020-12-17_10:12:31.png",
+    "category": "Movies"
+  },
+  {
     "name": "Star Movies Select HD",
     "encodedUrl": "1288",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_Select_HD_2020-12-18_09:12:58.png",
@@ -744,6 +756,12 @@
     "category": "Movies"
   },
   {
+    "name": "Star Gold HD",
+    "encodedUrl": "359",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_HD_2022-03-10_10:03:11.png",
+    "category": "Movies"
+  },
+  {
     "name": "Zee Cinema HD",
     "encodedUrl": "342",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Zee_Cinema_HD_2025-06-10_12:06:38.png",
@@ -753,6 +771,12 @@
     "name": "Star Gold Select HD",
     "encodedUrl": "483",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_Select_HD_2021-05-05_08:05:46.png",
+    "category": "Movies"
+  },
+  {
+    "name": "Star Movies",
+    "encodedUrl": "1306",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_2021-01-20_07:01:12.jpg",
     "category": "Movies"
   },
   {
@@ -804,57 +828,21 @@
     "category": "Movies"
   },
   {
+    "name": "Star Utsav Movies",
+    "encodedUrl": "464",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Utsav_Movies_2021-05-05_08:05:55.png",
+    "category": "Movies"
+  },
+  {
     "name": "Zee Classic",
     "encodedUrl": "316",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Zee_Classic_2025-06-10_12:06:01.png",
     "category": "Movies"
   },
   {
-    "name": "Sony Sports Ten 1 HD",
-    "encodedUrl": "346",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_1_HD_2022-11-06_09:11:20.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Sony Sports Ten 2 HD",
-    "encodedUrl": "661",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_2_HD_2022-11-06_09:11:37.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Sony Sports Ten 3 HD",
-    "encodedUrl": "739",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_3_HD_2022-11-06_09:11:56.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Sony Sports Ten 5 HD",
-    "encodedUrl": "412",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_5_HD_2022-11-06_09:11:31.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports 1 HD",
-    "encodedUrl": "365",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_1_HD_2021-05-05_08:05:14.png",
-    "category": "Sports"
-  },
-  {
     "name": "Star Sports 2 HD",
     "encodedUrl": "366",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_2_HD_2021-05-05_08:05:28.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports 1 HD Hindi",
-    "encodedUrl": "367",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_1_HD_Hindi_2022-03-10_10:03:52.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports Select 1 HD",
-    "encodedUrl": "398",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_Select_1_HD_2021-05-05_08:05:25.png",
     "category": "Sports"
   },
   {
@@ -885,12 +873,6 @@
     "name": "Sony Sports Ten 3",
     "encodedUrl": "336",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_3_2023-05-29_04:05:36.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports 1 SD",
-    "encodedUrl": "399",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_1_2021-05-05_08:05:08.png",
     "category": "Sports"
   },
   {
@@ -990,9 +972,21 @@
     "category": "Kids "
   },
   {
+    "name": "NAT GEO WILD HD",
+    "encodedUrl": "580",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/NAT_GEO_WILD_HD_2021-05-05_08:05:28.png",
+    "category": "Adventures"
+  },
+  {
     "name": "Animal Planet HD",
     "encodedUrl": "381",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Animal_Planet_HD_2022-03-10_10:03:16.png",
+    "category": "Adventures"
+  },
+  {
+    "name": "Nat Geo  HD",
+    "encodedUrl": "396",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Nat_Geo__HD_2021-05-05_08:05:05.png",
     "category": "Adventures"
   },
   {
@@ -1017,6 +1011,12 @@
     "name": "CGTN Documentary HD",
     "encodedUrl": "976",
     "logo": "https://nettv1.nettv.com.np/channel_logo/CGTN_Documentary_HD_2021-05-05_06:05:59.png",
+    "category": "Adventures"
+  },
+  {
+    "name": "National Geographic",
+    "encodedUrl": "1300",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/National_Geographic_2021-01-19_07:01:27.png",
     "category": "Adventures"
   },
   {
