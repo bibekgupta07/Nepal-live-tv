@@ -105,7 +105,9 @@ fun HomeScreen() {
     val recents by viewModel.recentlyWatched.collectAsState()
     val featured by viewModel.featuredChannels.collectAsState()
     val isCastEnabled by viewModel.isCastEnabled.collectAsState()
-    val userName by viewModel.datastorePreferences.userNameFlow.collectAsState(initial = null)
+    // v3: auth removed. The greeting line falls back to "Welcome back" when
+    // userName is null.
+    val userName: String? = null
 
     val playerMode by viewModel.playerMode.collectAsState()
     val isFullScreen = playerMode == PlayerMode.FULL

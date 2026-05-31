@@ -1,0 +1,47 @@
+name: scrape
+
+on:
+  schedule:
+    # Every 6 hours, offset to avoid the on-the-hour rush.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: scraper/requirements.txt
+
+      - name: Install deps
+        run: pip install -r scraper/requirements.txt
+
+      - name: Scrape
+        run: python -m scraper.main
+
+      - name: Commit data/ if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -z "$(git status --porcelain data/)" ]]; then
+            echo "No catalog drift — nothing to commit."
+            exit 0
+          fi
+          git add data/
+          git commit -m "chore(data): refresh catalog $(date -u +'%Y-%m-%dT%H:%MZ')"
+          git push

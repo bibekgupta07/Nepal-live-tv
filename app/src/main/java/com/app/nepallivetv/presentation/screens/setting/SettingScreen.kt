@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Abc
 import androidx.compose.material.icons.filled.Hd
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.SignalCellularAlt
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.*
@@ -31,13 +32,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SettingScreen() {
     val viewModel = koinViewModel<SharedViewModel>()
-    val authViewModel = koinViewModel<com.app.nepallivetv.presentation.viewmodel.AuthViewModel>()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val isCastEnabled by viewModel.isCastEnabled.collectAsState()
-    
-    val userName by viewModel.datastorePreferences.userNameFlow.collectAsState(initial = "User")
-    val userEmail by viewModel.datastorePreferences.userEmailFlow.collectAsState(initial = "user@gmail.com")
-    val userPhone by viewModel.datastorePreferences.userPhoneFlow.collectAsState(initial = "No Phone Saved")
+    val isAnalyticsEnabled by viewModel.isAnalyticsEnabled.collectAsState()
 
     var forceHdCast by remember { mutableStateOf(false) }
     var liveNotifications by remember { mutableStateOf(true) }
@@ -52,7 +49,7 @@ fun SettingScreen() {
         Spacer(modifier = Modifier.height(48.dp))
 
         Text(
-            text = "Account",
+            text = "Preferences",
             color = MaterialTheme.customColors.settingTextGray,
             fontSize = 14.sp
         )
@@ -62,66 +59,6 @@ fun SettingScreen() {
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Profile Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(AccentOrange, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = userName?.take(1)?.uppercase() ?: "U",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                
-                Spacer(modifier = Modifier.width(16.dp))
-                
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = userName ?: "User",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = userEmail ?: "user@gmail.com",
-                        color = MaterialTheme.customColors.settingTextGray,
-                        fontSize = 14.sp
-                    )
-                    if (!userPhone.isNullOrBlank() && userPhone != "No Phone Saved") {
-                        Text(
-                            text = userPhone ?: "",
-                            color = MaterialTheme.customColors.settingTextGray,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-                
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Edit Profile",
-                    tint = MaterialTheme.customColors.settingTextGray,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -211,22 +148,22 @@ fun SettingScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SectionHeader(title = "ACCOUNT")
+        SectionHeader(title = "PRIVACY")
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { authViewModel.logout() }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Logout", color = Color(0xFFFF4C4C), fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
+                SettingToggleItem(
+                    icon = Icons.Default.PrivacyTip,
+                    iconBgColor = IconBoxMoonBg,
+                    iconTintColor = Color(0xFFADD8E6),
+                    title = "Anonymous usage stats",
+                    subtitle = "Help improve the app via Firebase Analytics & Crashlytics. No personal info collected.",
+                    isChecked = isAnalyticsEnabled,
+                    onCheckedChange = { viewModel.setAnalyticsEnabled(it) },
+                )
             }
         }
 

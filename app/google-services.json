@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436162432200",
+    "project_id": "newsappbkg",
+    "storage_bucket": "newsappbkg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436162432200:android:4ca9eeee5c1f1826a2a9fd",
+        "android_client_info": {
+          "package_name": "com.app.nepallivetv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsn8DqzlVzLQCn5Q9MK24tXe07VWjz5NA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

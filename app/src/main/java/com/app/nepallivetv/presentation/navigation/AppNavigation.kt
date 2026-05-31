@@ -10,8 +10,8 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -39,30 +39,37 @@ import com.app.nepallivetv.LocalFullScreenMode
 import com.app.nepallivetv.LocalPipMode
 import com.app.nepallivetv.presentation.screens.home.HomeScreen
 import com.app.nepallivetv.presentation.viewmodel.SharedViewModel
-import com.app.nepallivetv.presentation.screens.mylist.MyListScreen
+import com.app.nepallivetv.presentation.screens.movies.MovieDetailScreen
+import com.app.nepallivetv.presentation.screens.movies.MoviePlayerScreen
+import com.app.nepallivetv.presentation.screens.movies.MoviesScreen
 import com.app.nepallivetv.presentation.screens.setting.SettingScreen
+import com.app.nepallivetv.domain.model.MediaKind
 import androidx.navigation.toRoute
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 import com.app.nepallivetv.presentation.screens.splash.SplashScreen
-
-import com.app.nepallivetv.presentation.screens.auth.LoginScreen
-import com.app.nepallivetv.presentation.screens.auth.RegisterScreen
-import com.app.nepallivetv.presentation.viewmodel.AuthViewModel
 import com.app.nepallivetv.updater.UpdateViewModel
 import com.app.nepallivetv.updater.UpdateManager
 import com.app.nepallivetv.updater.UpdateDialog
 
-@Serializable object LoginRoute
-@Serializable object RegisterRoute
-@Serializable object PreLoginGraph
-
 @Serializable object HomeRoute
-@Serializable object MyListRoute
+@Serializable object MoviesRoute
 @Serializable object SettingRoute
-@Serializable object PostLoginGraph
+@Serializable object RootGraph
+
+@Serializable
+data class MovieDetailRoute(val kind: String, val slug: String)
+
+// Native ExoPlayer player route. `idEpisode` is null for movies.
+@Serializable
+data class MoviePlayerRoute(
+    val kind: String,
+    val slug: String,
+    val title: String,
+    val idEpisode: Long? = null,
+)
 
 @Serializable object SplashRoute
 
@@ -77,23 +84,10 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val authViewModel = koinViewModel<AuthViewModel>()
-    // Start with a special string to indicate "loading" state
-    val authToken by authViewModel.isLoggedIn.collectAsState(initial = "LOADING")
-
     val updateViewModel = koinViewModel<UpdateViewModel>()
     val updateState by updateViewModel.updateState.collectAsState()
 
     var isBottomBarVisible by remember { mutableStateOf(true) }
-
-    // Auto-logout effect
-    LaunchedEffect(authToken) {
-        if (authToken != "LOADING" && authToken == null && currentDestination?.route?.contains("Login") != true && currentDestination?.route?.contains("Register") != true && currentDestination?.route?.contains("Splash") != true) {
-            navController.navigate(LoginRoute) {
-                popUpTo(0) { inclusive = true }
-            }
-        }
-    }
 
     LaunchedEffect(isBottomBarVisible, currentDestination) {
         if (isBottomBarVisible && !isInPipMode) {
@@ -102,10 +96,8 @@ fun AppNavigation() {
         }
     }
 
-    val showBottomBar = !isFullScreen && !isInPipMode && !isLandscape && 
-            currentDestination?.route?.contains("Login") != true && 
-            currentDestination?.route?.contains("Register") != true &&
-            currentDestination?.route?.contains("Splash") != true
+    val showBottomBar = !isFullScreen && !isInPipMode && !isLandscape &&
+        currentDestination?.route?.contains("Splash") != true
 
     Scaffold(
         bottomBar = {
@@ -148,50 +140,70 @@ fun AppNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = PreLoginGraph,
+            startDestination = RootGraph,
             modifier = Modifier.fillMaxSize().then(if (isFullScreen || isLandscape) Modifier else Modifier.padding(innerPadding))
         ) {
-            navigation<PreLoginGraph>(startDestination = SplashRoute) {
+            navigation<RootGraph>(startDestination = SplashRoute) {
                 composable<SplashRoute> {
-                    SplashScreen(navController = navController, authToken = authToken)
+                    SplashScreen(navController = navController)
                 }
 
-                composable<LoginRoute> {
-                    LoginScreen(
-                        onLoginSuccess = {
-                            navController.navigate(PostLoginGraph) {
-                                popUpTo(PreLoginGraph) { inclusive = true }
-                            }
-                        },
-                        onNavigateToRegister = {
-                            navController.navigate(RegisterRoute)
-                        }
-                    )
-                }
-                
-                composable<RegisterRoute> {
-                    RegisterScreen(
-                        onRegisterSuccess = {
-                            navController.navigate(LoginRoute) {
-                                popUpTo(RegisterRoute) { inclusive = true }
-                            }
-                        },
-                        onNavigateToLogin = {
-                            navController.popBackStack()
-                        }
-                    )
-                }
-            }
-
-            navigation<PostLoginGraph>(startDestination = HomeRoute) {
                 composable<HomeRoute> {
                     HomeScreen()
                 }
-                
-                composable<MyListRoute> {
-                    MyListScreen()
+
+                composable<MoviesRoute> {
+                    MoviesScreen(
+                        onOpenDetail = { item ->
+                            navController.navigate(
+                                MovieDetailRoute(
+                                    kind = if (item.kind == MediaKind.SHOW) "show" else "movie",
+                                    slug = item.id,
+                                ),
+                            )
+                        },
+                    )
                 }
-                
+
+                composable<MovieDetailRoute> { backStackEntry ->
+                    val route = backStackEntry.toRoute<MovieDetailRoute>()
+                    val kind = if (route.kind == "show") MediaKind.SHOW else MediaKind.MOVIE
+                    MovieDetailScreen(
+                        kind = kind,
+                        id = route.slug,
+                        onBack = { navController.popBackStack() },
+                        onPlay = { detail, episode ->
+                            val playerRoute = if (detail.kind == MediaKind.SHOW && episode != null) {
+                                MoviePlayerRoute(
+                                    kind = "show",
+                                    slug = detail.id,
+                                    title = "${detail.title}  ·  S${episode.season}·E${episode.number}",
+                                    idEpisode = episode.idEpisode,
+                                )
+                            } else {
+                                MoviePlayerRoute(
+                                    kind = "movie",
+                                    slug = detail.id,
+                                    title = detail.title,
+                                    idEpisode = null,
+                                )
+                            }
+                            navController.navigate(playerRoute)
+                        },
+                    )
+                }
+
+                composable<MoviePlayerRoute> { backStackEntry ->
+                    val route = backStackEntry.toRoute<MoviePlayerRoute>()
+                    MoviePlayerScreen(
+                        title = route.title,
+                        kind = route.kind,
+                        slug = route.slug,
+                        idEpisode = route.idEpisode,
+                        onBack = { navController.popBackStack() },
+                    )
+                }
+
                 composable<SettingRoute> {
                     SettingScreen()
                 }
@@ -204,18 +216,18 @@ fun AppNavigation() {
 fun AppBottomNavigation(currentDestinationRoute: String?, onNavigateTo: (Any) -> Unit) {
     val tabs = listOf(
         Triple("Home", Icons.Default.Home, HomeRoute),
-        Triple("My List", Icons.Default.Bookmarks, MyListRoute),
+        Triple("Movies", Icons.Default.Movie, MoviesRoute),
         Triple("Settings", Icons.Default.Settings, SettingRoute)
     )
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        tonalElevation = 0.dp // Flat design as requested
+        tonalElevation = 0.dp
     ) {
         tabs.forEach { (label, icon, routeObject) ->
             val isSelected = currentDestinationRoute?.contains(routeObject::class.simpleName ?: "") == true
-            
+
             NavigationBarItem(
                 selected = isSelected,
                 onClick = { onNavigateTo(routeObject) },

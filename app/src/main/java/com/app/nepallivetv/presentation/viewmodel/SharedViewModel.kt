@@ -2,6 +2,8 @@ package com.app.nepallivetv.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.nepallivetv.analytics.CrashReporter
+import com.app.nepallivetv.analytics.Telemetry
 import com.app.nepallivetv.data.local.datastore.DatastorePreferences
 import com.app.nepallivetv.domain.model.Channel
 import com.app.nepallivetv.domain.usecase.GetChannelsUseCase
@@ -18,7 +20,9 @@ import kotlinx.coroutines.launch
 class SharedViewModel(
     private val getChannelsUseCase: GetChannelsUseCase,
     private val getStreamUrlUseCase: GetStreamUrlUseCase,
-    val datastorePreferences: DatastorePreferences
+    val datastorePreferences: DatastorePreferences,
+    private val telemetry: Telemetry,
+    private val crashReporter: CrashReporter,
 ) : ViewModel() {
 
     private val _channels = MutableStateFlow<List<Channel>>(emptyList())
@@ -49,6 +53,19 @@ class SharedViewModel(
 
     val isCastEnabled: StateFlow<Boolean> = datastorePreferences.isCastEnabledFlow
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val isAnalyticsEnabled: StateFlow<Boolean> = datastorePreferences.isAnalyticsEnabledFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    fun setAnalyticsEnabled(enabled: Boolean) {
+        // Update the SDK toggles immediately so we don't log any further events
+        // after the user disables, then persist so it survives a relaunch.
+        telemetry.setEnabled(enabled)
+        crashReporter.setEnabled(enabled)
+        viewModelScope.launch {
+            datastorePreferences.setAnalyticsEnabled(enabled)
+        }
+    }
 
     /**
      * Channels filtered by both the search box and the selected synthetic
@@ -146,7 +163,11 @@ class SharedViewModel(
             // Record in recently-watched alongside the stream fetch. Done in
             // parallel because there's no dependency between them.
             launch { datastorePreferences.pushRecentlyWatched(channel) }
-            _currentStreamUrl.value = getStreamUrlUseCase(channel.encodedUrl)
+            val url = getStreamUrlUseCase(channel.encodedUrl)
+            _currentStreamUrl.value = url
+            if (!url.isNullOrBlank()) {
+                telemetry.channelPlayStarted(channel.name, channel.category ?: "")
+            }
         }
     }
 

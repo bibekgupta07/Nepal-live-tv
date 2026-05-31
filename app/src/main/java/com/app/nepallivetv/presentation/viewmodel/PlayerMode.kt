@@ -10,6 +10,6 @@ package com.app.nepallivetv.presentation.viewmodel
  *              rotating the device to landscape.
  *
  * Landscape orientation is always rendered as FULL regardless of stored mode — see
- * the `isLandscape` check in HomeScreen / MyListScreen.
+ * the `isLandscape` check in HomeScreen.
  */
 enum class PlayerMode { MINI, EXPANDED, FULL }

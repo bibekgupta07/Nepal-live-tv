@@ -6,13 +6,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.first
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import com.app.nepallivetv.data.local.datastore.dto.ChannelPersistDto
 import com.app.nepallivetv.domain.model.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 private val Context.appDataStore by preferencesDataStore(name = "app_preferences")
 
@@ -21,12 +21,7 @@ class DatastorePreferences(private val context: Context) {
     private val FAVORITES_KEY = stringSetPreferencesKey("favorite_channels_json")
     private val RECENTS_KEY = stringPreferencesKey("recently_watched_json")
     private val CAST_ENABLED_KEY = booleanPreferencesKey("is_cast_enabled")
-    
-    // Auth Keys
-    private val TOKEN_KEY = stringPreferencesKey("auth_token")
-    private val USER_NAME_KEY = stringPreferencesKey("auth_user_name")
-    private val USER_EMAIL_KEY = stringPreferencesKey("auth_user_email")
-    private val USER_PHONE_KEY = stringPreferencesKey("auth_user_phone")
+    private val ANALYTICS_ENABLED_KEY = booleanPreferencesKey("is_analytics_enabled")
 
     val isDarkModeFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
         prefs[THEME_KEY] ?: true
@@ -42,7 +37,7 @@ class DatastorePreferences(private val context: Context) {
             }
         }
     }
-    
+
     val favoriteUrlsFlow: Flow<Set<String>> = favoriteChannelsFlow.map { channels ->
         channels.map { it.encodedUrl }.toSet()
     }
@@ -60,56 +55,31 @@ class DatastorePreferences(private val context: Context) {
             emptyList()
         }
     }
-    
+
     val isCastEnabledFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
         prefs[CAST_ENABLED_KEY] ?: true
     }
-    
-    val authTokenFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
-        prefs[TOKEN_KEY]
-    }
-    
-    val userNameFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
-        prefs[USER_NAME_KEY]
-    }
-    
-    val userEmailFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
-        prefs[USER_EMAIL_KEY]
-    }
-    
-    val userPhoneFlow: Flow<String?> = context.appDataStore.data.map { prefs ->
-        prefs[USER_PHONE_KEY]
+
+    /** Default ON — privacy notice in Settings explains what's collected. */
+    val isAnalyticsEnabledFlow: Flow<Boolean> = context.appDataStore.data.map { prefs ->
+        prefs[ANALYTICS_ENABLED_KEY] ?: true
     }
 
-    suspend fun getToken(): String? {
+    suspend fun isAnalyticsEnabled(): Boolean {
         val prefs = context.appDataStore.data.first()
-        return prefs[TOKEN_KEY]
-    }
-
-    suspend fun saveAuthData(token: String, name: String, email: String, phone: String) {
-        context.appDataStore.edit { prefs ->
-            prefs[TOKEN_KEY] = token
-            prefs[USER_NAME_KEY] = name
-            prefs[USER_EMAIL_KEY] = email
-            prefs[USER_PHONE_KEY] = phone
-        }
-    }
-    
-    suspend fun clearAuthData() {
-        context.appDataStore.edit { prefs ->
-            prefs.remove(TOKEN_KEY)
-            prefs.remove(USER_NAME_KEY)
-            prefs.remove(USER_EMAIL_KEY)
-            prefs.remove(USER_PHONE_KEY)
-        }
+        return prefs[ANALYTICS_ENABLED_KEY] ?: true
     }
 
     suspend fun setDarkMode(isDark: Boolean) {
         context.appDataStore.edit { prefs -> prefs[THEME_KEY] = isDark }
     }
-    
+
     suspend fun setCastEnabled(isEnabled: Boolean) {
         context.appDataStore.edit { prefs -> prefs[CAST_ENABLED_KEY] = isEnabled }
+    }
+
+    suspend fun setAnalyticsEnabled(isEnabled: Boolean) {
+        context.appDataStore.edit { prefs -> prefs[ANALYTICS_ENABLED_KEY] = isEnabled }
     }
 
     suspend fun pushRecentlyWatched(channel: Channel) {

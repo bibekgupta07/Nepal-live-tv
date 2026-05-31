@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -25,39 +27,19 @@ android {
     flavorDimensions += "environment"
 
     productFlavors {
+        // v3 dropped the backend entirely. The catalog lives in raw.gh JSON
+        // (refreshed by .github/workflows/scrape.yml) and the click-time
+        // scraping runs on the device. Flavors now only toggle OkHttp logging.
         create("dev") {
             dimension = "environment"
-            // Points the app at the phone's own loopback. The phone reaches the
-            // host's backend through an `adb reverse` USB tunnel:
-            //
-            //     adb reverse tcp:8001 tcp:8001
-            //
-            // The tunnel re-routes the phone's 127.0.0.1:8001 to the host's
-            // 127.0.0.1:8001 where uvicorn is listening. This works regardless
-            // of whether the phone and host share a network, and it doesn't
-            // depend on knowing either device's IP.
-            //
-            // Re-run `adb reverse tcp:8001 tcp:8001` after every reboot, USB
-            // reconnect, or `adb kill-server`. List active tunnels with
-            // `adb reverse --list`.
-            //
-            // For an Android emulator, swap this for "http://10.0.2.2:8001/"
-            // (the emulator's built-in loopback alias for the host).
-            //
-            // Start the backend on the host (port 8001 because 8000 is taken
-            // here by something else):
-            //     uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
-            buildConfigField("String", "BASE_URL", "\"http://127.0.0.1:8001/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("uat") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         create("prod") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL", "\"https://backend-livetv-production.up.railway.app/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
         }
     }
@@ -111,6 +93,13 @@ dependencies {
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.jsoup)
+    // Firebase BoM keeps every Firebase artifact on the same internally-tested
+    // version set — never set versions on the individual deps below.
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.config)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
