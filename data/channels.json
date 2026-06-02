@@ -522,12 +522,6 @@
     "category": "Nepali"
   },
   {
-    "name": "City One HD",
-    "encodedUrl": "1351",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/City_One_HD_2021-09-20_06:09:13.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Samata TV",
     "encodedUrl": "1354",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Samata_TV_2021-09-20_06:09:29.png",
@@ -552,39 +546,9 @@
     "category": "Nepali"
   },
   {
-    "name": "Sanghu TV HD",
-    "encodedUrl": "1399",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sanghu_TV_HD_2023-07-16_11:07:20.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "Al Jazeera HD",
-    "encodedUrl": "351",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Al_Jazeera_HD_2021-05-05_08:05:14.png",
-    "category": "News"
-  },
-  {
     "name": "TRT World HD",
     "encodedUrl": "496",
     "logo": "https://nettv1.nettv.com.np/channel_logo/TRT_WORLD_HD_2021-05-05_08:05:19.png",
-    "category": "News"
-  },
-  {
-    "name": "France 24 English HD",
-    "encodedUrl": "436",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/France_24_English_HD_2021-05-05_08:05:09.png",
-    "category": "News"
-  },
-  {
-    "name": "News Asia HD",
-    "encodedUrl": "386",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/News_Asia_HD_2021-05-05_08:05:54.png",
-    "category": "News"
-  },
-  {
-    "name": "CGTN HD",
-    "encodedUrl": "973",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/CGTN_HD_2021-05-05_06:05:03.png",
     "category": "News"
   },
   {
@@ -945,6 +909,12 @@
     "name": "Super Hungama",
     "encodedUrl": "413",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Super_Hungama_2022-03-07_06:03:52.jpg",
+    "category": "Kids "
+  },
+  {
+    "name": "Disney Junior",
+    "encodedUrl": "415",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Disney_Junior_2021-05-05_08:05:31.png",
     "category": "Kids "
   },
   {
