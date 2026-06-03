@@ -235,12 +235,28 @@
       "title": "New Movies",
       "items": [
         {
-          "id": "29282571-single-saved-and-searching-2024",
+          "id": "14726796-sistahood-2021",
           "kind": "movie",
-          "title": "Single, Saved and Searching",
+          "title": "SistAhood",
+          "year": 2021,
+          "poster": "https://lookmovie2.to/images/p/w400/9db2b047f8fd402e1cf8867ac1561204.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9db2b047f8fd402e1cf8867ac1561204.webp"
+        },
+        {
+          "id": "30486940-sistahood-2-calling-all-lovers-2024",
+          "kind": "movie",
+          "title": "SistAhood 2: Calling All Lovers",
           "year": 2024,
-          "poster": "https://lookmovie2.to/images/p/w400/b2b152d2c8ca4d8ef4d688a058b0d86c.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/b2b152d2c8ca4d8ef4d688a058b0d86c.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/9c1a15b08a6390429a3a793688e9fc2a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9c1a15b08a6390429a3a793688e9fc2a.webp"
+        },
+        {
+          "id": "11767368-le-canal-des-secrets-2020",
+          "kind": "movie",
+          "title": "Le Canal des secrets",
+          "year": 2020,
+          "poster": "https://lookmovie2.to/images/p/w400/a1916113219b6ca39b5e4f24ab7af540.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/a1916113219b6ca39b5e4f24ab7af540.webp"
         },
         {
           "id": "7807036-oray-2021",
@@ -249,6 +265,38 @@
           "year": 2021,
           "poster": "https://lookmovie2.to/images/p/w400/a3709e00f8a9c8ff3c491fc3d7530f75.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/a3709e00f8a9c8ff3c491fc3d7530f75.webp"
+        },
+        {
+          "id": "32810662-lilla-spoket-laban-spokar-igen-2024",
+          "kind": "movie",
+          "title": "Lilla spöket Laban spökar igen",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/c3b67d3f42c2a61f383442aa5d2a7559.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c3b67d3f42c2a61f383442aa5d2a7559.webp"
+        },
+        {
+          "id": "29220279-slightly-new-2024",
+          "kind": "movie",
+          "title": "Slightly New",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/3985597698b68aec1442ba43d6b33655.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/3985597698b68aec1442ba43d6b33655.webp"
+        },
+        {
+          "id": "19882638-dans-lombre-des-dunes-2022",
+          "kind": "movie",
+          "title": "Dans l'ombre des dunes",
+          "year": 2022,
+          "poster": "https://lookmovie2.to/images/p/w400/b75c6933df41d9ee9b71a9ebbc077819.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b75c6933df41d9ee9b71a9ebbc077819.webp"
+        },
+        {
+          "id": "29282571-single-saved-and-searching-2024",
+          "kind": "movie",
+          "title": "Single, Saved and Searching",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/b2b152d2c8ca4d8ef4d688a058b0d86c.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b2b152d2c8ca4d8ef4d688a058b0d86c.webp"
         },
         {
           "id": "15466426-everybody-hates-johan-2022",
@@ -345,54 +393,6 @@
           "year": 2025,
           "poster": "https://lookmovie2.to/images/p/w400/ea2becc637d66056e912ff9ab75538ee.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/ea2becc637d66056e912ff9ab75538ee.webp"
-        },
-        {
-          "id": "35200669-the-death-of-recess-2025",
-          "kind": "movie",
-          "title": "The Death of Recess",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/7752bc33b1e16a3c427e586a9dbb6d7b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7752bc33b1e16a3c427e586a9dbb6d7b.webp"
-        },
-        {
-          "id": "7886614-cats-2018",
-          "kind": "movie",
-          "title": "Cats",
-          "year": 2018,
-          "poster": "https://lookmovie2.to/images/p/w400/d4f8d51ed88c6d64a608c7f1484e6ce9.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d4f8d51ed88c6d64a608c7f1484e6ce9.webp"
-        },
-        {
-          "id": "7677228-little-tito-and-the-aliens-2018",
-          "kind": "movie",
-          "title": "Little Tito and the Aliens",
-          "year": 2018,
-          "poster": "https://lookmovie2.to/images/p/w400/11fff8d9c5a795c5d567b5855b25cbce.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/11fff8d9c5a795c5d567b5855b25cbce.webp"
-        },
-        {
-          "id": "8822370-sevgili-komum-2018",
-          "kind": "movie",
-          "title": "Sevgili Komşum",
-          "year": 2018,
-          "poster": "https://lookmovie2.to/images/p/w400/97180ac2f471d6bb33f9c45b2a3a9639.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/97180ac2f471d6bb33f9c45b2a3a9639.webp"
-        },
-        {
-          "id": "13378874-murder-in-pont-leveque-2021",
-          "kind": "movie",
-          "title": "Murder in Pont-L'Évêque",
-          "year": 2021,
-          "poster": "https://lookmovie2.to/images/p/w400/46da7b82261c40678dda5546aedd700e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/46da7b82261c40678dda5546aedd700e.webp"
-        },
-        {
-          "id": "13097020-scenes-i-imagine-2020",
-          "kind": "movie",
-          "title": "Scenes I Imagine",
-          "year": 2020,
-          "poster": "https://lookmovie2.to/images/p/w400/eb0daafd41f71c1e90e25e1c6058d3bf.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/eb0daafd41f71c1e90e25e1c6058d3bf.webp"
         }
       ]
     },
@@ -400,12 +400,36 @@
       "title": "New TV Shows",
       "items": [
         {
+          "id": "28100731-reborn-as-a-vending-machine-i-now-wander-the-dungeon-2023",
+          "kind": "show",
+          "title": "Season 3, Episode 10",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/af9bb0dd8cd970f59ccec2f3779f10db.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/af9bb0dd8cd970f59ccec2f3779f10db.webp"
+        },
+        {
+          "id": "41993388-the-vardys-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 2",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/d7c3a61ab4bbd697f74cbee4ca75ff65.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/d7c3a61ab4bbd697f74cbee4ca75ff65.webp"
+        },
+        {
           "id": "11247158-critical-role-the-legend-of-vox-machina-2021",
           "kind": "show",
-          "title": "Season 4, Episode 3",
+          "title": "Season 4, Episode 2",
           "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/029f3b846389732ff41536d634e556d6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/029f3b846389732ff41536d634e556d6.webp"
+          "poster": "https://lookmovie2.to/images/p/w300/14552a2613711f6a3ef71b68294cc463.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/14552a2613711f6a3ef71b68294cc463.webp"
+        },
+        {
+          "id": "7263328-classroom-of-the-elite-2017",
+          "kind": "show",
+          "title": "Season 4, Episode 13",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/7ba0f7e02741c43895b9730a408e3a2d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/7ba0f7e02741c43895b9730a408e3a2d.webp"
         },
         {
           "id": "42321618-new-zealand-spy-2026",
@@ -486,38 +510,6 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/d85f00cc469d0954f0027c1f860165d7.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/d85f00cc469d0954f0027c1f860165d7.webp"
-        },
-        {
-          "id": "40547960-my-ribdiculous-reincarnation-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 9",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/b21873db2a3681c041f999f7da1ad07f.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/b21873db2a3681c041f999f7da1ad07f.webp"
-        },
-        {
-          "id": "39122591-eren-the-southpaw-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 9",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/454f8ddc970d6c8bda16ebf9b20642c7.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/454f8ddc970d6c8bda16ebf9b20642c7.webp"
-        },
-        {
-          "id": "40548626-pardon-the-intrusion-im-home-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 9",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/507f1cb9e6c15c7f6236b26418395780.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/507f1cb9e6c15c7f6236b26418395780.webp"
-        },
-        {
-          "id": "2498076-great-continental-railway-journeys-2012",
-          "kind": "show",
-          "title": "Season 9, Episode 13",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/cefb8cd6044954b5c4f5ab7f3c7eb276.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/cefb8cd6044954b5c4f5ab7f3c7eb276.webp"
         }
       ]
     },
@@ -690,6 +682,14 @@
       "title": "Comedy",
       "items": [
         {
+          "id": "29220279-slightly-new-2024",
+          "kind": "movie",
+          "title": "Slightly New",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/3985597698b68aec1442ba43d6b33655.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/3985597698b68aec1442ba43d6b33655.webp"
+        },
+        {
           "id": "29282571-single-saved-and-searching-2024",
           "kind": "movie",
           "title": "Single, Saved and Searching",
@@ -840,14 +840,6 @@
           "year": 2024,
           "poster": "https://lookmovie2.to/images/p/w400/8be62b1c8979e121988a769927e79b5e.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/8be62b1c8979e121988a769927e79b5e.webp"
-        },
-        {
-          "id": "29315945-cloistered-sister-2025",
-          "kind": "movie",
-          "title": "Cloistered Sister",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/81c84904a23ea2e108fec9375fee1117.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/81c84904a23ea2e108fec9375fee1117.webp"
         }
       ]
     },
@@ -1185,6 +1177,30 @@
       "title": "Drama",
       "items": [
         {
+          "id": "36922028-baddies-gone-wild-2025",
+          "kind": "show",
+          "title": "Baddies Gone Wild",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/43ac93ac47530fbdac2ff0a378f6ced0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/43ac93ac47530fbdac2ff0a378f6ced0.webp"
+        },
+        {
+          "id": "7263328-classroom-of-the-elite-2017",
+          "kind": "show",
+          "title": "Classroom of the Elite",
+          "year": 2017,
+          "poster": "https://lookmovie2.to/images/p/w400/7ba0f7e02741c43895b9730a408e3a2d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7ba0f7e02741c43895b9730a408e3a2d.webp"
+        },
+        {
+          "id": "5938484-homestead-rescue-2016",
+          "kind": "show",
+          "title": "Homestead Rescue",
+          "year": 2016,
+          "poster": "https://lookmovie2.to/images/p/w400/ee53760cb091d765e2b53ea18bfc1e3a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/ee53760cb091d765e2b53ea18bfc1e3a.webp"
+        },
+        {
           "id": "42321618-new-zealand-spy-2026",
           "kind": "show",
           "title": "New Zealand Spy",
@@ -1297,14 +1313,6 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/393da31bffc15e9867d56f515aec8c4e.webp"
         },
         {
-          "id": "36922028-baddies-gone-wild-2025",
-          "kind": "show",
-          "title": "Baddies Gone Wild",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/b6e4fbb3bda6e66aba09c7cffb9a61a4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/b6e4fbb3bda6e66aba09c7cffb9a61a4.webp"
-        },
-        {
           "id": "5555260-this-is-us-2016",
           "kind": "show",
           "title": "This Is Us",
@@ -1327,28 +1335,20 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/15d8189a723f2ae90d22c8718d4c4ab0.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/15d8189a723f2ae90d22c8718d4c4ab0.webp"
-        },
-        {
-          "id": "41926853-fate-chooses-you-2026",
-          "kind": "show",
-          "title": "Fate Chooses You",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/ff6191fc9c18fe55a2cf0b8fd961ff8d.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/ff6191fc9c18fe55a2cf0b8fd961ff8d.webp"
-        },
-        {
-          "id": "32477632-secret-service-2026",
-          "kind": "show",
-          "title": "Secret Service",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp"
         }
       ]
     },
     {
       "title": "Crime",
       "items": [
+        {
+          "id": "32383848-philly-homicide-2024",
+          "kind": "show",
+          "title": "Philly Homicide",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/2792ce0fe4712ba910d3f965b4d21db8.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/2792ce0fe4712ba910d3f965b4d21db8.webp"
+        },
         {
           "id": "32283804-people-magazine-investigates-surviving-a-serial-killer-2024",
           "kind": "show",
@@ -1438,12 +1438,12 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/994c9bb07a376d7c4233fa4dc17013d0.webp"
         },
         {
-          "id": "32477632-secret-service-2026",
+          "id": "35668813-unconditional-2026",
           "kind": "show",
-          "title": "Secret Service",
+          "title": "Unconditional",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp"
         },
         {
           "id": "40761508-bon-cop-bad-cop-2026",
@@ -1454,28 +1454,20 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/738db8d264999362f48dca6f4d10a078.webp"
         },
         {
-          "id": "35668813-unconditional-2026",
+          "id": "32477632-secret-service-2026",
           "kind": "show",
-          "title": "Unconditional",
+          "title": "Secret Service",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/96e98a077daf28b27dc72b3e63cc3cae.webp"
         },
         {
-          "id": "39282612-obsession-the-murder-of-a-beauty-queen-2025",
+          "id": "40018046-the-silent-noise-2026",
           "kind": "show",
-          "title": "Obsession: The Murder of a Beauty Queen",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/a82ecf25e1ee374e395f98dd9613c6e8.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/a82ecf25e1ee374e395f98dd9613c6e8.webp"
-        },
-        {
-          "id": "38454407-small-town-scandal-2026",
-          "kind": "show",
-          "title": "Small Town Scandal",
+          "title": "The Silent Noise",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/7dfa02dac903220ce6c6da338feeacba.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7dfa02dac903220ce6c6da338feeacba.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/c60310b022b22345574d4d130f8c1b47.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c60310b022b22345574d4d130f8c1b47.webp"
         },
         {
           "id": "37484311-blue-skies-2026",
@@ -1486,20 +1478,20 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/13d8d0607ee5fea6f271af9b07c5fbf7.webp"
         },
         {
-          "id": "35826715-boston-blue-2025",
+          "id": "38454407-small-town-scandal-2026",
           "kind": "show",
-          "title": "Boston Blue",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/6e112d8fa7c1ee18be94abc63ffa0cee.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/6e112d8fa7c1ee18be94abc63ffa0cee.webp"
+          "title": "Small Town Scandal",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/7dfa02dac903220ce6c6da338feeacba.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7dfa02dac903220ce6c6da338feeacba.webp"
         },
         {
-          "id": "40018046-the-silent-noise-2026",
+          "id": "39282612-obsession-the-murder-of-a-beauty-queen-2025",
           "kind": "show",
-          "title": "The Silent Noise",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/c60310b022b22345574d4d130f8c1b47.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c60310b022b22345574d4d130f8c1b47.webp"
+          "title": "Obsession: The Murder of a Beauty Queen",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/a82ecf25e1ee374e395f98dd9613c6e8.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/a82ecf25e1ee374e395f98dd9613c6e8.webp"
         },
         {
           "id": "38348167-the-friday-the-13th-murders-2025",
