@@ -36,38 +36,14 @@
     "category": "Nepali"
   },
   {
-    "name": "Prime Times HD",
-    "encodedUrl": "778",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Prime_Times_2020-10-02_06:10:33.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Makalu TV HD",
     "encodedUrl": "1312",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Makalu_TV_HD_2021-01-31_07:01:58.jpg",
     "category": "Nepali"
   },
   {
-    "name": "Janata HD",
-    "encodedUrl": "429",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Janata_HD_2021-05-03_11:05:25.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "Mountain TV HD",
-    "encodedUrl": "235",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Mountain_TV_HD_2022-03-10_10:03:26.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Kantipur Max HD",
     "encodedUrl": "1318",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_Max_HD_2024-01-01_05:01:02.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "NPL Live",
-    "encodedUrl": "1412",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_Max_HD_2024-01-01_05:01:02.png",
     "category": "Nepali"
   },
@@ -93,12 +69,6 @@
     "name": "Yoho TV HD",
     "encodedUrl": "1045",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Yoho_TV_HD_2022-03-10_10:03:53.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "Business Plus HD",
-    "encodedUrl": "422",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Business_Plus_HD_2022-03-10_10:03:20.png",
     "category": "Nepali"
   },
   {
@@ -159,12 +129,6 @@
     "name": "Bodhi TV HD",
     "encodedUrl": "481",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Bodhi_TV_HD_2021-05-03_11:05:28.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "Channel 4 Nepal",
-    "encodedUrl": "472",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Channel_4_Nepal_2021-05-03_11:05:59.png",
     "category": "Nepali"
   },
   {
@@ -570,12 +534,6 @@
     "category": "News"
   },
   {
-    "name": "News Asia HD",
-    "encodedUrl": "386",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/News_Asia_HD_2021-05-05_08:05:54.png",
-    "category": "News"
-  },
-  {
     "name": "CGTN HD",
     "encodedUrl": "973",
     "logo": "https://nettv1.nettv.com.np/channel_logo/CGTN_HD_2021-05-05_06:05:03.png",
@@ -585,12 +543,6 @@
     "name": "BBC News",
     "encodedUrl": "479",
     "logo": "https://nettv1.nettv.com.np/channel_logo/BBC_News_2021-05-05_08:05:16.png",
-    "category": "News"
-  },
-  {
-    "name": "CNN",
-    "encodedUrl": "395",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/CNN_2021-05-05_08:05:27.png",
     "category": "News"
   },
   {
@@ -714,12 +666,6 @@
     "category": "Entertainment"
   },
   {
-    "name": "DD Bharati",
-    "encodedUrl": "1167",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/DD_Bharati_2020-03-30_11:03:16.jpg",
-    "category": "Entertainment"
-  },
-  {
     "name": "Colors Rishtey",
     "encodedUrl": "673",
     "logo": "https://nettv1.nettv.com.np/channel_logo/RISHTEY_2021-05-05_08:05:08.png",
@@ -729,6 +675,12 @@
     "name": "Star Movies HD",
     "encodedUrl": "1285",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_HD_2020-12-17_10:12:31.png",
+    "category": "Movies"
+  },
+  {
+    "name": "Star Movies Select HD",
+    "encodedUrl": "1288",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_Select_HD_2020-12-18_09:12:58.png",
     "category": "Movies"
   },
   {
@@ -762,6 +714,12 @@
     "category": "Movies"
   },
   {
+    "name": "Star Gold Select HD",
+    "encodedUrl": "483",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_Select_HD_2021-05-05_08:05:46.png",
+    "category": "Movies"
+  },
+  {
     "name": "Star Movies",
     "encodedUrl": "1306",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_2021-01-20_07:01:12.jpg",
@@ -783,6 +741,12 @@
     "name": "Sony Max 2",
     "encodedUrl": "317",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Max_2_2022-11-06_09:11:55.png",
+    "category": "Movies"
+  },
+  {
+    "name": "Star Gold Select",
+    "encodedUrl": "374",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_Select_2022-03-10_10:03:42.png",
     "category": "Movies"
   },
   {
@@ -814,6 +778,24 @@
     "encodedUrl": "316",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Zee_Classic_2025-06-10_12:06:01.png",
     "category": "Movies"
+  },
+  {
+    "name": "Star Sports 2 HD",
+    "encodedUrl": "366",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_2_HD_2021-05-05_08:05:28.png",
+    "category": "Sports"
+  },
+  {
+    "name": "Star Sports Select 1 sd",
+    "encodedUrl": "502",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_Select_1_sd_2021-05-05_08:05:39.png",
+    "category": "Sports"
+  },
+  {
+    "name": "Star Sports Select 2",
+    "encodedUrl": "469",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_Select_2__2018-09-23_01:09:15.jpg",
+    "category": "Sports"
   },
   {
     "name": "Sony Sports Ten 1",
