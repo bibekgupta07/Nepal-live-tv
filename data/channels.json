@@ -732,12 +732,6 @@
     "category": "Movies"
   },
   {
-    "name": "Star Movies Select HD",
-    "encodedUrl": "1288",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_Select_HD_2020-12-18_09:12:58.png",
-    "category": "Movies"
-  },
-  {
     "name": "Sony Max HD",
     "encodedUrl": "919",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Max_HD_2022-11-06_09:11:22.png",
@@ -768,12 +762,6 @@
     "category": "Movies"
   },
   {
-    "name": "Star Gold Select HD",
-    "encodedUrl": "483",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_Select_HD_2021-05-05_08:05:46.png",
-    "category": "Movies"
-  },
-  {
     "name": "Star Movies",
     "encodedUrl": "1306",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Movies_2021-01-20_07:01:12.jpg",
@@ -795,12 +783,6 @@
     "name": "Sony Max 2",
     "encodedUrl": "317",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Max_2_2022-11-06_09:11:55.png",
-    "category": "Movies"
-  },
-  {
-    "name": "Star Gold Select",
-    "encodedUrl": "374",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Gold_Select_2022-03-10_10:03:42.png",
     "category": "Movies"
   },
   {
@@ -832,24 +814,6 @@
     "encodedUrl": "316",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Zee_Classic_2025-06-10_12:06:01.png",
     "category": "Movies"
-  },
-  {
-    "name": "Star Sports 2 HD",
-    "encodedUrl": "366",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_2_HD_2021-05-05_08:05:28.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports Select 1 sd",
-    "encodedUrl": "502",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_Select_1_sd_2021-05-05_08:05:39.png",
-    "category": "Sports"
-  },
-  {
-    "name": "Star Sports Select 2",
-    "encodedUrl": "469",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Star_Sports_Select_2__2018-09-23_01:09:15.jpg",
-    "category": "Sports"
   },
   {
     "name": "Sony Sports Ten 1",
@@ -1149,12 +1113,6 @@
     "name": "Peace TV Urdu HD",
     "encodedUrl": "424",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Peace_Tv_Urdu_2021-05-05_08:05:34.png",
-    "category": "Spiritual & Life"
-  },
-  {
-    "name": "Madani Channel",
-    "encodedUrl": "487",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Madani_Channel_2021-05-05_08:05:11.png",
     "category": "Spiritual & Life"
   },
   {
