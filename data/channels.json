@@ -876,6 +876,12 @@
     "category": "Kids "
   },
   {
+    "name": "Nick India",
+    "encodedUrl": "940",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Nick_India_2021-05-05_07:05:02.png",
+    "category": "Kids "
+  },
+  {
     "name": "Super Hungama",
     "encodedUrl": "413",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Super_Hungama_2022-03-07_06:03:52.jpg",
@@ -1002,12 +1008,6 @@
     "category": "International"
   },
   {
-    "name": "NHK Premium HD",
-    "encodedUrl": "327",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/NHK_Premium_HD_2021-05-05_08:05:07.png",
-    "category": "International"
-  },
-  {
     "name": "Arirang HD",
     "encodedUrl": "339",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Arirang_HD_2021-05-05_08:05:19.png",
@@ -1089,6 +1089,12 @@
     "name": "Peace TV Urdu HD",
     "encodedUrl": "424",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Peace_Tv_Urdu_2021-05-05_08:05:34.png",
+    "category": "Spiritual & Life"
+  },
+  {
+    "name": "Madani Channel",
+    "encodedUrl": "487",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Madani_Channel_2021-05-05_08:05:11.png",
     "category": "Spiritual & Life"
   },
   {
