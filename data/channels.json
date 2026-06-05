@@ -114,6 +114,12 @@
     "category": "Nepali"
   },
   {
+    "name": "Sagarmatha TV",
+    "encodedUrl": "226",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Sagarmatha_TV_2021-05-03_11:05:18.png",
+    "category": "Nepali"
+  },
+  {
     "name": "ABC NEWS",
     "encodedUrl": "590",
     "logo": "https://nettv1.nettv.com.np/channel_logo/ABC_NEWS_2021-05-03_11:05:24.png",
@@ -1029,6 +1035,12 @@
     "name": "NHK World HD",
     "encodedUrl": "350",
     "logo": "https://nettv1.nettv.com.np/channel_logo/NHK_World_HD_2021-05-05_08:05:07.png",
+    "category": "International"
+  },
+  {
+    "name": "NHK Premium HD",
+    "encodedUrl": "327",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/NHK_Premium_HD_2021-05-05_08:05:07.png",
     "category": "International"
   },
   {
