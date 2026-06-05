@@ -36,14 +36,38 @@
     "category": "Nepali"
   },
   {
+    "name": "Prime Times HD",
+    "encodedUrl": "778",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Prime_Times_2020-10-02_06:10:33.png",
+    "category": "Nepali"
+  },
+  {
     "name": "Makalu TV HD",
     "encodedUrl": "1312",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Makalu_TV_HD_2021-01-31_07:01:58.jpg",
     "category": "Nepali"
   },
   {
+    "name": "Janata HD",
+    "encodedUrl": "429",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Janata_HD_2021-05-03_11:05:25.png",
+    "category": "Nepali"
+  },
+  {
+    "name": "Mountain TV HD",
+    "encodedUrl": "235",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Mountain_TV_HD_2022-03-10_10:03:26.png",
+    "category": "Nepali"
+  },
+  {
     "name": "Kantipur Max HD",
     "encodedUrl": "1318",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_Max_HD_2024-01-01_05:01:02.png",
+    "category": "Nepali"
+  },
+  {
+    "name": "NPL Live",
+    "encodedUrl": "1412",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Kantipur_Max_HD_2024-01-01_05:01:02.png",
     "category": "Nepali"
   },
@@ -72,6 +96,12 @@
     "category": "Nepali"
   },
   {
+    "name": "Business Plus HD",
+    "encodedUrl": "422",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Business_Plus_HD_2022-03-10_10:03:20.png",
+    "category": "Nepali"
+  },
+  {
     "name": "Global TV",
     "encodedUrl": "1297",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Global_TV_2022-03-10_10:03:47.png",
@@ -81,12 +111,6 @@
     "name": "News 24",
     "encodedUrl": "237",
     "logo": "https://nettv1.nettv.com.np/channel_logo/News_24_2021-05-03_11:05:54.png",
-    "category": "Nepali"
-  },
-  {
-    "name": "Sagarmatha TV",
-    "encodedUrl": "226",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sagarmatha_TV_2021-05-03_11:05:18.png",
     "category": "Nepali"
   },
   {
@@ -666,6 +690,12 @@
     "category": "Entertainment"
   },
   {
+    "name": "DD Bharati",
+    "encodedUrl": "1167",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/DD_Bharati_2020-03-30_11:03:16.jpg",
+    "category": "Entertainment"
+  },
+  {
     "name": "Colors Rishtey",
     "encodedUrl": "673",
     "logo": "https://nettv1.nettv.com.np/channel_logo/RISHTEY_2021-05-05_08:05:08.png",
@@ -873,12 +903,6 @@
     "name": "Hungama TV",
     "encodedUrl": "1298",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Hungama_TV_2021-01-13_09:01:15.png",
-    "category": "Kids "
-  },
-  {
-    "name": "Nick India",
-    "encodedUrl": "940",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Nick_India_2021-05-05_07:05:02.png",
     "category": "Kids "
   },
   {
