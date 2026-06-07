@@ -174,14 +174,6 @@
           "backdrop": "https://lookmovie2.to/images/b/w1280/7677181b728c40f1ed3d116a54d058e1.webp"
         },
         {
-          "id": "30343126-miss-you-love-you-2026",
-          "kind": "movie",
-          "title": "Miss You, Love You",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w500/38e3383695f518904e1c582a158a09a9.webp",
-          "backdrop": "https://lookmovie2.to/images/b/w1280/990a99228406b44644b9c8e9feb587d6.webp"
-        },
-        {
           "id": "31195136-normal-2026",
           "kind": "movie",
           "title": "Normal",
@@ -228,12 +220,44 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w500/51aec7d88dfa0ad5184cdec313575564.webp",
           "backdrop": "https://lookmovie2.to/images/b/w1280/cca29759ede8ce13c669be1d32a18f7b.webp"
+        },
+        {
+          "id": "37287335-obsession-2026",
+          "kind": "movie",
+          "title": "Obsession",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w500/ab65d0d178950ad691a675a498ff5deb.webp",
+          "backdrop": "https://lookmovie2.to/images/b/w1280/d00db94236c60aad478ff970c99a27b4.webp"
         }
       ]
     },
     {
       "title": "New Movies",
       "items": [
+        {
+          "id": "30089457-ponman-2025",
+          "kind": "movie",
+          "title": "Ponman",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp"
+        },
+        {
+          "id": "40601101-sattendru-maarudhu-vaanilai-2026",
+          "kind": "movie",
+          "title": "Sattendru Maarudhu Vaanilai",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp"
+        },
+        {
+          "id": "31660693-the-way-we-talk-2025",
+          "kind": "movie",
+          "title": "The Way We Talk",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp"
+        },
         {
           "id": "36843630-un-futuro-aprile-2026",
           "kind": "movie",
@@ -369,36 +393,20 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/64ce9c256a15fb1dec1c7fad818ec07f.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/64ce9c256a15fb1dec1c7fad818ec07f.webp"
-        },
-        {
-          "id": "39963887-southerly-2026",
-          "kind": "movie",
-          "title": "Southerly",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/124de05cf553c86f21965d0908b30d51.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/124de05cf553c86f21965d0908b30d51.webp"
-        },
-        {
-          "id": "42456008-poldi-2026",
-          "kind": "movie",
-          "title": "Poldi",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/ad2605c60e48ee015f73c6660556a69a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/ad2605c60e48ee015f73c6660556a69a.webp"
-        },
-        {
-          "id": "37737315-29-2026",
-          "kind": "movie",
-          "title": "29",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/5f01d2c9d18ac0ed04fdb2f465b79ae3.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/5f01d2c9d18ac0ed04fdb2f465b79ae3.webp"
         }
       ]
     },
     {
       "title": "New TV Shows",
       "items": [
+        {
+          "id": "9813792-from-2022",
+          "kind": "show",
+          "title": "Season 4, Episode 7",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/d2ab883bdcf3bc119e07c96dade9d89d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/d2ab883bdcf3bc119e07c96dade9d89d.webp"
+        },
         {
           "id": "39403976-needy-girl-overdose-2026",
           "kind": "show",
@@ -542,14 +550,6 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/f8debbfbd1edb9d619abe54c43d3f7bb.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/f8debbfbd1edb9d619abe54c43d3f7bb.webp"
-        },
-        {
-          "id": "0096555-casualty-1986",
-          "kind": "show",
-          "title": "Season 46, Episode 6",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/2d45c176a71542bd774798ec5ddf4601.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/2d45c176a71542bd774798ec5ddf4601.webp"
         }
       ]
     },
@@ -722,6 +722,30 @@
       "title": "Comedy",
       "items": [
         {
+          "id": "30089457-ponman-2025",
+          "kind": "movie",
+          "title": "Ponman",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp"
+        },
+        {
+          "id": "40601101-sattendru-maarudhu-vaanilai-2026",
+          "kind": "movie",
+          "title": "Sattendru Maarudhu Vaanilai",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp"
+        },
+        {
+          "id": "31660693-the-way-we-talk-2025",
+          "kind": "movie",
+          "title": "The Way We Talk",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp"
+        },
+        {
           "id": "36460613-swingers-2-2026",
           "kind": "movie",
           "title": "Swingers 2",
@@ -856,30 +880,6 @@
           "year": 2022,
           "poster": "https://lookmovie2.to/images/p/w400/b404a3d1e9b4f131311895a09e48b8b5.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/b404a3d1e9b4f131311895a09e48b8b5.webp"
-        },
-        {
-          "id": "37961742-mexico-86-2026",
-          "kind": "movie",
-          "title": "Mexico 86",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/0c0905e6813dd2dcf79f54bc370ffde7.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/0c0905e6813dd2dcf79f54bc370ffde7.webp"
-        },
-        {
-          "id": "30210139-the-megalomaniacs-2025",
-          "kind": "movie",
-          "title": "The Megalomaniacs",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/149e6ce12f2dd267c507b29dfea32766.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/149e6ce12f2dd267c507b29dfea32766.webp"
-        },
-        {
-          "id": "39308444-hannah-berner-none-of-my-business-2026",
-          "kind": "movie",
-          "title": "Hannah Berner: None of My Business",
-          "year": 2026,
-          "poster": "",
-          "backdrop": ""
         }
       ]
     },
@@ -1217,12 +1217,28 @@
       "title": "Drama",
       "items": [
         {
-          "id": "3960394-interview-with-the-vampire-2022",
+          "id": "27776045-aew-collision-2023",
           "kind": "show",
-          "title": "Interview with the Vampire",
+          "title": "All Elite Wrestling: Collision",
+          "year": 2023,
+          "poster": "https://lookmovie2.to/images/p/w400/d3fdf43c3034f80534d0206ea701840c.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d3fdf43c3034f80534d0206ea701840c.webp"
+        },
+        {
+          "id": "0203259-law-order-special-victims-unit-1999",
+          "kind": "show",
+          "title": "Law & Order: Special Victims Unit",
+          "year": 1999,
+          "poster": "https://lookmovie2.to/images/p/w400/6da840df5559f7ee707bc174720834f4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/6da840df5559f7ee707bc174720834f4.webp"
+        },
+        {
+          "id": "9813792-from-2022",
+          "kind": "show",
+          "title": "FROM",
           "year": 2022,
-          "poster": "https://lookmovie2.to/images/p/w400/3c9ff0de7555880e32aa078331057e21.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3c9ff0de7555880e32aa078331057e21.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/d2ab883bdcf3bc119e07c96dade9d89d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d2ab883bdcf3bc119e07c96dade9d89d.webp"
         },
         {
           "id": "0096555-casualty-1986",
@@ -1233,12 +1249,20 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/2d45c176a71542bd774798ec5ddf4601.webp"
         },
         {
-          "id": "0203259-law-order-special-victims-unit-1999",
+          "id": "39403976-needy-girl-overdose-2026",
           "kind": "show",
-          "title": "Law & Order: Special Victims Unit",
-          "year": 1999,
-          "poster": "https://lookmovie2.to/images/p/w400/7714b22d9379e417cb225f68a7a41076.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7714b22d9379e417cb225f68a7a41076.webp"
+          "title": "NEEDY GIRL OVERDOSE",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/47fe594211236ef9335a77252b30fdd5.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/47fe594211236ef9335a77252b30fdd5.webp"
+        },
+        {
+          "id": "3960394-interview-with-the-vampire-2022",
+          "kind": "show",
+          "title": "Interview with the Vampire",
+          "year": 2022,
+          "poster": "https://lookmovie2.to/images/p/w400/3c9ff0de7555880e32aa078331057e21.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/3c9ff0de7555880e32aa078331057e21.webp"
         },
         {
           "id": "29259067-rebirth-2024",
@@ -1351,30 +1375,6 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/e6c30a6bd0b449e57a96d21c066f5ff8.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/e6c30a6bd0b449e57a96d21c066f5ff8.webp"
-        },
-        {
-          "id": "35768911-tip-toe-2026",
-          "kind": "show",
-          "title": "Tip Toe",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/29bdc9deafaa383d0f78c79bc8f4860b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/29bdc9deafaa383d0f78c79bc8f4860b.webp"
-        },
-        {
-          "id": "39184653-doctor-on-the-edge-2026",
-          "kind": "show",
-          "title": "Doctor on the Edge",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp"
-        },
-        {
-          "id": "38683169-the-trio-2026",
-          "kind": "show",
-          "title": "The Trio",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/6700c63848ec575ad47e98ec452af707.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/6700c63848ec575ad47e98ec452af707.webp"
         }
       ]
     },
@@ -1386,8 +1386,16 @@
           "kind": "show",
           "title": "Law & Order: Special Victims Unit",
           "year": 1999,
-          "poster": "https://lookmovie2.to/images/p/w400/7714b22d9379e417cb225f68a7a41076.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7714b22d9379e417cb225f68a7a41076.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/6da840df5559f7ee707bc174720834f4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/6da840df5559f7ee707bc174720834f4.webp"
+        },
+        {
+          "id": "20883058-on-patrol-live-2022",
+          "kind": "show",
+          "title": "On Patrol: Live",
+          "year": 2022,
+          "poster": "https://lookmovie2.to/images/p/w400/71a5fc09a89d67b79eff1c717ff32fbe.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/71a5fc09a89d67b79eff1c717ff32fbe.webp"
         },
         {
           "id": "11857512-crime-beat-2020",
@@ -1532,14 +1540,6 @@
           "year": 2024,
           "poster": "https://lookmovie2.to/images/p/w400/213b46919862e84b244754c03346d860.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/213b46919862e84b244754c03346d860.webp"
-        },
-        {
-          "id": "36473890-britains-countryside-killers-2025",
-          "kind": "show",
-          "title": "Britain's Countryside Killers",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/8f8daeccd7dbb1547569bf2eab8bb2e7.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/8f8daeccd7dbb1547569bf2eab8bb2e7.webp"
         }
       ]
     }
