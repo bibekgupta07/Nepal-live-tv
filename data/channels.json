@@ -84,12 +84,6 @@
     "category": "Nepali"
   },
   {
-    "name": "NTV Kohalpur HD",
-    "encodedUrl": "578",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/NTV_Kohalpur_HD_2021-05-03_11:05:21.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Yoho TV HD",
     "encodedUrl": "1045",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Yoho_TV_HD_2022-03-10_10:03:53.png",
@@ -111,6 +105,12 @@
     "name": "News 24",
     "encodedUrl": "237",
     "logo": "https://nettv1.nettv.com.np/channel_logo/News_24_2021-05-03_11:05:54.png",
+    "category": "Nepali"
+  },
+  {
+    "name": "Image HD",
+    "encodedUrl": "587",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Image_Channel_2021-09-13_10:09:42.jpg",
     "category": "Nepali"
   },
   {
@@ -540,12 +540,6 @@
     "category": "Nepali"
   },
   {
-    "name": "Sarokar TV",
-    "encodedUrl": "1408",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sarokar_TV_2024-01-14_12:01:03.png",
-    "category": "Nepali"
-  },
-  {
     "name": "Sanghu TV HD",
     "encodedUrl": "1399",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Sanghu_TV_HD_2023-07-16_11:07:20.png",
@@ -852,12 +846,6 @@
     "category": "Sports"
   },
   {
-    "name": "Sony Sports Ten 3",
-    "encodedUrl": "336",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Sony_Ten_3_2023-05-29_04:05:36.png",
-    "category": "Sports"
-  },
-  {
     "name": "Star Sports 2 SD",
     "encodedUrl": "522",
     "logo": "https://nettv1.nettv.com.np/channel_logo/STAR_SPORTS_2_2021-05-05_08:05:13.png",
@@ -870,15 +858,15 @@
     "category": "Sports"
   },
   {
-    "name": "Action Sports  HD 1",
-    "encodedUrl": "1114",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Action_Sports__HD_1_2021-09-13_10:09:21.jpg",
+    "name": "DD Sports",
+    "encodedUrl": "552",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/DD_SPORTS_2021-05-05_08:05:53.png",
     "category": "Sports"
   },
   {
-    "name": "A Sports HD",
-    "encodedUrl": "1391",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/A_Sports_HD_2023-02-05_04:02:30.png",
+    "name": "Action Sports  HD 1",
+    "encodedUrl": "1114",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Action_Sports__HD_1_2021-09-13_10:09:21.jpg",
     "category": "Sports"
   },
   {
@@ -1044,18 +1032,6 @@
     "category": "International"
   },
   {
-    "name": "Arirang HD",
-    "encodedUrl": "339",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Arirang_HD_2021-05-05_08:05:19.png",
-    "category": "International"
-  },
-  {
-    "name": "DW-TV HD",
-    "encodedUrl": "266",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/DW-TV_HD_2021-05-05_08:05:32.png",
-    "category": "International"
-  },
-  {
     "name": "TV 5 Monde",
     "encodedUrl": "291",
     "logo": "https://nettv1.nettv.com.np/channel_logo/TV_5_Monde_2022-03-10_10:03:10.png",
@@ -1125,12 +1101,6 @@
     "name": "Peace TV Urdu HD",
     "encodedUrl": "424",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Peace_Tv_Urdu_2021-05-05_08:05:34.png",
-    "category": "Spiritual & Life"
-  },
-  {
-    "name": "Madani Channel",
-    "encodedUrl": "487",
-    "logo": "https://nettv1.nettv.com.np/channel_logo/Madani_Channel_2021-05-05_08:05:11.png",
     "category": "Spiritual & Life"
   },
   {
