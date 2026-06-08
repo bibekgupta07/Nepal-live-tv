@@ -235,6 +235,54 @@
       "title": "New Movies",
       "items": [
         {
+          "id": "31849590-groundswell-2026",
+          "kind": "movie",
+          "title": "Groundswell",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/e52a266e4bea61b3108576cfd3b51fbe.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/e52a266e4bea61b3108576cfd3b51fbe.webp"
+        },
+        {
+          "id": "39833109-salmokji-whispering-water-2026",
+          "kind": "movie",
+          "title": "Salmokji: Whispering Water",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/402aaabd8a975f2511a9d5e164666e2d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/402aaabd8a975f2511a9d5e164666e2d.webp"
+        },
+        {
+          "id": "33397303-detective-chen-2-2026",
+          "kind": "movie",
+          "title": "Detective Chen 2",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp"
+        },
+        {
+          "id": "38628091-premarital-2025",
+          "kind": "movie",
+          "title": "Premarital",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp"
+        },
+        {
+          "id": "29253299-omaha-2025",
+          "kind": "movie",
+          "title": "Omaha",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp"
+        },
+        {
+          "id": "35856123-leaving-neverland-2-surviving-michael-jackson-2025",
+          "kind": "movie",
+          "title": "Leaving Neverland 2: Surviving Michael Jackson",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/1d2e217960019c938cc54d34588110ff.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/1d2e217960019c938cc54d34588110ff.webp"
+        },
+        {
           "id": "37472160-the-death-molesters-barn-of-blood-2025",
           "kind": "movie",
           "title": "The Death Molester's Barn of Blood",
@@ -257,14 +305,6 @@
           "year": 2025,
           "poster": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp"
-        },
-        {
-          "id": "29253299-omaha-2025",
-          "kind": "movie",
-          "title": "Omaha",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp"
         },
         {
           "id": "0305973-sonny-2002",
@@ -353,52 +393,28 @@
           "year": 2025,
           "poster": "https://lookmovie2.to/images/p/w400/75b6f6e095d2acc4008c90c8c1565976.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/75b6f6e095d2acc4008c90c8c1565976.webp"
-        },
-        {
-          "id": "38202962-avihitham-2025",
-          "kind": "movie",
-          "title": "Avihitham",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/85cebb8e93b44aa613f2fb7006ba540c.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/85cebb8e93b44aa613f2fb7006ba540c.webp"
-        },
-        {
-          "id": "40618609-usa-94-brazils-return-to-glory-2026",
-          "kind": "movie",
-          "title": "USA 94: Brazil's Return to Glory",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/f64f8b083879e0412029cf44c18cff3f.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/f64f8b083879e0412029cf44c18cff3f.webp"
-        },
-        {
-          "id": "31660693-the-way-we-talk-2025",
-          "kind": "movie",
-          "title": "The Way We Talk",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/e95757c8dc3db40dab8da21bfafa916a.webp"
-        },
-        {
-          "id": "42277791-the-greek-aisle-2026",
-          "kind": "movie",
-          "title": "The Greek Aisle",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/798b7ff5e1a4ddad4045e00ce68fc172.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/798b7ff5e1a4ddad4045e00ce68fc172.webp"
-        },
-        {
-          "id": "34385135-colony-2026",
-          "kind": "movie",
-          "title": "Colony",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/3d69e7569d95489cdaccbba344d8fa26.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3d69e7569d95489cdaccbba344d8fa26.webp"
         }
       ]
     },
     {
       "title": "New TV Shows",
       "items": [
+        {
+          "id": "32482007-narrow-escapes-2024",
+          "kind": "show",
+          "title": "Season 3, Episode 6",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/0a6d3a496124ecb1f3f02dcbca0078a1.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/0a6d3a496124ecb1f3f02dcbca0078a1.webp"
+        },
+        {
+          "id": "39184653-doctor-on-the-edge-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 3",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/611ed02e12d4440818344cae5d7d008e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/611ed02e12d4440818344cae5d7d008e.webp"
+        },
         {
           "id": "0283172-bargain-hunt-2007",
           "kind": "show",
@@ -502,28 +518,20 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/fa0b19c01a7394f18ae27fbf4c355d89.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/fa0b19c01a7394f18ae27fbf4c355d89.webp"
-        },
-        {
-          "id": "40546935-an-observation-log-of-my-fiance-who-calls-herself-a-villainess-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 10",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/a793236e61e23a09bb74874776ee7658.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/a793236e61e23a09bb74874776ee7658.webp"
-        },
-        {
-          "id": "34869195-90-day-the-last-resort-between-the-sheets-2024",
-          "kind": "show",
-          "title": "Season 2, Episode 2",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/32ac5879e279bc1b33f2f9b3e45396e2.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/32ac5879e279bc1b33f2f9b3e45396e2.webp"
         }
       ]
     },
     {
       "title": "Action",
       "items": [
+        {
+          "id": "33397303-detective-chen-2-2026",
+          "kind": "movie",
+          "title": "Detective Chen 2",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp"
+        },
         {
           "id": "31195136-normal-2026",
           "kind": "movie",
@@ -675,20 +683,28 @@
           "year": 2021,
           "poster": "https://lookmovie2.to/images/p/w400/282be04e8be2af75f83da3a86899fdba.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/282be04e8be2af75f83da3a86899fdba.webp"
-        },
-        {
-          "id": "2992096-bigfoot-wars-2014",
-          "kind": "movie",
-          "title": "Bigfoot Wars",
-          "year": 2014,
-          "poster": "https://lookmovie2.to/images/p/w400/aa81fd82447dc760726c294ea3a87e50.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/aa81fd82447dc760726c294ea3a87e50.webp"
         }
       ]
     },
     {
       "title": "Comedy",
       "items": [
+        {
+          "id": "33397303-detective-chen-2-2026",
+          "kind": "movie",
+          "title": "Detective Chen 2",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp"
+        },
+        {
+          "id": "38628091-premarital-2025",
+          "kind": "movie",
+          "title": "Premarital",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp"
+        },
         {
           "id": "37472160-the-death-molesters-barn-of-blood-2025",
           "kind": "movie",
@@ -770,14 +786,6 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/6b55b34564d97ff05a1ccc57381b488b.webp"
         },
         {
-          "id": "38628091-premarital-2025",
-          "kind": "movie",
-          "title": "Premarital",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/9d2d3727ee77f01936d410d6d60ca155.webp"
-        },
-        {
           "id": "32093575-scary-movie-2026",
           "kind": "movie",
           "title": "Scary Movie",
@@ -840,20 +848,20 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/4297a25ac4b79ac4a613b04e9822d0f3.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/4297a25ac4b79ac4a613b04e9822d0f3.webp"
-        },
-        {
-          "id": "29142264-giderayak-2024",
-          "kind": "movie",
-          "title": "Giderayak",
-          "year": 2024,
-          "poster": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp"
         }
       ]
     },
     {
       "title": "Horror",
       "items": [
+        {
+          "id": "39833109-salmokji-whispering-water-2026",
+          "kind": "movie",
+          "title": "Salmokji: Whispering Water",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/402aaabd8a975f2511a9d5e164666e2d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/402aaabd8a975f2511a9d5e164666e2d.webp"
+        },
         {
           "id": "37472160-the-death-molesters-barn-of-blood-2025",
           "kind": "movie",
@@ -1005,14 +1013,6 @@
           "year": 2013,
           "poster": "https://lookmovie2.to/images/p/w400/7d12e6b71fec3d6b2389d32be771090e.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/7d12e6b71fec3d6b2389d32be771090e.webp"
-        },
-        {
-          "id": "13062088-ride-scare-2020",
-          "kind": "movie",
-          "title": "Ride Scare",
-          "year": 2020,
-          "poster": "https://lookmovie2.to/images/p/w400/9dac0cfa07aaa26d3411e82b78ca1ce0.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/9dac0cfa07aaa26d3411e82b78ca1ce0.webp"
         }
       ]
     },
@@ -1185,6 +1185,14 @@
       "title": "Drama",
       "items": [
         {
+          "id": "39184653-doctor-on-the-edge-2026",
+          "kind": "show",
+          "title": "Doctor on the Edge",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp"
+        },
+        {
           "id": "0098911-shortland-street-1992",
           "kind": "show",
           "title": "Shortland Street",
@@ -1329,26 +1337,26 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/41a21d3ae9e163225313fe9ec4ac6090.webp"
         },
         {
-          "id": "39184653-doctor-on-the-edge-2026",
+          "id": "35578133-innate-2025",
           "kind": "show",
-          "title": "Doctor on the Edge",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp"
-        },
-        {
-          "id": "39366612-morpheus-2026",
-          "kind": "show",
-          "title": "Morpheus",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp"
+          "title": "Innate",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp"
         }
       ]
     },
     {
       "title": "Crime",
       "items": [
+        {
+          "id": "2723810-snapped-killer-couples-2013",
+          "kind": "show",
+          "title": "Snapped: Killer Couples",
+          "year": 2013,
+          "poster": "https://lookmovie2.to/images/p/w400/64de3973d745c0d9c061de33b2bc4b0b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/64de3973d745c0d9c061de33b2bc4b0b.webp"
+        },
         {
           "id": "36460202-youre-killing-me-2026",
           "kind": "show",
@@ -1462,14 +1470,6 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/e57a47c7a19443b5e8a9acedb5a37b54.webp"
         },
         {
-          "id": "33398245-treasure-island-2025",
-          "kind": "show",
-          "title": "Buried Hearts",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/7233f3cb17e42b435e7c495ba008fba6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7233f3cb17e42b435e7c495ba008fba6.webp"
-        },
-        {
           "id": "32932523-worst-ex-ever-2024",
           "kind": "show",
           "title": "Worst Ex Ever",
@@ -1494,12 +1494,12 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/2b3639b8e9d0bd69b5ea7ff1b901eefe.webp"
         },
         {
-          "id": "24339158-dunentod-ein-nordsee-krimi-2023",
+          "id": "33398245-treasure-island-2025",
           "kind": "show",
-          "title": "Dünentod – Ein Nordsee-Krimi",
-          "year": 2023,
-          "poster": "https://lookmovie2.to/images/p/w400/43d2278ae16de621785a2bf54465d84e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/43d2278ae16de621785a2bf54465d84e.webp"
+          "title": "Buried Hearts",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/7233f3cb17e42b435e7c495ba008fba6.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7233f3cb17e42b435e7c495ba008fba6.webp"
         },
         {
           "id": "29195231-pacto-de-silencio-2023",
