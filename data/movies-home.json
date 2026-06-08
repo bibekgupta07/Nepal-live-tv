@@ -235,6 +235,38 @@
       "title": "New Movies",
       "items": [
         {
+          "id": "37472160-the-death-molesters-barn-of-blood-2025",
+          "kind": "movie",
+          "title": "The Death Molester's Barn of Blood",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp"
+        },
+        {
+          "id": "35520399-honestly-im-fine-2026",
+          "kind": "movie",
+          "title": "Honestly, I'm Fine",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/fd444de79aceb2754762e31f389b9ff3.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/fd444de79aceb2754762e31f389b9ff3.webp"
+        },
+        {
+          "id": "37968634-lady-in-the-urn-2025",
+          "kind": "movie",
+          "title": "Lady in the Urn",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp"
+        },
+        {
+          "id": "29253299-omaha-2025",
+          "kind": "movie",
+          "title": "Omaha",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp"
+        },
+        {
           "id": "0305973-sonny-2002",
           "kind": "movie",
           "title": "Sonny",
@@ -281,14 +313,6 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/0ede07567c164ebf94a7bc64e5506b6c.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/0ede07567c164ebf94a7bc64e5506b6c.webp"
-        },
-        {
-          "id": "29253299-omaha-2025",
-          "kind": "movie",
-          "title": "Omaha",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/51856c62b52a44cd36277859994db2f1.webp"
         },
         {
           "id": "38855471-zero-existence-2025",
@@ -369,36 +393,52 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/3d69e7569d95489cdaccbba344d8fa26.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/3d69e7569d95489cdaccbba344d8fa26.webp"
-        },
-        {
-          "id": "37660578-elisa-2025",
-          "kind": "movie",
-          "title": "Elisa",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/c5e32b63d1e70ff3213a18a3a9d92b8a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c5e32b63d1e70ff3213a18a3a9d92b8a.webp"
-        },
-        {
-          "id": "30089457-ponman-2025",
-          "kind": "movie",
-          "title": "Ponman",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/b5da94fefb9cfe01fabc9245d5121604.webp"
-        },
-        {
-          "id": "40601101-sattendru-maarudhu-vaanilai-2026",
-          "kind": "movie",
-          "title": "Sattendru Maarudhu Vaanilai",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7e49977b928fc9c523a68972c403d3d8.webp"
         }
       ]
     },
     {
       "title": "New TV Shows",
       "items": [
+        {
+          "id": "0283172-bargain-hunt-2007",
+          "kind": "show",
+          "title": "Season 74, Episode 14",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/da8ab63306c92ff0525a4fafd592018e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/da8ab63306c92ff0525a4fafd592018e.webp"
+        },
+        {
+          "id": "1433870-masterchef-australia-2009",
+          "kind": "show",
+          "title": "Season 18, Episode 29",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/6906d059ea4fd0574203fed77c586040.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/6906d059ea4fd0574203fed77c586040.webp"
+        },
+        {
+          "id": "0098911-shortland-street-1992",
+          "kind": "show",
+          "title": "Season 35, Episode 49",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/0f91ab293854b2e7e6b71f952602aae2.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/0f91ab293854b2e7e6b71f952602aae2.webp"
+        },
+        {
+          "id": "0053494-coronation-street-1960",
+          "kind": "show",
+          "title": "Season 67, Episode 110",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/beeea3ada7a293794c364c4c725d8710.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/beeea3ada7a293794c364c4c725d8710.webp"
+        },
+        {
+          "id": "0068069-emmerdale-1972",
+          "kind": "show",
+          "title": "Season 55, Episode 110",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/18b480eb847f78d857c194ca9affa5c0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/18b480eb847f78d857c194ca9affa5c0.webp"
+        },
         {
           "id": "28510783-gwed-2024",
           "kind": "show",
@@ -478,46 +518,6 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/32ac5879e279bc1b33f2f9b3e45396e2.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/32ac5879e279bc1b33f2f9b3e45396e2.webp"
-        },
-        {
-          "id": "32550889-witch-hat-atelier-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 10",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/9c819c29816f042c67e1aa7613bf40a6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/9c819c29816f042c67e1aa7613bf40a6.webp"
-        },
-        {
-          "id": "42834589-100-cooks-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 1",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/e897bcf8f9bb33caf14b46c6b7edbe6e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/e897bcf8f9bb33caf14b46c6b7edbe6e.webp"
-        },
-        {
-          "id": "10098248-the-food-that-built-america-2019",
-          "kind": "show",
-          "title": "Season 7, Episode 7",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/a0f2b03d7df614fcae5e64973e589f9e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/a0f2b03d7df614fcae5e64973e589f9e.webp"
-        },
-        {
-          "id": "20221678-the-way-home-2023",
-          "kind": "show",
-          "title": "Season 4, Episode 8",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/5257e8f86bc747b27f441d696adee185.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/5257e8f86bc747b27f441d696adee185.webp"
-        },
-        {
-          "id": "39151104-best-of-the-world-with-antoni-porowski-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 1",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/2c4312338f813a7b528c331b468fd81d.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/2c4312338f813a7b528c331b468fd81d.webp"
         }
       ]
     },
@@ -690,6 +690,14 @@
       "title": "Comedy",
       "items": [
         {
+          "id": "37472160-the-death-molesters-barn-of-blood-2025",
+          "kind": "movie",
+          "title": "The Death Molester's Barn of Blood",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp"
+        },
+        {
           "id": "35670000-zorla-guvenlik-2025",
           "kind": "movie",
           "title": "Zorla Güvenlik",
@@ -840,20 +848,28 @@
           "year": 2024,
           "poster": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp"
-        },
-        {
-          "id": "33397980-office-romance-2026",
-          "kind": "movie",
-          "title": "Office Romance",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/bb055b5bcfb761796dd6ee69a844d4ad.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/bb055b5bcfb761796dd6ee69a844d4ad.webp"
         }
       ]
     },
     {
       "title": "Horror",
       "items": [
+        {
+          "id": "37472160-the-death-molesters-barn-of-blood-2025",
+          "kind": "movie",
+          "title": "The Death Molester's Barn of Blood",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/d4eadec26ff2756cb501373985c9705b.webp"
+        },
+        {
+          "id": "37968634-lady-in-the-urn-2025",
+          "kind": "movie",
+          "title": "Lady in the Urn",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b99ad88dc4457fc9616c1e9a010790b0.webp"
+        },
         {
           "id": "28639917-sharp-obsession-2025",
           "kind": "movie",
@@ -997,22 +1013,6 @@
           "year": 2020,
           "poster": "https://lookmovie2.to/images/p/w400/9dac0cfa07aaa26d3411e82b78ca1ce0.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/9dac0cfa07aaa26d3411e82b78ca1ce0.webp"
-        },
-        {
-          "id": "30768179-super-happy-fun-clown-2025",
-          "kind": "movie",
-          "title": "Super Happy Fun Clown",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/e0c4e2f4056ea76445481d44d1933e2c.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/e0c4e2f4056ea76445481d44d1933e2c.webp"
-        },
-        {
-          "id": "2992096-bigfoot-wars-2014",
-          "kind": "movie",
-          "title": "Bigfoot Wars",
-          "year": 2014,
-          "poster": "https://lookmovie2.to/images/p/w400/aa81fd82447dc760726c294ea3a87e50.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/aa81fd82447dc760726c294ea3a87e50.webp"
         }
       ]
     },
@@ -1185,6 +1185,30 @@
       "title": "Drama",
       "items": [
         {
+          "id": "0098911-shortland-street-1992",
+          "kind": "show",
+          "title": "Shortland Street",
+          "year": 1992,
+          "poster": "https://lookmovie2.to/images/p/w400/0f91ab293854b2e7e6b71f952602aae2.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/0f91ab293854b2e7e6b71f952602aae2.webp"
+        },
+        {
+          "id": "0053494-coronation-street-1960",
+          "kind": "show",
+          "title": "Coronation Street",
+          "year": 1960,
+          "poster": "https://lookmovie2.to/images/p/w400/beeea3ada7a293794c364c4c725d8710.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/beeea3ada7a293794c364c4c725d8710.webp"
+        },
+        {
+          "id": "0068069-emmerdale-1972",
+          "kind": "show",
+          "title": "Emmerdale",
+          "year": 1972,
+          "poster": "https://lookmovie2.to/images/p/w400/18b480eb847f78d857c194ca9affa5c0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/18b480eb847f78d857c194ca9affa5c0.webp"
+        },
+        {
           "id": "38683169-the-trio-2026",
           "kind": "show",
           "title": "The Trio",
@@ -1319,30 +1343,6 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp"
-        },
-        {
-          "id": "35578133-innate-2025",
-          "kind": "show",
-          "title": "Innate",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp"
-        },
-        {
-          "id": "35668813-unconditional-2026",
-          "kind": "show",
-          "title": "Unconditional",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp"
-        },
-        {
-          "id": "29152827-ena-la-reina-victoria-eugenia-2025",
-          "kind": "show",
-          "title": "ENA. La reina Victoria Eugenia",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/8527654907300fc6ee18c737cdbba7df.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/8527654907300fc6ee18c737cdbba7df.webp"
         }
       ]
     },
