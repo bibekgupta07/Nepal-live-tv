@@ -168,6 +168,12 @@
     "category": "Nepali"
   },
   {
+    "name": "Channel 4 Nepal",
+    "encodedUrl": "472",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/Channel_4_Nepal_2021-05-03_11:05:59.png",
+    "category": "Nepali"
+  },
+  {
     "name": "Krishi TV HD",
     "encodedUrl": "453",
     "logo": "https://nettv1.nettv.com.np/channel_logo/Krishi_TV_HD_2021-05-03_11:05:27.png",
@@ -1065,6 +1071,12 @@
     "name": "NHK World HD",
     "encodedUrl": "350",
     "logo": "https://nettv1.nettv.com.np/channel_logo/NHK_World_HD_2021-05-05_08:05:07.png",
+    "category": "International"
+  },
+  {
+    "name": "NHK Premium HD",
+    "encodedUrl": "327",
+    "logo": "https://nettv1.nettv.com.np/channel_logo/NHK_Premium_HD_2021-05-05_08:05:07.png",
     "category": "International"
   },
   {
