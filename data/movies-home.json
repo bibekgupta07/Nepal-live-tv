@@ -235,6 +235,22 @@
       "title": "New Movies",
       "items": [
         {
+          "id": "1099193-brothers-sisters-family-album-2007",
+          "kind": "movie",
+          "title": "Brothers & Sisters: Family Album",
+          "year": 2007,
+          "poster": "",
+          "backdrop": ""
+        },
+        {
+          "id": "1199503-nick-nolte-no-exit-2008",
+          "kind": "movie",
+          "title": "Nick Nolte: No Exit",
+          "year": 2008,
+          "poster": "https://lookmovie2.to/images/p/w400/c0e6c4e16bf1bc68171d4fe6ea184499.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c0e6c4e16bf1bc68171d4fe6ea184499.webp"
+        },
+        {
           "id": "9823564-47-dhansukh-bhawan-2019",
           "kind": "movie",
           "title": "47 Dhansukh Bhawan",
@@ -377,28 +393,92 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/6fca01a7d381e3fbe2bb9e680ce62484.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/6fca01a7d381e3fbe2bb9e680ce62484.webp"
-        },
-        {
-          "id": "11702514-stolen-lilies-2019",
-          "kind": "movie",
-          "title": "Stolen Lilies",
-          "year": 2019,
-          "poster": "https://lookmovie2.to/images/p/w400/dc66d98de7c49b62546fe726133fcf37.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/dc66d98de7c49b62546fe726133fcf37.webp"
-        },
-        {
-          "id": "0095360-imagine-john-lennon-1988",
-          "kind": "movie",
-          "title": "Imagine: John Lennon",
-          "year": 1988,
-          "poster": "https://lookmovie2.to/images/p/w400/3c0cd7acec57cc703e0c856486d0f81a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3c0cd7acec57cc703e0c856486d0f81a.webp"
         }
       ]
     },
     {
       "title": "New TV Shows",
       "items": [
+        {
+          "id": "32482007-narrow-escapes-2024",
+          "kind": "show",
+          "title": "Season 3, Episode 9",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/58bccf1a67b43ad44507b2ba6d7ad9d0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/58bccf1a67b43ad44507b2ba6d7ad9d0.webp"
+        },
+        {
+          "id": "39123061-the-ramparts-of-ice-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 11",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/db59778391f9c12aad7c55260c2495a2.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/db59778391f9c12aad7c55260c2495a2.webp"
+        },
+        {
+          "id": "0419336-homes-under-the-hammer-2003",
+          "kind": "show",
+          "title": "Season 29, Episode 10",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/5b4fd255e61e56552b1488b4dcb2881a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/5b4fd255e61e56552b1488b4dcb2881a.webp"
+        },
+        {
+          "id": "0058796-days-of-our-lives-1965",
+          "kind": "show",
+          "title": "Season 61, Episode 209",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/74c30c3dd8e0d5cc407612ea3f00a073.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/74c30c3dd8e0d5cc407612ea3f00a073.webp"
+        },
+        {
+          "id": "34625441-de-tattas-de-serie-2024",
+          "kind": "show",
+          "title": "Season 2, Episode 1",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/e3a201d7e37b73d8bcf7704337a9509c.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/e3a201d7e37b73d8bcf7704337a9509c.webp"
+        },
+        {
+          "id": "35623665-drag-house-rules-2025",
+          "kind": "show",
+          "title": "Season 2, Episode 4",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/73e23e49206d9135f027b4d214247d84.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/73e23e49206d9135f027b4d214247d84.webp"
+        },
+        {
+          "id": "36593277-the-warrior-princess-and-the-barbaric-king-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 10",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/d3ea082482dc2a8e312a8b8b637383a5.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/d3ea082482dc2a8e312a8b8b637383a5.webp"
+        },
+        {
+          "id": "39122722-kujima-why-sing-when-you-can-warble-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 10",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/7278ca6f6c764a08d1592a77ce3fa567.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/7278ca6f6c764a08d1592a77ce3fa567.webp"
+        },
+        {
+          "id": "9679542-dr-stone-2019",
+          "kind": "show",
+          "title": "Season 4, Episode 35",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/52a30e5fd16e450be753de6347711ac9.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/52a30e5fd16e450be753de6347711ac9.webp"
+        },
+        {
+          "id": "9077540-sweet-magnolias-2020",
+          "kind": "show",
+          "title": "Season 5, Episode 5",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/161046ef8a430cea0e2dea6fbb3d6924.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/161046ef8a430cea0e2dea6fbb3d6924.webp"
+        },
         {
           "id": "39749708-the-evil-lawyer-2026",
           "kind": "show",
@@ -414,86 +494,6 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/a0a1cdf27c7cf55333c454fa94b42003.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/a0a1cdf27c7cf55333c454fa94b42003.webp"
-        },
-        {
-          "id": "9077540-sweet-magnolias-2020",
-          "kind": "show",
-          "title": "Season 5, Episode 1",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/28852b0e2497ccf4d34adac4622f46d2.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/28852b0e2497ccf4d34adac4622f46d2.webp"
-        },
-        {
-          "id": "14675396-on-the-roam-2024",
-          "kind": "show",
-          "title": "Season 2, Episode 5",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/cdc3df0da22b90819f3f01428f0db1df.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/cdc3df0da22b90819f3f01428f0db1df.webp"
-        },
-        {
-          "id": "0452046-criminal-minds-2005",
-          "kind": "show",
-          "title": "Season 19, Episode 4",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/75414d1ed9ce344bf516493ae3fcbce4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/75414d1ed9ce344bf516493ae3fcbce4.webp"
-        },
-        {
-          "id": "25523050-taskmaster-2023",
-          "kind": "show",
-          "title": "Season 5, Episode 6",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/39e89255e6081cff961dba2e06902514.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/39e89255e6081cff961dba2e06902514.webp"
-        },
-        {
-          "id": "19862726-tribunal-justice-2023",
-          "kind": "show",
-          "title": "Season 3, Episode 74",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/75eb537e206414d0e811bbc2f6857c7a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/75eb537e206414d0e811bbc2f6857c7a.webp"
-        },
-        {
-          "id": "37182080-go-for-it-nakamura-kun-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 11",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/5b002bc85d6e947ff3a099df3d5cc20e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/5b002bc85d6e947ff3a099df3d5cc20e.webp"
-        },
-        {
-          "id": "43029507-make-that-movie-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 5",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/2cab5663904758d8c073228c4057b727.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/2cab5663904758d8c073228c4057b727.webp"
-        },
-        {
-          "id": "28489780-the-hardacres-2024",
-          "kind": "show",
-          "title": "Season 2, Episode 5",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/c4b5cd624a7a1a18c11c247f156e97ae.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/c4b5cd624a7a1a18c11c247f156e97ae.webp"
-        },
-        {
-          "id": "11247158-critical-role-the-legend-of-vox-machina-2021",
-          "kind": "show",
-          "title": "Season 4, Episode 6",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/bf30eaf0aeae42133a89d7eb4fca3a93.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/bf30eaf0aeae42133a89d7eb4fca3a93.webp"
-        },
-        {
-          "id": "0092325-the-bold-and-the-beautiful-1987",
-          "kind": "show",
-          "title": "Season 39, Episode 187",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/b936e291bf3e2fb3e2ea9d97f74836b4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/b936e291bf3e2fb3e2ea9d97f74836b4.webp"
         }
       ]
     },
@@ -1161,6 +1161,54 @@
       "title": "Drama",
       "items": [
         {
+          "id": "39123061-the-ramparts-of-ice-2026",
+          "kind": "show",
+          "title": "The Ramparts of Ice",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/db59778391f9c12aad7c55260c2495a2.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/db59778391f9c12aad7c55260c2495a2.webp"
+        },
+        {
+          "id": "0058796-days-of-our-lives-1965",
+          "kind": "show",
+          "title": "Days of Our Lives",
+          "year": 1965,
+          "poster": "https://lookmovie2.to/images/p/w400/74c30c3dd8e0d5cc407612ea3f00a073.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/74c30c3dd8e0d5cc407612ea3f00a073.webp"
+        },
+        {
+          "id": "36118374-two-weeks-in-august-2026",
+          "kind": "show",
+          "title": "Two Weeks in August",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/c6c687351ca73f65eddacac8616c4543.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c6c687351ca73f65eddacac8616c4543.webp"
+        },
+        {
+          "id": "10752770-tyler-perrys-sistas-2019",
+          "kind": "show",
+          "title": "Tyler Perry's Sistas",
+          "year": 2019,
+          "poster": "https://lookmovie2.to/images/p/w400/9b069c97ed87acd14dddb7ff62f9dc1e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9b069c97ed87acd14dddb7ff62f9dc1e.webp"
+        },
+        {
+          "id": "10530900-gullak-2019",
+          "kind": "show",
+          "title": "Gullak",
+          "year": 2019,
+          "poster": "https://lookmovie2.to/images/p/w400/93ae0958d0759a1e16227c3c4ae6bb4e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/93ae0958d0759a1e16227c3c4ae6bb4e.webp"
+        },
+        {
+          "id": "9077540-sweet-magnolias-2020",
+          "kind": "show",
+          "title": "Sweet Magnolias",
+          "year": 2020,
+          "poster": "https://lookmovie2.to/images/p/w400/161046ef8a430cea0e2dea6fbb3d6924.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/161046ef8a430cea0e2dea6fbb3d6924.webp"
+        },
+        {
           "id": "0092325-the-bold-and-the-beautiful-1987",
           "kind": "show",
           "title": "The Bold and the Beautiful",
@@ -1207,14 +1255,6 @@
           "year": 2013,
           "poster": "https://lookmovie2.to/images/p/w400/fe90666821386bdbd76490ebac904721.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/fe90666821386bdbd76490ebac904721.webp"
-        },
-        {
-          "id": "9077540-sweet-magnolias-2020",
-          "kind": "show",
-          "title": "Sweet Magnolias",
-          "year": 2020,
-          "poster": "https://lookmovie2.to/images/p/w400/28852b0e2497ccf4d34adac4622f46d2.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/28852b0e2497ccf4d34adac4622f46d2.webp"
         },
         {
           "id": "26448526-brilliant-minds-2024",
@@ -1279,52 +1319,20 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/c1f8770223f0e28e31bdcfdb4ff43827.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/c1f8770223f0e28e31bdcfdb4ff43827.webp"
-        },
-        {
-          "id": "0101114-heartbeat-1992",
-          "kind": "show",
-          "title": "Heartbeat",
-          "year": 1992,
-          "poster": "https://lookmovie2.to/images/p/w400/7445c6c202f1affc4929e3bebdbf782b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7445c6c202f1affc4929e3bebdbf782b.webp"
-        },
-        {
-          "id": "0050051-perry-mason-1957",
-          "kind": "show",
-          "title": "Perry Mason",
-          "year": 1957,
-          "poster": "https://lookmovie2.to/images/p/w400/8ed5f6875485c7d473d21d45af5a9b41.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/8ed5f6875485c7d473d21d45af5a9b41.webp"
-        },
-        {
-          "id": "9140554-loki-2021",
-          "kind": "show",
-          "title": "Loki",
-          "year": 2021,
-          "poster": "https://lookmovie2.to/images/p/w400/9e4d8316be9ee8469ada9fd3f5f256b8.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/9e4d8316be9ee8469ada9fd3f5f256b8.webp"
-        },
-        {
-          "id": "0112182-strange-luck-1995",
-          "kind": "show",
-          "title": "Strange Luck",
-          "year": 1995,
-          "poster": "https://lookmovie2.to/images/p/w400/d57d4e55b7bc9eea38ca7a2ae738a864.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d57d4e55b7bc9eea38ca7a2ae738a864.webp"
-        },
-        {
-          "id": "38626513-the-legend-of-kitchen-soldier-2026",
-          "kind": "show",
-          "title": "The Legend of Kitchen Soldier",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/d928ea2ba0452b068e73be48d0648a77.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d928ea2ba0452b068e73be48d0648a77.webp"
         }
       ]
     },
     {
       "title": "Crime",
       "items": [
+        {
+          "id": "37745969-squatters-2025",
+          "kind": "show",
+          "title": "Squatters",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/a4851537daacc74907c28fc87be3bc9a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/a4851537daacc74907c28fc87be3bc9a.webp"
+        },
         {
           "id": "2372162-orange-is-the-new-black-2013",
           "kind": "show",
@@ -1446,12 +1454,12 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/738db8d264999362f48dca6f4d10a078.webp"
         },
         {
-          "id": "34929457-dare-you-to-death-2025",
+          "id": "35674865-that-night-2026",
           "kind": "show",
-          "title": "Dare You to Death",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/4ed7f93de5a57d2451d70322183b4f0b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/4ed7f93de5a57d2451d70322183b4f0b.webp"
+          "title": "That Night",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/9bbb884ffc11b4d666658b324b01c14b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9bbb884ffc11b4d666658b324b01c14b.webp"
         },
         {
           "id": "36473890-britains-countryside-killers-2025",
@@ -1462,12 +1470,12 @@
           "backdrop": "https://lookmovie2.to/images/p/w400/8f8daeccd7dbb1547569bf2eab8bb2e7.webp"
         },
         {
-          "id": "35674865-that-night-2026",
+          "id": "34929457-dare-you-to-death-2025",
           "kind": "show",
-          "title": "That Night",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/9bbb884ffc11b4d666658b324b01c14b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/9bbb884ffc11b4d666658b324b01c14b.webp"
+          "title": "Dare You to Death",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/4ed7f93de5a57d2451d70322183b4f0b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/4ed7f93de5a57d2451d70322183b4f0b.webp"
         },
         {
           "id": "0092419-the-oldest-rookie-1987",
@@ -1476,14 +1484,6 @@
           "year": 1987,
           "poster": "https://lookmovie2.to/images/p/w400/e57a47c7a19443b5e8a9acedb5a37b54.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/e57a47c7a19443b5e8a9acedb5a37b54.webp"
-        },
-        {
-          "id": "34275059-la-jefa-2025",
-          "kind": "show",
-          "title": "La Jefa",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/c05a6bf28dbf524f1f191d5f9f126f12.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c05a6bf28dbf524f1f191d5f9f126f12.webp"
         }
       ]
     }
