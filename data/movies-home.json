@@ -134,6 +134,14 @@
           "backdrop": "https://lookmovie2.to/images/b/w1280/44685cf2d1f49c4d2eb264c0b49bdb68.webp"
         },
         {
+          "id": "33538438-maa-behen-2026",
+          "kind": "movie",
+          "title": "Maa Behen",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w500/3f20eb926537f32be67d8cb5c2019e9b.webp",
+          "backdrop": "https://lookmovie2.to/images/b/w1280/1480115bc0459d6acb0b942f9a3ade48.webp"
+        },
+        {
           "id": "42192165-the-murder-of-rachel-nickell-2026",
           "kind": "movie",
           "title": "The Murder of Rachel Nickell",
@@ -220,20 +228,52 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w500/51aec7d88dfa0ad5184cdec313575564.webp",
           "backdrop": "https://lookmovie2.to/images/b/w1280/cca29759ede8ce13c669be1d32a18f7b.webp"
-        },
-        {
-          "id": "37287335-obsession-2026",
-          "kind": "movie",
-          "title": "Obsession",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w500/ab65d0d178950ad691a675a498ff5deb.webp",
-          "backdrop": "https://lookmovie2.to/images/b/w1280/d00db94236c60aad478ff970c99a27b4.webp"
         }
       ]
     },
     {
       "title": "New Movies",
       "items": [
+        {
+          "id": "0200497-body-parts-1992",
+          "kind": "movie",
+          "title": "Body Parts",
+          "year": 1992,
+          "poster": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp"
+        },
+        {
+          "id": "0104745-the-living-end-1992",
+          "kind": "movie",
+          "title": "The Living End",
+          "year": 1992,
+          "poster": "https://lookmovie2.to/images/p/w400/9a2b006fd23f4dfb9061ea877041075e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9a2b006fd23f4dfb9061ea877041075e.webp"
+        },
+        {
+          "id": "0106476-the-fire-engine-that-disappeared-1993",
+          "kind": "movie",
+          "title": "The Fire Engine That Disappeared",
+          "year": 1993,
+          "poster": "https://lookmovie2.to/images/p/w400/b377e7ff6e5e2db0386b9f6d8d32bd0d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/b377e7ff6e5e2db0386b9f6d8d32bd0d.webp"
+        },
+        {
+          "id": "0107511-the-man-on-the-balcony-1993",
+          "kind": "movie",
+          "title": "The Man on the Balcony",
+          "year": 1993,
+          "poster": "https://lookmovie2.to/images/p/w400/f945fb253a3a4ed88b8d2f12b00b57d4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f945fb253a3a4ed88b8d2f12b00b57d4.webp"
+        },
+        {
+          "id": "0107846-murder-at-the-savoy-1993",
+          "kind": "movie",
+          "title": "Murder at the Savoy",
+          "year": 1993,
+          "poster": "https://lookmovie2.to/images/p/w400/4297e0d63a2631866ef5c9c298f2ea61.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/4297e0d63a2631866ef5c9c298f2ea61.webp"
+        },
         {
           "id": "0115723-body-of-influence-2-1996",
           "kind": "movie",
@@ -353,46 +393,6 @@
           "year": 2000,
           "poster": "https://lookmovie2.to/images/p/w400/034014cf52ac9582e536e866c32b8c81.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/034014cf52ac9582e536e866c32b8c81.webp"
-        },
-        {
-          "id": "0212827-bride-of-the-wind-2001",
-          "kind": "movie",
-          "title": "Bride of the Wind",
-          "year": 2001,
-          "poster": "https://lookmovie2.to/images/p/w400/4a944a7d0a4f9a04c0860da06d88574d.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/4a944a7d0a4f9a04c0860da06d88574d.webp"
-        },
-        {
-          "id": "42863533-maternal-instinct-2026",
-          "kind": "movie",
-          "title": "Maternal Instinct",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/c10104a09cd69eb947f2033eb60c0ec4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c10104a09cd69eb947f2033eb60c0ec4.webp"
-        },
-        {
-          "id": "0316599-graveyard-of-honor-2002",
-          "kind": "movie",
-          "title": "Graveyard of Honor",
-          "year": 2002,
-          "poster": "https://lookmovie2.to/images/p/w400/3ff3552d680ac38a0f1938711651689d.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3ff3552d680ac38a0f1938711651689d.webp"
-        },
-        {
-          "id": "0411469-hazaaron-khwaishein-aisi-2003",
-          "kind": "movie",
-          "title": "Hazaaron Khwaishein Aisi",
-          "year": 2003,
-          "poster": "https://lookmovie2.to/images/p/w400/156bbac24420cf2fb0a19ea9006693d6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/156bbac24420cf2fb0a19ea9006693d6.webp"
-        },
-        {
-          "id": "0332658-intermission-2003",
-          "kind": "movie",
-          "title": "Intermission",
-          "year": 2003,
-          "poster": "https://lookmovie2.to/images/p/w400/72d041c2760df1ec3d5fc5322ad14359.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/72d041c2760df1ec3d5fc5322ad14359.webp"
         }
       ]
     },
@@ -714,6 +714,14 @@
       "title": "Comedy",
       "items": [
         {
+          "id": "0200497-body-parts-1992",
+          "kind": "movie",
+          "title": "Body Parts",
+          "year": 1992,
+          "poster": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp"
+        },
+        {
           "id": "0113623-the-graduates-1995",
           "kind": "movie",
           "title": "The Graduates",
@@ -864,20 +872,20 @@
           "year": 2013,
           "poster": "https://lookmovie2.to/images/p/w400/5fbfe7ed42c0152982fd6ef5ad1ac5c5.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/5fbfe7ed42c0152982fd6ef5ad1ac5c5.webp"
-        },
-        {
-          "id": "7278702-bank-attack-2007",
-          "kind": "movie",
-          "title": "Bank Attack",
-          "year": 2007,
-          "poster": "https://lookmovie2.to/images/p/w400/0d230e2bc693ef6b297218e87adfdd31.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/0d230e2bc693ef6b297218e87adfdd31.webp"
         }
       ]
     },
     {
       "title": "Horror",
       "items": [
+        {
+          "id": "0200497-body-parts-1992",
+          "kind": "movie",
+          "title": "Body Parts",
+          "year": 1992,
+          "poster": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9d23e9aae7dde75d4d728fac957b93e0.webp"
+        },
         {
           "id": "0116503-head-of-the-family-1996",
           "kind": "movie",
@@ -1029,14 +1037,6 @@
           "year": 2024,
           "poster": "https://lookmovie2.to/images/p/w400/32186ece079041f74302db94a72b0cf2.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/32186ece079041f74302db94a72b0cf2.webp"
-        },
-        {
-          "id": "15284556-mrama-2026",
-          "kind": "movie",
-          "title": "Mārama",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/680b2452f611cefa9bb4751fcec65ab7.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/680b2452f611cefa9bb4751fcec65ab7.webp"
         }
       ]
     },
