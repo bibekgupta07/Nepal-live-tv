@@ -134,14 +134,6 @@
           "backdrop": "https://lookmovie2.to/images/b/w1280/44685cf2d1f49c4d2eb264c0b49bdb68.webp"
         },
         {
-          "id": "33538438-maa-behen-2026",
-          "kind": "movie",
-          "title": "Maa Behen",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w500/3f20eb926537f32be67d8cb5c2019e9b.webp",
-          "backdrop": "https://lookmovie2.to/images/b/w1280/1480115bc0459d6acb0b942f9a3ade48.webp"
-        },
-        {
           "id": "42192165-the-murder-of-rachel-nickell-2026",
           "kind": "movie",
           "title": "The Murder of Rachel Nickell",
@@ -228,12 +220,92 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w500/51aec7d88dfa0ad5184cdec313575564.webp",
           "backdrop": "https://lookmovie2.to/images/b/w1280/cca29759ede8ce13c669be1d32a18f7b.webp"
+        },
+        {
+          "id": "37287335-obsession-2026",
+          "kind": "movie",
+          "title": "Obsession",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w500/ab65d0d178950ad691a675a498ff5deb.webp",
+          "backdrop": "https://lookmovie2.to/images/b/w1280/d00db94236c60aad478ff970c99a27b4.webp"
         }
       ]
     },
     {
       "title": "New Movies",
       "items": [
+        {
+          "id": "0115723-body-of-influence-2-1996",
+          "kind": "movie",
+          "title": "Body of Influence 2",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/4b98134ea622bfc9d37d6d4d618c4b09.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/4b98134ea622bfc9d37d6d4d618c4b09.webp"
+        },
+        {
+          "id": "0110860-cop-killer-1994",
+          "kind": "movie",
+          "title": "Cop Killer",
+          "year": 1994,
+          "poster": "https://lookmovie2.to/images/p/w400/4456de0086476d4088123322e4ff053c.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/4456de0086476d4088123322e4ff053c.webp"
+        },
+        {
+          "id": "0113623-the-graduates-1995",
+          "kind": "movie",
+          "title": "The Graduates",
+          "year": 1995,
+          "poster": "https://lookmovie2.to/images/p/w400/23cf562f65c8a9a931516786fce73048.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/23cf562f65c8a9a931516786fce73048.webp"
+        },
+        {
+          "id": "0115756-brilliant-lies-1996",
+          "kind": "movie",
+          "title": "Brilliant Lies",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/576117496cb2a6fcb067dcab781c0abe.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/576117496cb2a6fcb067dcab781c0abe.webp"
+        },
+        {
+          "id": "0111299-the-stranger-1995",
+          "kind": "movie",
+          "title": "The Stranger",
+          "year": 1995,
+          "poster": "https://lookmovie2.to/images/p/w400/f24c0a9d7fe79ab3c51796e299995f6b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f24c0a9d7fe79ab3c51796e299995f6b.webp"
+        },
+        {
+          "id": "0116503-head-of-the-family-1996",
+          "kind": "movie",
+          "title": "Head of the Family",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp"
+        },
+        {
+          "id": "0119848-out-to-sea-1997",
+          "kind": "movie",
+          "title": "Out to Sea",
+          "year": 1997,
+          "poster": "https://lookmovie2.to/images/p/w400/3304e4f9ec3e9747c1fbdff7d2775645.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/3304e4f9ec3e9747c1fbdff7d2775645.webp"
+        },
+        {
+          "id": "0129781-bella-min-bella-1996",
+          "kind": "movie",
+          "title": "Bella, min Bella",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/7e8fff717b2ff73d78f00c014bf6810a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/7e8fff717b2ff73d78f00c014bf6810a.webp"
+        },
+        {
+          "id": "0119755-naked-acts-1998",
+          "kind": "movie",
+          "title": "Naked Acts",
+          "year": 1998,
+          "poster": "https://lookmovie2.to/images/p/w400/04d5bae71ca22776b2594ab9d521dcbb.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/04d5bae71ca22776b2594ab9d521dcbb.webp"
+        },
         {
           "id": "0143261-friends-lovers-1999",
           "kind": "movie",
@@ -321,84 +393,28 @@
           "year": 2003,
           "poster": "https://lookmovie2.to/images/p/w400/72d041c2760df1ec3d5fc5322ad14359.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/72d041c2760df1ec3d5fc5322ad14359.webp"
-        },
-        {
-          "id": "0334928-barrier-device-2002",
-          "kind": "movie",
-          "title": "Barrier Device",
-          "year": 2002,
-          "poster": "https://lookmovie2.to/images/p/w400/d5f225bdd85c2cef0be7f8ed5ddef5de.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d5f225bdd85c2cef0be7f8ed5ddef5de.webp"
-        },
-        {
-          "id": "38648344-bugun-guzel-2025",
-          "kind": "movie",
-          "title": "Bugün Güzel",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/8bf09ccb3e1102d301ac27af2adf584e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/8bf09ccb3e1102d301ac27af2adf584e.webp"
-        },
-        {
-          "id": "36639986-i-am-frankelda-2025",
-          "kind": "movie",
-          "title": "I Am Frankelda",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/d5305227db4ef41cccf0b4bc6d0f600b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d5305227db4ef41cccf0b4bc6d0f600b.webp"
-        },
-        {
-          "id": "0342097-benjamim-2003",
-          "kind": "movie",
-          "title": "Benjamim",
-          "year": 2003,
-          "poster": "https://lookmovie2.to/images/p/w400/02d8197f5a490659b2970b0baf5cd3e7.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/02d8197f5a490659b2970b0baf5cd3e7.webp"
-        },
-        {
-          "id": "32124219-empire-of-lies-2026",
-          "kind": "movie",
-          "title": "Empire of Lies",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/8760c1ba55fa49b80a1db07f02a1e5d8.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/8760c1ba55fa49b80a1db07f02a1e5d8.webp"
-        },
-        {
-          "id": "0337953-debs-2003",
-          "kind": "movie",
-          "title": "D.E.B.S.",
-          "year": 2003,
-          "poster": "https://lookmovie2.to/images/p/w400/ea256909b7e0f948c1e333c4fc0c6d7b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/ea256909b7e0f948c1e333c4fc0c6d7b.webp"
-        },
-        {
-          "id": "40430802-derby-2026",
-          "kind": "movie",
-          "title": "Derby",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/a3de886fd66d7b754a8c2ccedc87f822.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/a3de886fd66d7b754a8c2ccedc87f822.webp"
-        },
-        {
-          "id": "0405977-chaos-2005",
-          "kind": "movie",
-          "title": "Chaos",
-          "year": 2005,
-          "poster": "https://lookmovie2.to/images/p/w400/a44fef05fef1bc54f2dab7b33acf59cf.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/a44fef05fef1bc54f2dab7b33acf59cf.webp"
-        },
-        {
-          "id": "0383648-sueno-2005",
-          "kind": "movie",
-          "title": "Sueno",
-          "year": 2005,
-          "poster": "https://lookmovie2.to/images/p/w400/7ce0a807b5a6174db92b1b33692cd1ca.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7ce0a807b5a6174db92b1b33692cd1ca.webp"
         }
       ]
     },
     {
       "title": "New TV Shows",
       "items": [
+        {
+          "id": "38840807-the-strongest-job-is-apparently-not-a-hero-or-a-sage-but-an-appraiser-provisional-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 11",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/f8debbfbd1edb9d619abe54c43d3f7bb.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/f8debbfbd1edb9d619abe54c43d3f7bb.webp"
+        },
+        {
+          "id": "36118374-two-weeks-in-august-2026",
+          "kind": "show",
+          "title": "Season 1, Episode 5",
+          "year": null,
+          "poster": "https://lookmovie2.to/images/p/w300/c6c687351ca73f65eddacac8616c4543.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w300/c6c687351ca73f65eddacac8616c4543.webp"
+        },
         {
           "id": "41050785-proud-2026",
           "kind": "show",
@@ -526,28 +542,20 @@
           "year": null,
           "poster": "https://lookmovie2.to/images/p/w300/bb714a59a524819945b3afaaa187e304.webp",
           "backdrop": "https://lookmovie2.to/images/p/w300/bb714a59a524819945b3afaaa187e304.webp"
-        },
-        {
-          "id": "37388613-a-hundred-scenes-of-awajima-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 10",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/497da375ba5de02815aabbcacd4cf7be.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/497da375ba5de02815aabbcacd4cf7be.webp"
-        },
-        {
-          "id": "39122622-haibaras-teenage-new-game-2026",
-          "kind": "show",
-          "title": "Season 1, Episode 11",
-          "year": null,
-          "poster": "https://lookmovie2.to/images/p/w300/635acd1b916b2c58180b33c4d0d6ae0b.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w300/635acd1b916b2c58180b33c4d0d6ae0b.webp"
         }
       ]
     },
     {
       "title": "Action",
       "items": [
+        {
+          "id": "0111299-the-stranger-1995",
+          "kind": "movie",
+          "title": "The Stranger",
+          "year": 1995,
+          "poster": "https://lookmovie2.to/images/p/w400/f24c0a9d7fe79ab3c51796e299995f6b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f24c0a9d7fe79ab3c51796e299995f6b.webp"
+        },
         {
           "id": "0337953-debs-2003",
           "kind": "movie",
@@ -699,20 +707,44 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/ee095ac2d0e8022cb618d4d90b48d62a.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/ee095ac2d0e8022cb618d4d90b48d62a.webp"
-        },
-        {
-          "id": "33412884-patriot-2026",
-          "kind": "movie",
-          "title": "Patriot",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/939da51e6249f8e9ed3e071754e472c5.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/939da51e6249f8e9ed3e071754e472c5.webp"
         }
       ]
     },
     {
       "title": "Comedy",
       "items": [
+        {
+          "id": "0113623-the-graduates-1995",
+          "kind": "movie",
+          "title": "The Graduates",
+          "year": 1995,
+          "poster": "https://lookmovie2.to/images/p/w400/23cf562f65c8a9a931516786fce73048.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/23cf562f65c8a9a931516786fce73048.webp"
+        },
+        {
+          "id": "0116503-head-of-the-family-1996",
+          "kind": "movie",
+          "title": "Head of the Family",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp"
+        },
+        {
+          "id": "0119848-out-to-sea-1997",
+          "kind": "movie",
+          "title": "Out to Sea",
+          "year": 1997,
+          "poster": "https://lookmovie2.to/images/p/w400/3304e4f9ec3e9747c1fbdff7d2775645.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/3304e4f9ec3e9747c1fbdff7d2775645.webp"
+        },
+        {
+          "id": "0119755-naked-acts-1998",
+          "kind": "movie",
+          "title": "Naked Acts",
+          "year": 1998,
+          "poster": "https://lookmovie2.to/images/p/w400/04d5bae71ca22776b2594ab9d521dcbb.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/04d5bae71ca22776b2594ab9d521dcbb.webp"
+        },
         {
           "id": "0143261-friends-lovers-1999",
           "kind": "movie",
@@ -840,44 +872,20 @@
           "year": 2007,
           "poster": "https://lookmovie2.to/images/p/w400/0d230e2bc693ef6b297218e87adfdd31.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/0d230e2bc693ef6b297218e87adfdd31.webp"
-        },
-        {
-          "id": "33397303-detective-chen-2-2026",
-          "kind": "movie",
-          "title": "Detective Chen 2",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c3fd943679c2e22e57a98eed4eb04a02.webp"
-        },
-        {
-          "id": "39747930-screw-mickiewicz-3-2026",
-          "kind": "movie",
-          "title": "Screw Mickiewicz 3",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/4297a25ac4b79ac4a613b04e9822d0f3.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/4297a25ac4b79ac4a613b04e9822d0f3.webp"
-        },
-        {
-          "id": "29142264-giderayak-2024",
-          "kind": "movie",
-          "title": "Giderayak",
-          "year": 2024,
-          "poster": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/6cf94c2fe9c7f98da79a29cf422b431f.webp"
-        },
-        {
-          "id": "33397980-office-romance-2026",
-          "kind": "movie",
-          "title": "Office Romance",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/bb055b5bcfb761796dd6ee69a844d4ad.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/bb055b5bcfb761796dd6ee69a844d4ad.webp"
         }
       ]
     },
     {
       "title": "Horror",
       "items": [
+        {
+          "id": "0116503-head-of-the-family-1996",
+          "kind": "movie",
+          "title": "Head of the Family",
+          "year": 1996,
+          "poster": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/61abd4c9410ac55199732098274754ba.webp"
+        },
         {
           "id": "36639986-i-am-frankelda-2025",
           "kind": "movie",
@@ -1029,14 +1037,6 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/680b2452f611cefa9bb4751fcec65ab7.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/680b2452f611cefa9bb4751fcec65ab7.webp"
-        },
-        {
-          "id": "22074082-recuerdos-del-mal-2023",
-          "kind": "movie",
-          "title": "Memories of Evil",
-          "year": 2023,
-          "poster": "https://lookmovie2.to/images/p/w400/3fce9855091c7ca03680721084f687d4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3fce9855091c7ca03680721084f687d4.webp"
         }
       ]
     },
@@ -1209,170 +1209,218 @@
       "title": "Drama",
       "items": [
         {
-          "id": "41050785-proud-2026",
+          "id": "35768911-tip-toe-2026",
           "kind": "show",
-          "title": "Proud",
+          "title": "Tip Toe",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/2ab6eb2156f5b121abdbed499cf1ab77.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/2ab6eb2156f5b121abdbed499cf1ab77.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/e6e35d45907f0dcd784db478009973aa.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/e6e35d45907f0dcd784db478009973aa.webp"
         },
         {
-          "id": "38828946-my-royal-nemesis-2026",
+          "id": "33055254-every-year-after-2026",
           "kind": "show",
-          "title": "My Royal Nemesis",
+          "title": "Every Year After",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/d18e2d65fdf0ad0dbf30722536693c57.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d18e2d65fdf0ad0dbf30722536693c57.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/c1f8770223f0e28e31bdcfdb4ff43827.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/c1f8770223f0e28e31bdcfdb4ff43827.webp"
         },
         {
-          "id": "38876090-gomorrah-the-origins-2026",
+          "id": "35728748-alice-and-steve-2026",
           "kind": "show",
-          "title": "Gomorrah: The Origins",
+          "title": "Alice and Steve",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/53d28cd02d515a61c7474b94cdbe78db.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/53d28cd02d515a61c7474b94cdbe78db.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/df47355e12f2066f91e17f14fe357701.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/df47355e12f2066f91e17f14fe357701.webp"
         },
         {
-          "id": "38941543-love-is-never-gone-2026",
+          "id": "34809853-teach-you-a-lesson-2026",
           "kind": "show",
-          "title": "Love Is Never Gone",
+          "title": "Teach You a Lesson",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/1681d05254d26b26b97dfc311db1485d.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/1681d05254d26b26b97dfc311db1485d.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/9f505e9341b3896f255f9c54b3944824.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/9f505e9341b3896f255f9c54b3944824.webp"
         },
         {
-          "id": "0058796-days-of-our-lives-1965",
+          "id": "35725229-falling-2026",
           "kind": "show",
-          "title": "Days of Our Lives",
-          "year": 1965,
-          "poster": "https://lookmovie2.to/images/p/w400/74c30c3dd8e0d5cc407612ea3f00a073.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/74c30c3dd8e0d5cc407612ea3f00a073.webp"
-        },
-        {
-          "id": "4834232-critical-role-2015",
-          "kind": "show",
-          "title": "Critical Role",
-          "year": 2015,
-          "poster": "https://lookmovie2.to/images/p/w400/89bca6a56f0c178116afcbacfc365e91.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/89bca6a56f0c178116afcbacfc365e91.webp"
-        },
-        {
-          "id": "32140872-star-city-2026",
-          "kind": "show",
-          "title": "Star City",
+          "title": "Falling",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/5b6b4e7a6a8bc54aa9ee8992302c02a6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/5b6b4e7a6a8bc54aa9ee8992302c02a6.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/570eabed825fef368e2214e1ce584fd2.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/570eabed825fef368e2214e1ce584fd2.webp"
         },
         {
-          "id": "1637727-the-killing-2011",
+          "id": "37140755-ashes-to-crown-2026",
           "kind": "show",
-          "title": "The Killing",
-          "year": 2011,
-          "poster": "https://lookmovie2.to/images/p/w400/e9d37c6cfa7c91156e1430a0f52162c9.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/e9d37c6cfa7c91156e1430a0f52162c9.webp"
-        },
-        {
-          "id": "34675596-cape-fear-2026",
-          "kind": "show",
-          "title": "Cape Fear",
+          "title": "Ashes to Crown",
           "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/859ca1768d2fcc9408c06c44ad00689a.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/859ca1768d2fcc9408c06c44ad00689a.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/02c5a84dfc9d3102858b40b36f2708c0.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/02c5a84dfc9d3102858b40b36f2708c0.webp"
         },
         {
-          "id": "31510819-mobland-2025",
+          "id": "41840765-the-old-stories-moses-2026",
           "kind": "show",
-          "title": "MobLand",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/d402a55ded1f3d42c63414e0f7e29d54.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d402a55ded1f3d42c63414e0f7e29d54.webp"
+          "title": "The Old Stories: Moses",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/f26a19bf2645cf92a5df7d934c2f096a.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f26a19bf2645cf92a5df7d934c2f096a.webp"
         },
         {
-          "id": "32125269-beyond-the-gates-2025",
+          "id": "37403273-two-years-later-2026",
           "kind": "show",
-          "title": "Beyond the Gates",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/4544cd21fa054d5a9dc78a12356ce36e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/4544cd21fa054d5a9dc78a12356ce36e.webp"
+          "title": "Two Years Later",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/5f89c4d94e0f289a9324feab8d8ebc60.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/5f89c4d94e0f289a9324feab8d8ebc60.webp"
         },
         {
-          "id": "0068069-emmerdale-1972",
+          "id": "37614297-smoking-behind-the-supermarket-with-you-2026",
           "kind": "show",
-          "title": "Emmerdale",
-          "year": 1972,
-          "poster": "https://lookmovie2.to/images/p/w400/18b480eb847f78d857c194ca9affa5c0.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/18b480eb847f78d857c194ca9affa5c0.webp"
+          "title": "Smoking Behind the Supermarket with You",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/263f68727973f23e94c9ca431611a7f4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/263f68727973f23e94c9ca431611a7f4.webp"
         },
         {
-          "id": "0053494-coronation-street-1960",
+          "id": "35955279-the-lead-2026",
           "kind": "show",
-          "title": "Coronation Street",
-          "year": 1960,
-          "poster": "https://lookmovie2.to/images/p/w400/beeea3ada7a293794c364c4c725d8710.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/beeea3ada7a293794c364c4c725d8710.webp"
+          "title": "The Lead",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/1973e5a1ab0eb1b8cab23f16745e8479.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/1973e5a1ab0eb1b8cab23f16745e8479.webp"
         },
         {
-          "id": "6294706-the-chi-2018",
+          "id": "39184653-doctor-on-the-edge-2026",
           "kind": "show",
-          "title": "The Chi",
-          "year": 2018,
-          "poster": "https://lookmovie2.to/images/p/w400/3563451650ab07efb4e8e38fbe65a48e.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/3563451650ab07efb4e8e38fbe65a48e.webp"
+          "title": "Doctor on the Edge",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/611ed02e12d4440818344cae5d7d008e.webp"
         },
         {
-          "id": "0320038-john-doe-2002",
+          "id": "36982546-you-are-my-fateful-love-2026",
           "kind": "show",
-          "title": "John Doe",
-          "year": 2002,
-          "poster": "https://lookmovie2.to/images/p/w400/976f7330967f0adc96c72686f6c41756.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/976f7330967f0adc96c72686f6c41756.webp"
+          "title": "You Are My Fateful Love",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/5a8f73ea07f4517f35ebb40c16771990.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/5a8f73ea07f4517f35ebb40c16771990.webp"
         },
         {
-          "id": "11950864-astrid-et-raphaelle-2019",
+          "id": "39258424-lobo-morir-matando-2026",
           "kind": "show",
-          "title": "Astrid & Raphaëlle",
+          "title": "Lobo, morir matando",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/f3fc6534830e1a0116cfb6098edbee17.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f3fc6534830e1a0116cfb6098edbee17.webp"
+        },
+        {
+          "id": "41090249-absolute-value-of-romance-2026",
+          "kind": "show",
+          "title": "Absolute Value of Romance",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/ff76011737752724aa4e048e1c107aee.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/ff76011737752724aa4e048e1c107aee.webp"
+        },
+        {
+          "id": "39122591-eren-the-southpaw-2026",
+          "kind": "show",
+          "title": "Eren the Southpaw",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/454f8ddc970d6c8bda16ebf9b20642c7.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/454f8ddc970d6c8bda16ebf9b20642c7.webp"
+        },
+        {
+          "id": "40546998-even-a-replica-can-fall-in-love-2026",
+          "kind": "show",
+          "title": "Even a Replica Can Fall in Love",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/bc7ee83fbd3993661b1cd8e3967846e3.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/bc7ee83fbd3993661b1cd8e3967846e3.webp"
+        },
+        {
+          "id": "13505008-csar-wagner-2020",
+          "kind": "show",
+          "title": "César Wagner",
           "year": 2020,
-          "poster": "https://lookmovie2.to/images/p/w400/67ac5c8e43e0940f16f143bce36270ce.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/67ac5c8e43e0940f16f143bce36270ce.webp"
+          "poster": "https://lookmovie2.to/images/p/w400/241958c539497c939c6d123f6c70760d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/241958c539497c939c6d123f6c70760d.webp"
         },
         {
-          "id": "1996507-after-the-first-48-2008",
+          "id": "33292950-maledictions-2025",
           "kind": "show",
-          "title": "After the First 48",
-          "year": 2008,
-          "poster": "https://lookmovie2.to/images/p/w400/1cef249481c0434392848650ad1036d1.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/1cef249481c0434392848650ad1036d1.webp"
+          "title": "Maledictions",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/28bc13b8a8134076ee01f1d7434e9c11.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/28bc13b8a8134076ee01f1d7434e9c11.webp"
         },
         {
-          "id": "0094481-home-and-away-1988",
+          "id": "24163532-smoke-2025",
           "kind": "show",
-          "title": "Home and Away",
-          "year": 1988,
-          "poster": "https://lookmovie2.to/images/p/w400/663de9f3a070318ed10ebdae9e1a58b0.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/663de9f3a070318ed10ebdae9e1a58b0.webp"
+          "title": "Smoke",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp"
         },
         {
-          "id": "11761176-power-book-iii-raising-kanan-2021",
+          "id": "29258436-like-water-for-chocolate-2024",
           "kind": "show",
-          "title": "Power Book III: Raising Kanan",
-          "year": 2021,
-          "poster": "https://lookmovie2.to/images/p/w400/177773027d8d7bf238eb38c6f87833e3.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/177773027d8d7bf238eb38c6f87833e3.webp"
-        },
-        {
-          "id": "35668813-unconditional-2026",
-          "kind": "show",
-          "title": "Unconditional",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d734df9f60447afe9387a471c30194d6.webp"
+          "title": "Like Water for Chocolate",
+          "year": 2024,
+          "poster": "https://lookmovie2.to/images/p/w400/dc7ff224602f12859c5e26766ae79b34.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/dc7ff224602f12859c5e26766ae79b34.webp"
         }
       ]
     },
     {
       "title": "Crime",
       "items": [
+        {
+          "id": "37520584-bust-up-2026",
+          "kind": "show",
+          "title": "Bust Up",
+          "year": 2026,
+          "poster": "https://lookmovie2.to/images/p/w400/57f9ef8e484bb740ef7fb07835392622.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/57f9ef8e484bb740ef7fb07835392622.webp"
+        },
+        {
+          "id": "13505008-csar-wagner-2020",
+          "kind": "show",
+          "title": "César Wagner",
+          "year": 2020,
+          "poster": "https://lookmovie2.to/images/p/w400/241958c539497c939c6d123f6c70760d.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/241958c539497c939c6d123f6c70760d.webp"
+        },
+        {
+          "id": "24163532-smoke-2025",
+          "kind": "show",
+          "title": "Smoke",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp"
+        },
+        {
+          "id": "35641807-murder-suspect-no-1-2025",
+          "kind": "show",
+          "title": "Murder: Suspect No. 1",
+          "year": 2025,
+          "poster": "https://lookmovie2.to/images/p/w400/e829095091c5e47329c980d6531aadc9.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/e829095091c5e47329c980d6531aadc9.webp"
+        },
+        {
+          "id": "21914006-feds-2023",
+          "kind": "show",
+          "title": "FEDS",
+          "year": 2023,
+          "poster": "https://lookmovie2.to/images/p/w400/87dc84f887344e46a918ff3567dc893b.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/87dc84f887344e46a918ff3567dc893b.webp"
+        },
+        {
+          "id": "11595618-american-detective-with-lt-joe-kenda-2021",
+          "kind": "show",
+          "title": "Homicide Hunter: American Detective",
+          "year": 2021,
+          "poster": "https://lookmovie2.to/images/p/w400/f17421e08f3bcc13921425a20854f487.webp",
+          "backdrop": "https://lookmovie2.to/images/p/w400/f17421e08f3bcc13921425a20854f487.webp"
+        },
         {
           "id": "38876090-gomorrah-the-origins-2026",
           "kind": "show",
@@ -1484,54 +1532,6 @@
           "year": 2026,
           "poster": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp",
           "backdrop": "https://lookmovie2.to/images/p/w400/3c10e0b60bc0a8ccfffc9835d78a2d99.webp"
-        },
-        {
-          "id": "35578133-innate-2025",
-          "kind": "show",
-          "title": "Innate",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/feee6e9ccba8f49cb7d4a62883176b55.webp"
-        },
-        {
-          "id": "42601718-vengeance-murder-on-the-heath-2026",
-          "kind": "show",
-          "title": "Vengeance: Murder on the Heath",
-          "year": 2026,
-          "poster": "https://lookmovie2.to/images/p/w400/c15a505ae88e30b3443723ce35923cc5.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/c15a505ae88e30b3443723ce35923cc5.webp"
-        },
-        {
-          "id": "31158597-to-kill-a-monkey-2024",
-          "kind": "show",
-          "title": "To Kill A Monkey",
-          "year": 2024,
-          "poster": "https://lookmovie2.to/images/p/w400/d50010c363c4850adeeb13f6e652ff47.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/d50010c363c4850adeeb13f6e652ff47.webp"
-        },
-        {
-          "id": "24163532-smoke-2025",
-          "kind": "show",
-          "title": "Smoke",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/a64def9b0665315f1baad39001e28eb4.webp"
-        },
-        {
-          "id": "0167644-maigret-1991",
-          "kind": "show",
-          "title": "Maigret",
-          "year": 1991,
-          "poster": "https://lookmovie2.to/images/p/w400/7d07acc43f5f1b166190fe9d5b2791ad.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/7d07acc43f5f1b166190fe9d5b2791ad.webp"
-        },
-        {
-          "id": "35469182-homicide-squad-new-orleans-2025",
-          "kind": "show",
-          "title": "Homicide Squad New Orleans",
-          "year": 2025,
-          "poster": "https://lookmovie2.to/images/p/w400/a175ff057f36e9fb776ca50fd2d45f33.webp",
-          "backdrop": "https://lookmovie2.to/images/p/w400/a175ff057f36e9fb776ca50fd2d45f33.webp"
         }
       ]
     }
